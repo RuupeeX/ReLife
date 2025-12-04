@@ -3,7 +3,6 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { products } from '../data/products';
 import { useCart } from '../context/CartContext';
-// Importamos los iconos de Lucide-React
 import { Truck, Package, Gem, Star, Frown } from 'lucide-react'; 
 
 const Products = () => {

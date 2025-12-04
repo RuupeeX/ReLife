@@ -1,287 +1,689 @@
 import React from "react";
-import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import SectionWrapper from "../components/SectionWrapper";
-import ProductCard from "../components/ProductCard";
-import { products } from "../data/products";
-import { useCart } from "../context/CartContext";
-// Importamos los iconos de Lucide-React
-import { Leaf, Hourglass, FlaskConical } from "lucide-react"; 
+import {
+  Truck,
+  RefreshCw,
+  Globe,
+  ArrowRight,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
 
 const Home = () => {
-  const { addToCart } = useCart();
+  const products = [
+    {
+      name: "AKIP80 LORS V2 'BLACK PRANTOY'",
+      price: "190.00€",
+      image: "/images/bands-bluenavy-hoodie.png",
+    },
+    {
+      name: "VORTER 'GLOSSY BLACK'",
+      price: "170.00€",
+      image: "/images/bands-bluenavy-hoodie.png",
+    },
+    {
+      name: "VENTURE HI 'TEXTILE BLACK'",
+      price: "240.00€",
+      image: "/images/bands-bluenavy-hoodie.png",
+    },
+    {
+      name: "AKIP80 LORS 'BLACK CROCO'",
+      price: "100.00€",
+      image: "/images/bands-bluenavy-hoodie.png",
+    },
+    {
+      name: "RUNNER PRO 'BLACK EDITION'",
+      price: "220.00€",
+      image: "/images/bands-bluenavy-hoodie.png",
+    },
+    {
+      name: "URBAN JACKET 'MATTE BLACK'",
+      price: "180.00€",
+      image: "/images/product2.png",
+    },
+    {
+      name: "TECH HOODIE 'STEALTH'",
+      price: "150.00€",
+      image: "/images/product3.png",
+    },
+    {
+      name: "CARGOS 'BLACK CAMO'",
+      price: "130.00€",
+      image: "/images/product4.png",
+    },
+  ];
 
-  const fadeInUp = {
-    initial: { opacity: 0, y: 60 },
-    animate: { opacity: 1, y: 0 },
-    transition: { duration: 0.6 },
+  const scrollLeft = () => {
+    const container = document.getElementById("products-carousel");
+    if (container) {
+      container.scrollBy({ left: -300, behavior: "smooth" });
+    }
   };
 
-  const stagger = {
-    animate: {
-      transition: {
-        staggerChildren: 0.1,
-      },
-    },
+  const scrollRight = () => {
+    const container = document.getElementById("products-carousel");
+    if (container) {
+      container.scrollBy({ left: 300, behavior: "smooth" });
+    }
   };
 
   return (
     <div className="pt-20">
-      {/* Hero Section con Video */}
-      <section className="relative h-screen flex items-center justify-center bg-gradient-to-br from-amber-50 to-white overflow-hidden">
-        <div className="absolute inset-0 bg-black/60 z-0"></div>
-
-        {/* Video de fondo con velocidad reducida */}
-        <video
-          autoPlay
-          muted
-          loop
-          playsInline
-          className="absolute inset-0 w-full h-full object-cover z-0"
+      {/* Banner Hero */}
+      <section className="relative h-[90vh] flex items-center justify-center overflow-hidden">
+        <div
+          className="absolute inset-0 bg-cover bg-center"
           style={{
-            filter: "brightness(0.5)",
-            animationDuration: "8s",
+            backgroundImage: "url('/images/prueba.png')",
           }}
-          // Se elimina playbackRate que no es una propiedad de estilo estándar, si se desea
-          // controlarlo se haría vía JavaScript o si fuera una librería específica.
-          // En este caso, lo he comentado para evitar warnings, si es que lo causaba.
-          // playbackRate={8} 
-        >
-          <source src="../../public/video/bannervideo.mp4" type="video/mp4" />
-          {/* Fallback por si el video no carga */}
-          <div
-            className="absolute inset-0 bg-cover bg-center"
-            style={{
-              backgroundImage: "url('../../public/images/hero2.png')",
-              backgroundSize: "cover",
-            }}
-          ></div>
-        </video>
+        ></div>
 
-        <motion.div
-          className="text-center text-white z-10 px-4 max-w-4xl"
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-        >
-          <motion.h1
-            className="text-5xl md:text-7xl font-bold mb-6 font-serif"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2, duration: 0.8 }}
-          >
-            Aureum
-          </motion.h1>
-          <motion.p
-            className="text-xl md:text-2xl mb-8 text-amber-100"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4, duration: 0.8 }}
-          >
-            Aceite de Oliva Premium & Artesanal
-          </motion.p>
-          <motion.p
-            className="text-lg mb-12 max-w-2xl mx-auto leading-relaxed"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6, duration: 0.8 }}
-          >
-            Descubre la esencia pura del aceite de oliva virgen extra, elaborado
-            con dedicación artesanal y el cuidado que solo generaciones de
-            tradición pueden ofrecer.
-          </motion.p>
-          <motion.button
-            className="bg-amber-600 hover:bg-amber-700 text-white px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300 transform hover:scale-105 shadow-lg"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.8, duration: 0.8 }}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            Descubre Aureum
-          </motion.button>
-        </motion.div>
+        <div className="absolute inset-0 bg-black/10 z-0"></div>
 
-        <motion.div
-          className="absolute bottom-10 left-1/2 transform -translate-x-1/2"
-          animate={{ y: [0, 10, 0] }}
-          transition={{ duration: 2, repeat: Infinity }}
-        >
-          <div className="w-6 h-10 border-2 border-white rounded-full flex justify-center">
-            <div className="w-1 h-3 bg-white rounded-full mt-2"></div>
-          </div>
-        </motion.div>
+        <div className="text-center text-white z-10 px-4 max-w-4xl">
+          <h1 className="text-5xl md:text-7xl font-bold mb-6 font-serif">
+            RISE WITH THE CREW
+          </h1>
+          <Link to="/productos">
+            <button className="bg-white text-black hover:bg-black hover:text-white px-8 py-3 font-bold text-lg shadow-lg border border-white hover:border-white transition-all duration-300">
+              SHOP NOW
+            </button>
+          </Link>
+        </div>
       </section>
 
-      {/* Quiénes Somos */}
-      <SectionWrapper bgColor="bg-white">
-        <motion.div
-          className="grid md:grid-cols-2 gap-12 items-center"
-          variants={stagger}
-          initial="initial"
-          whileInView="animate"
-          viewport={{ once: true }}
-        >
-          <motion.div variants={fadeInUp}>
-            <h2 className="text-4xl font-bold text-gray-900 mb-6 font-serif">
-              Nuestra Historia
-            </h2>
-            <p className="text-gray-600 mb-6 leading-relaxed">
-              Desde 2025, la familia Aureum ha cultivado olivos centenarios en
-              las soleadas colinas de Madrid, preservando técnicas artesanales
-              que se transmiten de generación en generación.
-            </p>
-            <p className="text-gray-600 mb-6 leading-relaxed">
-              Cada botella de Aureum representa no solo un producto excepcional,
-              sino una herencia de pasión, calidad y respeto por la tierra que
-              nos sustenta.
-            </p>
-            <div className="flex items-center space-x-4 mt-8">
-              <div className="flex-1 h-px bg-amber-200"></div>
-              <span className="text-amber-600 font-semibold">Desde 1950</span>
-              <div className="flex-1 h-px bg-amber-200"></div>
-            </div>
-          </motion.div>
-
-          <motion.div
-            className="relative h-96 rounded-2xl overflow-hidden shadow-2xl" 
-            variants={fadeInUp}
-            whileHover={{ scale: 1.02 }}
-            transition={{ duration: 0.3 }}
-          >
-            <div
-              className="absolute inset-0 bg-cover bg-center z-0"
-              style={{
-                backgroundImage: "url('../../public/images/history.png')",
-                backgroundSize: "cover", 
-              }}
-            ></div>
-          </motion.div>
-        </motion.div>
-      </SectionWrapper>
-
-      {/* Calidad y Proceso */}
-      <SectionWrapper bgColor="bg-amber-50">
-        <motion.div
-          initial={{ opacity: 0, y: 60 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-        >
-          <h2 className="text-4xl font-bold text-center text-gray-900 mb-16 font-serif">
-            Excelencia en Cada Gota
-          </h2>
-
-          <div className="grid md:grid-cols-3 gap-8">
+      {/* Información de Envío y Clientes CON ICONOS - ESTÁTICAS */}
+      <section className="bg-white py-8">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
               {
-                icon: Leaf, // 🌿
-                title: "Cultivo Sostenible",
-                description:
-                  "Olivos centenarios cultivados de forma ecológica y sostenible.",
+                icon: RefreshCw,
+                title: "14 DAYS RETURN POLICY",
+                description: "Devoluciones gratuitas durante 14 días",
+                color: "text-black",
               },
               {
-                icon: Hourglass, // ⏳
-                title: "Recolección Manual",
-                description:
-                  "Selección manual de aceitunas en su punto óptimo de maduración.",
+                icon: Truck,
+                title: "FREE SHIPPING OVER 50€",
+                description: "Envío gratuito en pedidos superiores a 50€",
+                color: "text-black",
               },
               {
-                icon: FlaskConical, // ⚗️
-                title: "Extracción en Frío",
-                description:
-                  "Proceso de extracción a baja temperatura para preservar nutrientes.",
+                icon: Globe,
+                title: "WORLDWIDE SHIPPING",
+                description: "Envíos a todo el mundo",
+                color: "text-black",
               },
             ].map((item, index) => (
-              <motion.div
-                key={index}
-                className="text-center p-6 bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300"
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.2, duration: 0.6 }}
-                whileHover={{ y: -5 }}
-              >
-                {/* Renderizamos el componente del icono de Lucide */}
-                <div className="text-4xl mb-4 flex justify-center">
-                    <item.icon className="w-10 h-10 text-amber-600" /> {/* Ajustado el tamaño y color */}
+              <div key={index} className="text-center p-8">
+                <div className="flex items-center justify-center mx-auto mb-4">
+                  <item.icon className={`w-12 h-12 ${item.color}`} />
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-3">
+                <h3 className="text-xl font-bold text-gray-900 mb-2">
                   {item.title}
                 </h3>
                 <p className="text-gray-600">{item.description}</p>
-              </motion.div>
+              </div>
             ))}
           </div>
-        </motion.div>
-      </SectionWrapper>
+        </div>
+      </section>
 
-      {/* Catálogo de Productos */}
-      <SectionWrapper bgColor="bg-white">
-        <motion.div
-          initial={{ opacity: 0, y: 60 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-        >
-          <h2 className="text-4xl font-bold text-center text-gray-900 mb-4 font-serif">
-            Nuestra Colección
-          </h2>
-          <p className="text-gray-600 text-center mb-12 max-w-2xl mx-auto">
-            Descubre nuestra exclusiva gama de aceites de oliva virgen extra,
-            cada uno con características únicas que reflejan nuestro compromiso
-            con la excelencia.
-          </p>
-
-          <motion.div
-            className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
-            variants={stagger}
-            initial="initial"
-            whileInView="animate"
-            viewport={{ once: true }}
+      {/* Categorías con Descuentos - CON MÁRGENES */}
+      <div className="bg-gray-100">
+        <div className="flex flex-col md:flex-row w-full">
+          {/* Categoría 1 - TOPS */}
+          <Link
+            to="/productos?categoria=tops"
+            className="relative overflow-hidden flex-1 h-[85vh] group md:mr-1"
           >
-            {products
-              .sort(() => Math.random() - 0.5)
-              .slice(0, 6)
-              .map((product) => (
-                <ProductCard
-                  key={product.id}
-                  product={product}
-                  onAddToCart={addToCart}
-                />
-              ))}
-          </motion.div>
+            <div
+              className="absolute inset-0 bg-cover bg-center"
+              style={{
+                backgroundImage: "url('/images/tops1.png')",
+              }}
+            ></div>
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent">
+              {/* Texto principal */}
+              <div className="absolute bottom-5 left-8">
+                <h3 className="text-3xl md:text-4xl font-bold text-white mb-2">
+                  TOPS
+                </h3>
+                <p className="text-4xl md:text-3xl font-bold text-white">
+                  UP TO 75% OFF
+                </p>
+              </div>
 
-          {/* Botón "Ver Todos" con icono */}
-          <motion.div
-            className="text-center mt-16"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.4, duration: 0.6 }}
+              {/* Botón en esquina inferior derecha con flecha */}
+              <div className="absolute bottom-4 right-4">
+                <button className="bg-white text-black px-8 py-3 font-bold text-lg shadow-lg flex items-center space-x-2">
+                  <span>OFFERS</span>
+                  <ArrowRight className="w-5 h-5" />
+                </button>
+              </div>
+
+              {/* Badge descuento */}
+              <div className="absolute top-6 right-6 bg-red-600 text-white px-4 py-2 font-bold text-xl">
+                -75%
+              </div>
+            </div>
+          </Link>
+
+          {/* Categoría 2 - BOTTOMS */}
+          <Link
+            to="/productos?categoria=bottoms"
+            className="relative overflow-hidden flex-1 h-[85vh] group mx-1"
           >
-            <Link to="/productos" onClick={() => window.scrollTo(0, 0)}>
-              <motion.button
-                className="group bg-amber-600 hover:bg-white text-white hover:text-amber-600 px-14 py-4 rounded-[12px] font-semibold text-lg transition-all duration-300 transform hover:scale-105 shadow-lg border-2 border-amber-600 hover:border-amber-700 flex items-center space-x-3 mx-auto"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <span>Ver Colección Completa</span>
-                <motion.span
-                  className="group-hover:translate-x-1 transition-transform duration-300"
-                  animate={{ x: [0, 5, 0] }}
-                  transition={{ duration: 2, repeat: Infinity }}
+            <div
+              className="absolute inset-0 bg-cover bg-center"
+              style={{
+                backgroundImage: "url('/images/bottons.png')",
+              }}
+            ></div>
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent">
+              {/* Texto principal */}
+              <div className="absolute bottom-5 left-8">
+                <h3 className="text-3xl md:text-4xl font-bold text-white mb-2">
+                  BOTTOMS
+                </h3>
+                <p className="text-4xl md:text-3xl font-bold text-white">
+                  UP TO 70% OFF
+                </p>
+              </div>
+
+              {/* Botón en esquina inferior derecha con flecha */}
+              <div className="absolute bottom-4 right-4">
+                <button className="bg-white text-black px-8 py-3 font-bold text-lg shadow-lg flex items-center space-x-2">
+                  <span>OFFERS</span>
+                  <ArrowRight className="w-5 h-5" />
+                </button>
+              </div>
+
+              {/* Badge descuento */}
+              <div className="absolute top-6 right-6 bg-red-600 text-white px-4 py-2 font-bold text-xl">
+                -70%
+              </div>
+            </div>
+          </Link>
+
+          {/* Categoría 3 - ACCESSORIES */}
+          <Link
+            to="/productos?categoria=accesorios"
+            className="relative overflow-hidden flex-1 h-[85vh] group md:ml-1"
+          >
+            <div
+              className="absolute inset-0 bg-cover bg-center"
+              style={{
+                backgroundImage: "url('/images/accessories.png')",
+              }}
+            ></div>
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent">
+              {/* Texto principal */}
+              <div className="absolute bottom-5 left-8">
+                <h3 className="text-3xl md:text-4xl font-bold text-white mb-2">
+                  ACCESSORIES
+                </h3>
+                <p className="text-4xl md:text-3xl font-bold text-white">
+                  UP TO 50% OFF
+                </p>
+              </div>
+
+              {/* Botón en esquina inferior derecha con flecha */}
+              <div className="absolute bottom-4 right-4">
+                <button className="bg-white text-black px-8 py-3 font-bold text-lg shadow-lg flex items-center space-x-2">
+                  <span>OFFERS</span>
+                  <ArrowRight className="w-5 h-5" />
+                </button>
+              </div>
+
+              {/* Badge descuento */}
+              <div className="absolute top-6 right-6 bg-red-600 text-white px-4 py-2 font-bold text-xl">
+                -50%
+              </div>
+            </div>
+          </Link>
+        </div>
+      </div>
+
+      {/* Sección DISCOVER BY CATEGORY - CON CARRUSEL PEGADO A BORDES */}
+      <section className="bg-white py-16">
+        <div className="relative">
+          {/* Título principal - CON PADDING */}
+          <div className="container mx-auto px-4 mb-12">
+            <div className="text-center">
+              <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-8">
+                DISCOVER BY CATEGORY
+              </h2>
+
+              {/* Categorías centradas */}
+              <div className="flex justify-center">
+                <div className="flex flex-wrap justify-center gap-8">
+                  {[
+                    "NEW ARRIVALS",
+                    "FOOTWEAR",
+                    "DENIMS",
+                    "JERSEYS",
+                    "KNITWEAR",
+                    "TRACKSUITS",
+                    "HOODIES",
+                    "T-SHIRTS",
+                  ].map((category, index) => (
+                    <Link
+                      key={index}
+                      to={`/productos?categoria=${category
+                        .toLowerCase()
+                        .replace(/\s+/g, "-")}`}
+                      className="group"
+                    >
+                      <div className="text-center">
+                        <div className="text-lg md:text-lg font-bold text-gray-800 group-hover:text-blue-700 transition-colors whitespace-nowrap">
+                          {category}
+                        </div>
+                        <div className="mt-2 h-1 w-full bg-transparent group-hover:bg-blue-700 transition-colors"></div>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Carrusel de Productos PEGADO A BORDES */}
+          <div className="relative">
+            {/* Contenedor del carrusel SIN MÁRGENES LATERALES */}
+            <div
+              id="products-carousel"
+              className="flex overflow-x-auto scrollbar-hide space-x-6 pb-8 pl-4"
+              style={{
+                scrollbarWidth: "none",
+                msOverflowStyle: "none",
+                scrollPaddingLeft: "0",
+                scrollPaddingRight: "0",
+              }}
+            >
+              {products.map((product, index) => (
+                <Link
+                  key={index}
+                  to={`/producto/${product.name
+                    .toLowerCase()
+                    .replace(/\s+/g, "-")}`}
+                  className="group flex-shrink-0 w-64 first:ml-0 last:mr-0"
                 >
-                  →
-                </motion.span>
-              </motion.button>
-            </Link>
-            <p className="text-gray-500 mt-4 text-sm">
-              Explora nuestros {products.length} productos premium
-            </p>
-          </motion.div>
-        </motion.div>
-      </SectionWrapper>
+                  <div className="relative aspect-square bg-gray-100 mb-4 overflow-hidden rounded-lg">
+                    <div
+                      className="w-full h-full bg-cover bg-center group-hover:scale-105 transition-transform duration-500"
+                      style={{
+                        backgroundImage: `url('${product.image}')`,
+                      }}
+                    ></div>
+                  </div>
+                  <h4 className="text-sm font-bold text-gray-900 mb-2 line-clamp-2">
+                    {product.name}
+                  </h4>
+                  <div className="flex justify-between items-center">
+                    <span className="text-xl font-bold text-gray-900">
+                      {product.price}
+                    </span>
+                  </div>
+                  {/* Botón rápido */}
+                  <button className="mt-4 w-full bg-black text-white py-2 font-semibold hover:bg-gray-800 transition-colors opacity-0 group-hover:opacity-100 transition-opacity">
+                    AÑADIR AL CARRITO
+                  </button>
+                </Link>
+              ))}
+            </div>
+
+            {/* Botón izquierdo - POSICIONADO EN EL BORDE */}
+            <button
+              onClick={scrollLeft}
+              className="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 bg-white/80 hover:bg-white border border-gray-300 rounded-full w-10 h-10 flex items-center justify-center shadow-lg ml-2"
+            >
+              <ChevronLeft className="w-6 h-6 text-gray-800" />
+            </button>
+
+            {/* Botón derecho - POSICIONADO EN EL BORDE */}
+            <button
+              onClick={scrollRight}
+              className="absolute right-0 top-1/2 transform -translate-y-1/2 z-10 bg-white/80 hover:bg-white border border-gray-300 rounded-full w-10 h-10 flex items-center justify-center shadow-lg mr-2"
+            >
+              <ChevronRight className="w-6 h-6 text-gray-800" />
+            </button>
+          </div>
+
+          {/* Botón VER TODOS - CON MÁRGENES NORMALES */}
+          <div className="container mx-auto px-4">
+            <div className="text-center mt-12">
+              <Link to="/productos">
+                <button className="bg-black text-white px-10 py-3 font-bold text-lg shadow-lg hover:bg-gray-800 transition-colors flex items-center space-x-2 mx-auto">
+                  <span>VER TODOS LOS PRODUCTOS</span>
+                  <ArrowRight className="w-5 h-5" />
+                </button>
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Nueva sección de 2 columnas - NEW ARRIVALS y OUTERWEAR */}
+      <div className="bg-gray-100">
+        <div className="flex flex-col md:flex-row w-full">
+          {/* Columna 1 - NEW ARRIVALS */}
+          <Link
+            to="/productos?categoria=new-arrivals"
+            className="relative overflow-hidden flex-1 h-[95vh] group md:mr-1"
+          >
+            <div
+              className="absolute inset-0 bg-cover bg-center"
+              style={{
+                backgroundImage: "url('/images/newarrivals.png')",
+              }}
+            ></div>
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent flex items-center justify-center">
+              {/* Texto principal CENTRADO */}
+              <div className="text-center">
+                <h3 className="text-4xl md:text-5xl font-bold text-white mb-1">
+                  NEW ARRIVALS
+                </h3>
+                <p className="text-4xl md:text-3xl font-bold text-white">
+                  SHOP NOW
+                </p>
+              </div>
+            </div>
+          </Link>
+
+          {/* Columna 2 - NEW DENIMS*/}
+          <Link
+            to="/productos?categoria=outerwear"
+            className="relative overflow-hidden flex-1 h-[95vh] group md:ml-1"
+          >
+            <div
+              className="absolute inset-0 bg-cover bg-center"
+              style={{
+                backgroundImage: "url('/images/newdenims.png')",
+              }}
+            ></div>
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent flex items-center justify-center">
+              {/* Texto principal CENTRADO */}
+              <div className="text-center">
+                <h3 className="text-4xl md:text-5xl font-bold text-white mb-1">
+                  NEW DENIMS
+                </h3>
+                <p className="text-4xl md:text-3xl font-bold text-white">
+                  SHOP NOW
+                </p>
+              </div>
+            </div>
+          </Link>
+        </div>
+      </div>
+
+      {/* Sección BEST SELLERS - Título a la izquierda */}
+      <section className="bg-white py-16">
+        <div className="relative">
+          {/* Encabezado con título a la izquierda */}
+          <div className="container mx-auto px-4 mb-8">
+            <div className="flex flex-col md:flex-row md:items-center justify-between">
+              {/* Título a la izquierda */}
+              <div className="mb-6 md:mb-0 md:w-1/3">
+                <h2 className="text-4xl md:text-4xl font-bold text-gray-900">
+                  BEST SELLERS
+                </h2>
+              </div>
+
+              {/* Botón Ver Todos a la derecha (opcional) */}
+              <div className="md:w-1/3 flex justify-end">
+                <Link to="/productos?orden=mas-vendidos">
+                  <button className="text-black font-bold hover:text-gray-700 transition-colors flex items-center space-x-2">
+                    <span>VER TODOS LOS BEST SELLERS</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </button>
+                </Link>
+              </div>
+            </div>
+          </div>
+
+          {/* Carrusel de BEST SELLERS PEGADO A BORDES */}
+          <div className="relative">
+            {/* Contenedor del carrusel SIN MÁRGENES LATERALES */}
+            <div
+              id="best-sellers-carousel"
+              className="flex overflow-x-auto scrollbar-hide space-x-6 pb-8 pl-4"
+              style={{
+                scrollbarWidth: "none",
+                msOverflowStyle: "none",
+                scrollPaddingLeft: "0",
+                scrollPaddingRight: "0",
+              }}
+            >
+              {products.map((product, index) => (
+                <Link
+                  key={index}
+                  to={`/producto/${product.name
+                    .toLowerCase()
+                    .replace(/\s+/g, "-")}`}
+                  className="group flex-shrink-0 w-64 first:ml-0 last:mr-0"
+                >
+                  <div className="relative aspect-square bg-gray-100 mb-4 overflow-hidden rounded-lg">
+                    <div
+                      className="w-full h-full bg-cover bg-center group-hover:scale-105 transition-transform duration-500"
+                      style={{
+                        backgroundImage: `url('${product.image}')`,
+                      }}
+                    ></div>
+                    {/* Badge BEST SELLER */}
+                    <div className="absolute top-3 right-3 bg-black text-white px-3 py-1 rounded-full font-bold text-sm">
+                      TOP {index + 1}
+                    </div>
+                  </div>
+                  <h4 className="text-sm font-bold text-gray-900 mb-2 line-clamp-2">
+                    {product.name}
+                  </h4>
+                  <div className="flex justify-between items-center">
+                    <span className="text-xl font-bold text-gray-900">
+                      {product.price}
+                    </span>
+                  </div>
+                  {/* Botón rápido */}
+                  <button className="mt-4 w-full bg-black text-white py-2 font-semibold hover:bg-gray-800 transition-colors opacity-0 group-hover:opacity-100 transition-opacity">
+                    AÑADIR AL CARRITO
+                  </button>
+                </Link>
+              ))}
+            </div>
+
+            {/* Botón izquierdo - POSICIONADO EN EL BORDE */}
+            <button
+              onClick={() => {
+                const container = document.getElementById(
+                  "best-sellers-carousel"
+                );
+                if (container) {
+                  container.scrollBy({ left: -400, behavior: "smooth" });
+                }
+              }}
+              className="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 bg-white/80 hover:bg-white border border-gray-300 rounded-full w-10 h-10 flex items-center justify-center shadow-lg ml-2"
+            >
+              <ChevronLeft className="w-6 h-6 text-gray-800" />
+            </button>
+
+            {/* Botón derecho - POSICIONADO EN EL BORDE */}
+            <button
+              onClick={() => {
+                const container = document.getElementById(
+                  "best-sellers-carousel"
+                );
+                if (container) {
+                  container.scrollBy({ left: 400, behavior: "smooth" });
+                }
+              }}
+              className="absolute right-0 top-1/2 transform -translate-y-1/2 z-10 bg-white/80 hover:bg-white border border-gray-300 rounded-full w-10 h-10 flex items-center justify-center shadow-lg mr-2"
+            >
+              <ChevronRight className="w-6 h-6 text-gray-800" />
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* Nueva sección de 2 columnas - NEW ARRIVALS y OUTERWEAR */}
+      <div className="bg-gray-100">
+        <div className="flex flex-col md:flex-row w-full">
+          {/* Columna 1 - NEW ARRIVALS */}
+          <Link
+            to="/productos?categoria=new-arrivals"
+            className="relative overflow-hidden flex-1 h-[95vh] group md:mr-1"
+          >
+            <div
+              className="absolute inset-0 bg-cover bg-center"
+              style={{
+                backgroundImage: "url('/images/outerwear.png')",
+              }}
+            ></div>
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent flex items-center justify-center">
+              {/* Texto principal CENTRADO */}
+              <div className="text-center">
+                <h3 className="text-4xl md:text-5xl font-bold text-white mb-1">
+                  OUTERWEAR
+                </h3>
+                <p className="text-4xl md:text-3xl font-bold text-white">
+                  SHOP NOW
+                </p>
+              </div>
+            </div>
+          </Link>
+
+          {/* Columna 2 - NEW DENIMS*/}
+          <Link
+            to="/productos?categoria=outerwear"
+            className="relative overflow-hidden flex-1 h-[95vh] group md:ml-1"
+          >
+            <div
+              className="absolute inset-0 bg-cover bg-center"
+              style={{
+                backgroundImage: "url('/images/footwear.png')",
+              }}
+            ></div>
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent flex items-center justify-center">
+              {/* Texto principal CENTRADO */}
+              <div className="text-center">
+                <h3 className="text-4xl md:text-5xl font-bold text-white mb-1">
+                  FOOTWEAR
+                </h3>
+                <p className="text-4xl md:text-3xl font-bold text-white">
+                  SHOP NOW
+                </p>
+              </div>
+            </div>
+          </Link>
+        </div>
+      </div>
+
+      {/* Sección BEST SELLERS - Título a la izquierda */}
+      <section className="bg-white py-16">
+        <div className="relative">
+          {/* Encabezado con título a la izquierda */}
+          <div className="container mx-auto px-4 mb-8">
+            <div className="flex flex-col md:flex-row md:items-center justify-between">
+              {/* Título a la izquierda */}
+              <div className="mb-6 md:mb-0 md:w-1/3">
+                <h2 className="text-4xl md:text-4xl font-bold text-gray-900">
+                  WINTER ESSENTIALS
+                </h2>
+              </div>
+
+              {/* Botón Ver Todos a la derecha (opcional) */}
+              <div className="md:w-1/3 flex justify-end">
+                <Link to="/productos?orden=mas-vendidos">
+                  <button className="text-black font-bold hover:text-gray-700 transition-colors flex items-center space-x-2">
+                    <span>VER TODOS LOS BEST SELLERS</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </button>
+                </Link>
+              </div>
+            </div>
+          </div>
+
+          {/* Carrusel de BEST SELLERS PEGADO A BORDES */}
+          <div className="relative">
+            {/* Contenedor del carrusel SIN MÁRGENES LATERALES */}
+            <div
+              id="best-sellers-carousel"
+              className="flex overflow-x-auto scrollbar-hide space-x-6 pb-8 pl-4"
+              style={{
+                scrollbarWidth: "none",
+                msOverflowStyle: "none",
+                scrollPaddingLeft: "0",
+                scrollPaddingRight: "0",
+              }}
+            >
+              {products.map((product, index) => (
+                <Link
+                  key={index}
+                  to={`/producto/${product.name
+                    .toLowerCase()
+                    .replace(/\s+/g, "-")}`}
+                  className="group flex-shrink-0 w-64 first:ml-0 last:mr-0"
+                >
+                  <div className="relative aspect-square bg-gray-100 mb-4 overflow-hidden rounded-lg">
+                    <div
+                      className="w-full h-full bg-cover bg-center group-hover:scale-105 transition-transform duration-500"
+                      style={{
+                        backgroundImage: `url('${product.image}')`,
+                      }}
+                    ></div>
+                    {/* Badge BEST SELLER */}
+                    <div className="absolute top-3 right-3 bg-black text-white px-2 py-1 rounded-full font-bold text-xs">
+                      TOP {index + 1}
+                    </div>
+                  </div>
+                  <h4 className="text-sm font-bold text-gray-900 mb-2 line-clamp-2">
+                    {product.name}
+                  </h4>
+                  <div className="flex justify-between items-center">
+                    <span className="text-xl font-bold text-gray-900">
+                      {product.price}
+                    </span>
+                  </div>
+                  {/* Botón rápido */}
+                  <button className="mt-4 w-full bg-black text-white py-2 font-semibold hover:bg-gray-800 transition-colors opacity-0 group-hover:opacity-100 transition-opacity">
+                    AÑADIR AL CARRITO
+                  </button>
+                </Link>
+              ))}
+            </div>
+
+            {/* Botón izquierdo - POSICIONADO EN EL BORDE */}
+            <button
+              onClick={() => {
+                const container = document.getElementById(
+                  "best-sellers-carousel"
+                );
+                if (container) {
+                  container.scrollBy({ left: -400, behavior: "smooth" });
+                }
+              }}
+              className="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 bg-white/80 hover:bg-white border border-gray-300 rounded-full w-10 h-10 flex items-center justify-center shadow-lg ml-2"
+            >
+              <ChevronLeft className="w-6 h-6 text-gray-800" />
+            </button>
+
+            {/* Botón derecho - POSICIONADO EN EL BORDE */}
+            <button
+              onClick={() => {
+                const container = document.getElementById(
+                  "best-sellers-carousel"
+                );
+                if (container) {
+                  container.scrollBy({ left: 400, behavior: "smooth" });
+                }
+              }}
+              className="absolute right-0 top-1/2 transform -translate-y-1/2 z-10 bg-white/80 hover:bg-white border border-gray-300 rounded-full w-10 h-10 flex items-center justify-center shadow-lg mr-2"
+            >
+              <ChevronRight className="w-6 h-6 text-gray-800" />
+            </button>
+          </div>
+        </div>
+      </section>
     </div>
   );
 };
