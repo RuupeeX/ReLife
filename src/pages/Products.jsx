@@ -1,257 +1,365 @@
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
-import { products } from '../data/products';
-import { useCart } from '../context/CartContext';
-import { Truck, Package, Gem, Star, Frown } from 'lucide-react'; 
+// Products.jsx (CON SINCRONIZACIÓN DE ESTADO Y URL)
+import React, { useMemo, useState, useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
+import { products as allProducts } from "../data/products"; 
+import { ChevronDown } from "lucide-react";
+
+// Función para obtener parámetros de búsqueda de la URL
+const useQuery = () => {
+  return new URLSearchParams(useLocation().search);
+};
+
+// --- COMPONENTES DE DROPDOWN (Mantenidos sin cambios) ---
+// ... (FilterDropdown y SortDropdown se mantienen como están)
+const FilterDropdown = ({ title, options, filterValue, setFilterValue }) => {
+    const [isOpen, setIsOpen] = useState(false);
+
+    const handleSelect = (e, option) => {
+        e.stopPropagation(); 
+        setFilterValue(option);
+        setIsOpen(false);
+    };
+
+    useEffect(() => {
+        const handleOutsideClick = (event) => {
+            if (isOpen && event.target.closest('.filter-dropdown') === null) {
+                setIsOpen(false);
+            }
+        };
+
+        if (isOpen) {
+            document.addEventListener('mousedown', handleOutsideClick);
+        } else {
+            document.removeEventListener('mousedown', handleOutsideClick);
+        }
+
+        return () => {
+            document.removeEventListener('mousedown', handleOutsideClick);
+        };
+    }, [isOpen]);
+
+    return (
+        <div className="relative filter-dropdown">
+            <button 
+                onClick={(e) => { e.stopPropagation(); setIsOpen(!isOpen); }}
+                className="flex items-center space-x-1 text-xs text-gray-700 font-medium cursor-pointer uppercase py-2 px-4 bg-gray-200 border border-gray-200 hover:bg-gray-300 transition-all duration-200"
+            >
+                <span>{title}</span>
+                <ChevronDown className={`w-3 h-3 text-black transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+            </button>
+            
+            {isOpen && (
+                <div className="absolute top-full left-0 mt-1 w-40 bg-white shadow-xl border border-gray-200 z-10">
+                    <button 
+                        onClick={(e) => handleSelect(e, "")} 
+                        className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-100 ${filterValue === "" ? 'font-bold bg-gray-100' : ''}`}
+                    >
+                        ALL {title}S
+                    </button>
+                    {options.map((option, index) => (
+                        <button
+                            key={index}
+                            onClick={(e) => handleSelect(e, option)}
+                            className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-100 ${filterValue === option ? 'font-bold bg-gray-100' : ''}`}
+                        >
+                            {option}
+                        </button>
+                    ))}
+                </div>
+            )}
+        </div>
+    );
+};
+
+const SortDropdown = ({ sortBy, setSortBy }) => {
+    const [isOpen, setIsOpen] = useState(false);
+
+    const handleSelect = (e, option) => {
+        e.stopPropagation();
+        setSortBy(option);
+        setIsOpen(false);
+    };
+    
+    useEffect(() => {
+        const handleOutsideClick = (event) => {
+            if (isOpen && event.target.closest('.sort-dropdown') === null) {
+                setIsOpen(false);
+            }
+        };
+
+        if (isOpen) {
+            document.addEventListener('mousedown', handleOutsideClick);
+        } else {
+            document.removeEventListener('mousedown', handleOutsideClick);
+        }
+
+        return () => {
+            document.removeEventListener('mousedown', handleOutsideClick);
+        };
+    }, [isOpen]);
+
+    return (
+        <div className="relative sort-dropdown">
+            <button 
+                onClick={(e) => { e.stopPropagation(); setIsOpen(!isOpen); }}
+                className="flex items-center space-x-1 text-xs text-gray-700 font-medium cursor-pointer uppercase py-2 px-4 bg-gray-200 border border-gray-200 hover:bg-gray-300 transition-all duration-200"
+            >
+                <span>SORT BY:</span>
+                <ChevronDown className={`w-3 h-3 text-black transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+            </button>
+            
+            {isOpen && (
+                <div className="absolute top-full right-0 mt-1 w-48 bg-white shadow-xl border border-gray-200 z-10">
+                    {[
+                        { label: "Default", value: "default" },
+                        { label: "Price: Low to High", value: "price-low" },
+                        { label: "Price: High to Low", value: "price-high" },
+                        { label: "Name: A to Z", value: "name-asc" },
+                    ].map((option) => (
+                        <button 
+                            key={option.value} 
+                            onClick={(e) => handleSelect(e, option.value)} 
+                            className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-100 ${sortBy === option.value ? 'font-bold bg-gray-100' : ''}`}
+                        >
+                            {option.label}
+                        </button>
+                    ))}
+                </div>
+            )}
+        </div>
+    );
+};
+
+
+// --- COMPONENTE PRINCIPAL PRODUCTS ---
 
 const Products = () => {
-  const { addToCart } = useCart();
-  const [activeFilter, setActiveFilter] = useState('Todos');
+  const query = useQuery();
+  const initialCategoryFilter = query.get("category");
+  const searchQuery = query.get("search");
 
-  const fadeInUp = {
-    initial: { opacity: 0, y: 60 },
-    animate: { opacity: 1, y: 0 },
-    transition: { duration: 0.6 }
-  };
+  // --- ESTADOS ---
+  const [colorFilter, setColorFilter] = useState("");
+  const [sizeFilter, setSizeFilter] = useState("");
+  
+  // 1. Inicializamos el estado a null o cadena vacía
+  const [categoryFilter, setCategoryFilter] = useState(initialCategoryFilter || ""); 
+  
+  const [sortBy, setSortBy] = useState("default");
+  const [showOnlyAvailable, setShowOnlyAvailable] = useState(false);
+  const [modelView, setModelView] = useState(false); 
 
-  const stagger = {
-    animate: {
-      transition: {
-        staggerChildren: 0.1
-      }
-    }
-  };
+    // 2. EFECTO PARA SINCRONIZAR EL ESTADO INTERNO CON EL QUERY PARAMETER
+    useEffect(() => {
+        // Solo actualiza si el valor de la URL es diferente al estado actual
+        if (categoryFilter !== initialCategoryFilter) {
+            setCategoryFilter(initialCategoryFilter || "");
+            
+            // Opcional: Resetear otros filtros al cambiar de categoría principal
+            setColorFilter("");
+            setSizeFilter("");
+            setSortBy("default");
+        }
+    }, [initialCategoryFilter, categoryFilter]);
 
-  // Obtener categorías únicas
-  const categories = ['Todos', ...new Set(products.map(product => product.category))];
 
-  // Filtrar productos según la categoría activa
-  const filteredProducts = activeFilter === 'Todos' 
-    ? products 
-    : products.filter(product => product.category === activeFilter);
+  // --- FUNCIONES DE UTILIDAD y Lógica de Filtrado (Mantenidos) ---
+  const normalize = (text) => (text ? text.toLowerCase().replace(/\s+/g, "") : "");
 
-  // Contador de productos por categoría
-  const getProductCount = (category) => {
-    if (category === 'Todos') return products.length;
-    return products.filter(product => product.category === category).length;
-  };
+  // Determinar el título (coincide con "ALL" de la imagen)
+  const getTitle = () => {
+    if (categoryFilter) {
+      return categoryFilter.split('-')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+        .join(' ');
+    }
+    if (searchQuery) {
+      return `SEARCH RESULTS FOR: "${searchQuery.toUpperCase()}"`;
+    }
+    return "ALL"; 
+  };
 
-  return (
-    <div className="pt-20">
-      {/* Hero Section Productos */}
-      <section className="relative py-20 bg-gradient-to-br from-amber-50 to-amber-100">
-        <div className="container mx-auto px-4 text-center">
-          <motion.h1 
-            className="text-5xl md:text-6xl font-bold text-gray-900 mb-6 font-serif"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-          >
-            Nuestra Colección
-          </motion.h1>
-          <motion.p 
-            className="text-xl text-gray-600 max-w-2xl mx-auto"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2, duration: 0.8 }}
-          >
-            Descubre nuestra exclusiva gama de aceites de oliva virgen extra, 
-            elaborados con la máxima dedicación y calidad artesanal.
-          </motion.p>
-        </div>
-      </section>
+  // --- Lógica de Filtrado y Ordenación (Mantenida) ---
+  const filteredProducts = useMemo(() => {
+    let result = allProducts;
+    const normalizedCategoryFilter = normalize(categoryFilter);
+    const normalizedSearchQuery = normalize(searchQuery);
 
-      {/* Filtros Funcionales */}
-      <section className="py-8 bg-white border-b">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-wrap gap-4 justify-center">
-            {categories.map((filter) => (
-              <motion.button
-                key={filter}
-                onClick={() => setActiveFilter(filter)}
-                className={`px-6 py-3 rounded-full border transition-all duration-300 flex items-center space-x-2 ${
-                  activeFilter === filter
-                    ? 'bg-amber-600 border-amber-600 text-white shadow-lg'
-                    : 'border-amber-200 text-amber-700 hover:bg-amber-50 hover:border-amber-300'
-                }`}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <span>{filter}</span>
-                <span className={`text-xs px-2 py-1 rounded-full ${
-                  activeFilter === filter
-                    ? 'bg-amber-500 text-white'
-                    : 'bg-amber-100 text-amber-700'
-                }`}>
-                  {getProductCount(filter)}
-                </span>
-              </motion.button>
-            ))}
-          </div>
-          
-          {/* Contador de resultados */}
-          <motion.div 
-            className="text-center mt-4"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.3 }}
-          >
-          </motion.div>
-        </div>
-      </section>
+    if (categoryFilter) {
+      result = result.filter(product => normalize(product.category) === normalizedCategoryFilter || normalize(product.name).includes(normalizedCategoryFilter) || normalize(product.description).includes(normalizedCategoryFilter));
+    }
 
-      {/* Grid de Productos Filtrados */}
-      <section className="py-16 bg-white">
-        <div className="container mx-auto px-4">
-          {filteredProducts.length === 0 ? (
-            <motion.div
-              className="text-center py-16"
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-            >
-              {/* Reemplazo de 😔 por Frown */}
-              <div className="text-6xl mb-4 flex justify-center">
-                <Frown className="w-16 h-16 text-gray-400" />
-              </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-2">No hay productos en esta categoría</h3>
-              <p className="text-gray-600 mb-6">Prueba con otra categoría para descubrir nuestros productos</p>
-              <button
-                onClick={() => setActiveFilter('Todos')}
-                className="bg-amber-600 hover:bg-amber-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors duration-300"
-              >
-                Ver Todos los Productos
-              </button>
-            </motion.div>
-          ) : (
-            <motion.div 
-              className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8"
-              variants={stagger}
-              initial="initial"
-              animate="animate"
-              key={activeFilter} 
-            >
-              {filteredProducts.map((product) => (
-                <motion.div
-                  key={product.id}
-                  className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 group"
-                  variants={fadeInUp}
-                  whileHover={{ y: -8 }}
-                >
-                  <Link onClick={() => window.scrollTo(0, 0)} to={`/producto/${product.id}`} className="block">
-                    <div className="relative h-64 overflow-hidden">
-                      <div 
-                        className="w-full h-full bg-cover bg-center group-hover:scale-110 transition-transform duration-500"
-                        style={{ backgroundImage: `url(${product.image})` }}
-                      ></div>
-                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-300"></div>
-                      <div className="absolute top-4 right-4">
-                        <span className="bg-amber-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
-                          {product.size}
-                        </span>
-                      </div>
-                      <div className="absolute top-4 left-4">
-                        <span className="bg-white/90 text-amber-700 px-2 py-1 rounded text-xs font-medium">
-                          {product.category}
-                        </span>
-                      </div>
-                    </div>
-                  </Link>
-                  
-                  <div className="p-6">
-                    <Link onClick={() => window.scrollTo(0, 0)} to={`/producto/${product.id}`}>
-                      <h3 className="text-xl font-bold text-gray-900 mb-2 hover:text-amber-600 transition-colors duration-300">
-                        {product.name}
-                      </h3>
-                      <p className="text-gray-600 text-sm mb-4 line-clamp-2">
-                        {product.description}
-                      </p>
-                    </Link>
-                    
-                    <div className="flex items-center justify-between mb-4">
-                      <span className="text-2xl font-bold text-amber-600">€{product.price}</span>
-                      <div className="flex items-center space-x-1 text-amber-500">
-                        {/* Reemplazo de ★ por Star (usando un icono) */}
-                        <Star className="w-4 h-4 fill-amber-500" />
-                        <Star className="w-4 h-4 fill-amber-500" />
-                        <Star className="w-4 h-4 fill-amber-500" />
-                        <Star className="w-4 h-4 fill-amber-500" />
-                        <Star className="w-4 h-4 fill-amber-500" />
-                      </div>
-                    </div>
-                    
-                    <div className="flex space-x-2">
-                      <motion.button
-                        onClick={() => addToCart(product)}
-                        className="flex-1 bg-amber-600 hover:bg-amber-700 text-white py-3 rounded-lg font-semibold transition-colors duration-300"
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
-                      >
-                        Añadir
-                      </motion.button>
-                      <Link onClick={() => window.scrollTo(0, 0)}
-                        to={`/producto/${product.id}`}
-                        className="flex items-center justify-center w-12 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors duration-300"
-                      >
-                        <span className="text-gray-600">→</span>
-                      </Link>
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
-            </motion.div>
-          )}
-        </div>
-      </section>
+    if (searchQuery) {
+      result = result.filter(product => normalize(product.name).includes(normalizedSearchQuery) || normalize(product.description).includes(normalizedSearchQuery) || normalize(product.category).includes(normalizedSearchQuery));
+    }
 
-      {/* Características */}
-      <section className="py-16 bg-amber-50">
-        <div className="container mx-auto px-4">
-          <motion.div 
-            className="grid md:grid-cols-3 gap-8 text-center"
-            initial={{ opacity: 0, y: 60 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-          >
-            {[
-              {
-                icon: Truck, 
-                title: 'Envío Gratis',
-                description: 'En pedidos superiores a €50'
-              },
-              {
-                icon: Package, 
-                title: 'Embalaje Premium',
-                description: 'Presentación exclusiva para regalo'
-              },
-              {
-                icon: Gem, 
-                title: 'Calidad Garantizada',
-                description: 'Aceite de oliva virgen extra certificado'
-              }
-            ].map((item, index) => (
-              <motion.div
-                key={index}
-                className="p-6"
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.2 }}
-              >
-                {/* Renderizamos el componente del icono */}
-                <div className="text-4xl mb-4 flex justify-center">
-                    <item.icon className="w-10 h-10 text-amber-600" />
-                </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-2">{item.title}</h3>
-                <p className="text-gray-600">{item.description}</p>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
-      </section>
-    </div>
-  );
+    if (colorFilter) {
+      result = result.filter(product => normalize(product.name).includes(normalize(colorFilter)));
+    }
+
+    if (sizeFilter) {
+      result = result.filter(product => product.size && normalize(product.size) === normalize(sizeFilter));
+    }
+    
+    if (showOnlyAvailable) {
+        result = result.filter(product => product.stock > 0);
+    }
+
+    switch (sortBy) {
+      case "price-low": return [...result].sort((a, b) => a.price - b.price);
+      case "price-high": return [...result].sort((a, b) => b.price - a.price);
+      case "name-asc": return [...result].sort((a, b) => a.name.localeCompare(b.name));
+      case "name-desc": return [...result].sort((a, b) => b.name.localeCompare(a.name));
+      default: return result;
+    }
+  }, [categoryFilter, searchQuery, colorFilter, sizeFilter, sortBy, showOnlyAvailable]);
+
+  const groupedProducts = useMemo(() => filteredProducts, [filteredProducts]);
+
+  // --- OPCIONES DE FILTRO (Simulación mantenida) ---
+  const allColors = useMemo(() => ["BLACK", "WHITE", "GREY", "OLIVE", "BLUE"], []);
+  const allSizes = useMemo(() => {
+    const sizes = new Set();
+    allProducts.forEach(product => {
+      if (['S', 'M', 'L', 'XL', 'XXL', '32', '34'].includes(product.size)) {
+        sizes.add(product.size);
+      }
+    });
+    return Array.from(sizes).sort();
+  }, [allProducts]);
+  const allCategories = useMemo(() => {
+    const categories = new Set();
+    allProducts.forEach(product => {
+      if (product.category) categories.add(product.category);
+    });
+    return Array.from(categories).sort();
+  }, [allProducts]);
+
+  // --- RENDERIZADO PRINCIPAL (Mantenido) ---
+  return (
+    <div className="pt-20 min-h-screen bg-white">
+      
+        {/* Contenedor Principal Edge-to-Edge */}
+        <div className="w-full">
+          
+          {/* FILTROS SUPERIORES (Flotando sobre la cuadrícula) */}
+          <div className="relative w-full">
+            {/* Título Principal Centrado */}
+            <div className="text-center pt-12 pb-2">
+              <h1 className="text-2xl font-bold text-gray-900 uppercase tracking-tight">
+                  {getTitle()}
+              </h1>
+            </div>
+
+            {/* BARRA DE FILTROS Y CONTADOR (Fijos y Alineados) */}
+            <div className="flex justify-between items-start pt-4 px-4"> 
+              
+              {/* Columna Izquierda: Checkboxes */}
+              <div className="w-1/4 space-y-2">
+                <div className="flex items-center space-x-2 text-xs font-medium text-gray-700">
+                    {/* Checkbox: ONLY SHOW AVAILABLE PRODUCTS */}
+                    <input type="checkbox" id="available" checked={showOnlyAvailable} onChange={(e) => setShowOnlyAvailable(e.target.checked)} className="appearance-none w-4 h-4 border border-gray-400 checked:bg-black checked:border-black transition duration-150 relative top-0.5" />
+                    <label htmlFor="available" className="uppercase cursor-pointer mt-1">
+                        ONLY SHOW AVAILABLE PRODUCTS
+                    </label>
+                </div>
+                <div className="flex items-center space-x-2 text-xs font-medium text-gray-700">
+                    {/* Checkbox: MODEL VIEW */}
+                    <input type="checkbox" id="model" checked={modelView} onChange={(e) => setModelView(e.target.checked)} className="appearance-none w-4 h-4 border border-gray-400 checked:bg-black checked:border-black transition duration-150 relative top-0.5" />
+                    <label htmlFor="model" className="uppercase cursor-pointer mt-1">
+                        MODEL VIEW
+                    </label>
+                </div>
+              </div>
+              
+              {/* Columna Central: Dropdowns de Filtro */}
+              <div className="flex items-center space-x-1.5 pt-0.5">
+                <FilterDropdown title="COLOR" options={allColors} filterValue={colorFilter} setFilterValue={setColorFilter} />
+                <FilterDropdown title="SIZE" options={allSizes} filterValue={sizeFilter} setFilterValue={setSizeFilter} />
+                <FilterDropdown title="CATEGORY" options={allCategories} filterValue={categoryFilter} setFilterValue={(value) => { setCategoryFilter(value); if (value) { window.history.pushState(null, '', `/shop?category=${normalize(value)}`); } else { window.history.pushState(null, '', '/shop'); } }} />
+                
+                {/* SORT BY */}
+                <SortDropdown sortBy={sortBy} setSortBy={setSortBy} />
+              </div>
+              
+              {/* Columna Derecha: Contador de Productos */}
+              <p className="text-xs text-gray-800 font-normal whitespace-nowrap pt-2 w-1/4 text-right">
+                {groupedProducts.length} PRODUCTS
+              </p>
+            </div>
+
+            {/* LÍNEA DIVISORIA INFERIOR */}
+            <div className="border-t border-gray-200 mt-4 mx-4"></div>
+          </div>
+
+          {/* Cuadrícula de Productos */}
+          {groupedProducts.length === 0 ? (
+            <div className="text-center py-24 bg-gray-100 rounded-lg mx-4">
+              <p className="text-xl text-gray-500 mb-4">
+                No products found for the selected filters.
+              </p>
+              <button 
+                onClick={() => { setColorFilter(""); setSizeFilter(""); setCategoryFilter(initialCategoryFilter || ""); setSortBy("default"); }}
+                className="inline-block text-black font-bold hover:text-gray-700 transition-colors"
+              >
+                CLEAR ALL FILTERS
+              </button>
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-12 pb-12 px-4 mt-10"> 
+              {groupedProducts.map((product) => (
+                <Link
+                  key={product.id}
+                  to={`/producto/${product.id}`}
+                  className="group relative"
+                >
+                  {/* Contenedor de la imagen */}
+                  <div className="relative aspect-square bg-gray-100 mb-2 overflow-hidden">
+                    <img
+                      src={modelView ? product.images[1] || product.images[0] : product.images[0]}
+                      alt={product.name}
+                      className="w-full h-full object-cover"
+                    />
+                    
+                    {/* Badge de descuento (ejemplo: ID 1 tiene -50%) */}
+                    {product.id === 1 && ( 
+                      <div className="absolute bottom-0 left-0 bg-red-600 text-white text-xs font-bold px-2 py-1">
+                        -50%
+                      </div>
+                    )}
+                    {/* Badge KHAKI (ejemplo: ID 4 tiene KHAKI) */}
+                    {product.id === 4 && ( 
+                        <div className="absolute top-4 right-4 bg-black text-white text-xs font-bold px-2 py-1">
+                          KHAKI
+                        </div>
+                    )}
+                    
+                    {/* Icono de bolsa de la compra */}
+                    <button 
+                      onClick={(e) => { e.preventDefault(); /* Lógica de carrito */ }}
+                      className="absolute bottom-4 right-4 bg-white/80 p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity hover:bg-white"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-shopping-bag w-5 h-5 text-gray-900"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+                    </button>
+                  </div>
+                  
+                  {/* Nombre y Precio */}
+                  <h3 className="text-sm font-bold text-gray-900 line-clamp-2 uppercase">
+                    {product.name.split(' ').slice(0, 3).join(' ')} 
+                  </h3>
+                  <p className="text-sm font-medium text-black">
+                    {product.price.toFixed(2)}€
+                  </p>
+                  <p className="text-xs text-gray-500 mt-1">
+                    +1 colorways 
+                  </p>
+                </Link>
+              ))}
+            </div>
+          )}
+        </div>
+    </div>
+  );
 };
 
 export default Products;

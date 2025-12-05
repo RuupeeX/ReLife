@@ -1,5 +1,4 @@
-// src/App.js - Actualización
-
+// App.js - Versión alternativa
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { CartProvider } from './context/CartContext';
@@ -7,9 +6,8 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import CartPanel from './components/CartPanel';
 import Home from './pages/Home';
-import Products from './pages/Products'; // <-- Agregar esta línea
+import Products from './pages/Products'; 
 import ProductDetail from './pages/ProductDetail';
-import QualityProduction from './pages/Quality';
 import MembersClub from './pages/MembersClub';
 import Register from './pages/Register';
 import Login from './pages/Login';
@@ -27,7 +25,6 @@ function App() {
               <Route path="/shop" element={<Products />} /> 
               <Route path="/producto/:id" element={<ProductDetail />} />
               <Route path="/member-club" element={<MembersClub />} />
-              <Route path="/calidad" element={<QualityProduction />} />
             </Routes>
             <Footer />
             <CartPanel />

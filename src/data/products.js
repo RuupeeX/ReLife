@@ -1,28 +1,28 @@
 export const products = [
   {
     id: 1,
-    name: "Urban Classic T-Shirt",
+    name: "Champion Ring T-Shirt",
     description: "Camiseta básica de algodón orgánico con corte moderno y logo minimalista bordado en el pecho. Perfecta para looks casuales y cómodos.",
     price: 29.90,
     size: "M",
     stock: 45,
-    category: "TOPS",
+    category: "T-SHIRTS",
     images: [
-      "/images/tshirt-front.jpg",
+      "/images/ChampionRing-Holo-Black.png",
       "/images/tshirt-back.jpg",
       "/images/tshirt-detail.jpg"
     ]
   },
   {
     id: 2,
-    name: "Essential Cargo Pants",
+    name: "Universal Crew T-Shirt",
     description: "Pantalones cargo con múltiples bolsillos funcionales, tejido resistente y cómodo para el día a día. Diseño moderno con ajuste perfecto.",
     price: 89.90,
     size: "32",
     stock: 28,
-    category: "BOTTOMS",
+    category: "T-SHIRTS",
     images: [
-      "/images/cargo-front.jpg",
+      "/images/Universal-jersey-blue.png",
       "/images/cargo-side.jpg",
       "/images/cargo-detail.jpg"
     ]

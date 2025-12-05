@@ -27,7 +27,6 @@ const Login = () => {
     // Simulación de login
     setTimeout(() => {
       setIsLoading(false);
-      alert("¡Login exitoso! (Esta es una demostración)");
       navigate("/");
     }, 1500);
   };
