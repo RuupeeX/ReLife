@@ -1,214 +1,334 @@
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import { useParams, Link, useNavigate } from 'react-router-dom';
-import { 
-  ArrowLeft, 
-  ShoppingCart, 
-  Star, 
-  Truck, 
-  Shield, 
-  LeafyGreen,
-  Zap,
-  Award, 
-  CalendarDays 
-} from 'lucide-react'; 
-import { products } from '../data/products';
-import { useCart } from '../context/CartContext';
+import React, { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { useParams, Link, useNavigate } from "react-router-dom";
+import {
+  ArrowLeft,
+  ShoppingCart,
+  Star,
+  ChevronDown,
+  Plus,
+  Minus,
+  Check,
+  CreditCard,
+  Truck,
+  Info,
+} from "lucide-react";
+import { products } from "../data/products";
+import { useCart } from "../context/CartContext";
+
+// Componente para los Acordeones (Details, Fit, Shipping)
+const AccordionItem = ({ title, children, isOpen, onClick }) => {
+  return (
+    // CAMBIO: Añadido 'mb-2' para separación y mantenido el borde
+    <div className="border-b border-gray-200 mb-2 last:mb-0 last:border-b-0">
+      <button
+        className="w-full py-4 flex justify-between items-center text-left hover:bg-gray-50 transition-colors"
+        onClick={onClick}
+      >
+        <span className="font-bold text-xs uppercase tracking-wider text-gray-900">
+          {title}
+        </span>
+        {isOpen ? <Minus className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
+      </button>
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            className="overflow-hidden"
+          >
+            <div className="pb-4 text-sm text-gray-600 leading-relaxed">
+              {children}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+};
 
 const ProductDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { addToCart } = useCart();
-  const [selectedQuantity, setSelectedQuantity] = useState(1);
 
-  const product = products.find(p => p.id === parseInt(id));
+  // Estados
+  const [selectedSize, setSelectedSize] = useState(null);
+  const [openAccordion, setOpenAccordion] = useState(null); // 'details', 'fit', 'shipping'
+  const [selectedLookItems, setSelectedLookItems] = useState([]);
 
-  if (!product) {
-    return (
-      <div className="pt-20 min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">Producto no encontrado</h1>
-          <Link to="/productos" className="text-amber-600 hover:text-amber-700">
-            Volver a la tienda
-          </Link>
-        </div>
-      </div>
-    );
-  }
+  // Encontrar producto
+  const product = products.find((p) => p.id === parseInt(id));
 
-  const relatedProducts = products.filter(p => p.id !== product.id).slice(0, 4);
+  // Productos sugeridos para "Complete the Look" (Excluyendo el actual)
+  const completeTheLookProducts = products
+    .filter((p) => p.id !== product?.id)
+    .slice(0, 2);
+
+  if (!product) return <div>Cargando...</div>;
+
+  // Lógica del acordeón
+  const toggleAccordion = (section) => {
+    setOpenAccordion(openAccordion === section ? null : section);
+  };
+
+  // Lógica "Complete the look"
+  const toggleLookItem = (itemId) => {
+    if (selectedLookItems.includes(itemId)) {
+      setSelectedLookItems(selectedLookItems.filter((id) => id !== itemId));
+    } else {
+      setSelectedLookItems([...selectedLookItems, itemId]);
+    }
+  };
+
+  // Tallas disponibles (Mock)
+  const sizes = ["XS", "S", "M", "L", "XL", "XXL"];
 
   return (
-    <div className="pt-20">
-      {/* Navegación */}
-      <div className="border-b bg-white">
-        <div className="container mx-auto px-4 py-4">
-          <button
-            onClick={() => navigate(-1)}
-            className="flex items-center space-x-2 text-gray-600 hover:text-amber-600 transition-colors duration-300 mt-4"
-          >
-            <ArrowLeft className="w-5 h-5" />
-            <span>Volver</span>
-          </button>
-        </div>
-      </div>
+    <div className="pt-24 pb-12 bg-white min-h-screen font-sans">
+      <div className="container mx-auto px-4 max-w-7xl">
+        {/* Botón Volver */}
+        <button
+          onClick={() => navigate(-1)}
+          className="flex items-center space-x-2 text-gray-500 hover:text-black mb-8 text-sm uppercase tracking-wide font-medium transition-colors"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          <span>Back to Shop</span>
+        </button>
 
-      {/* Producto Principal */}
-      <section className="py-16 bg-white">
-        <div className="container mx-auto px-4">
-          <div className="grid lg:grid-cols-2 gap-12 items-start">
-            {/* Imagen del Producto */}
-            <motion.div
-              className="relative"
-              initial={{ opacity: 0, x: -60 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6 }}
-            >
-              <div 
-                className="w-full h-96 lg:h-[500px] rounded-2xl bg-cover bg-center shadow-2xl"
-                style={{ backgroundImage: `url(${product.image})` }}
-              ></div>
-              <div className="absolute top-4 right-4">
-                <span className="bg-amber-600 text-white px-4 py-2 rounded-full font-semibold">
-                  {product.size}
-                </span>
-              </div>
-            </motion.div>
+        <div className="flex flex-col lg:flex-row gap-20">
+          {/* COLUMNA IZQUIERDA: GALERÍA DE IMÁGENES */}
+          <div className="lg:w-[60%]">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+              {/* Si hay múltiples imágenes, las mostramos. Si no, repetimos la principal */}
+              {(product.images && product.images.length > 0
+                ? product.images
+                : [product.image, product.image, product.image, product.image]
+              )
+                .slice(0, 4)
+                .map((img, index) => (
+                  <div
+                    key={index}
+                    // AQUÍ ESTÁ EL CAMBIO: Añadimos lógica condicional para el índice 2 (la tercera imagen)
+                    className={`relative bg-gray-100 aspect-[3/4] overflow-hidden ${
+                      index === 2 ? "md:col-span-2" : ""
+                    }`}
+                  >
+                    <img
+                      src={img}
+                      alt={`${product.name} view ${index + 1}`}
+                      className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
+                    />
+                  </div>
+                ))}
+            </div>
+          </div>
 
-            {/* Información del Producto */}
-            <motion.div
-              className="space-y-6"
-              initial={{ opacity: 0, x: 60 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-            >
-              <div>
-                <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 font-serif mb-4">
+          {/* COLUMNA DERECHA: INFORMACIÓN Y COMPRA (Sticky) */}
+          <div className="lg:w-[40%]">
+            <div className="sticky top-24 space-y-8">
+              {/* Header del Producto */}
+              <div className="space-y-2 text-center lg:text-left">
+                <h1 className="text-2xl lg:text-2xl font-bold text-gray-900 uppercase tracking-tight">
                   {product.name}
                 </h1>
-                <div className="flex items-center space-x-4 mb-4">
-                  <div className="flex items-center space-x-1 text-amber-500">
-                    {'★'.repeat(5)}
-                    <span className="text-gray-400 ml-2">(48 reseñas)</span>
-                  </div>
-                </div>
-                <p className="text-3xl font-bold text-amber-600 mb-6">
-                  €{product.price}
+                <p className="text-xl font-medium text-gray-900">
+                  {product.price.toFixed(2)}€
                 </p>
+                <p className="text-xs text-gray-500">
+                  Tax included.{" "}
+                  <span className="underline cursor-pointer">Shipping</span>{" "}
+                  calculated at checkout.
+                </p>
+
+                {/* Estrellas */}
+                <div className="flex justify-center lg:justify-start items-center space-x-1 pt-2">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <Star
+                      key={star}
+                      className="w-4 h-4 fill-black text-black"
+                    />
+                  ))}
+                  <span className="text-xs text-gray-500 ml-2">
+                    (12 Reviews)
+                  </span>
+                </div>
               </div>
 
+              {/* Selector de Tallas */}
               <div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-3">Descripción</h3>
-                <p className="text-gray-600 leading-relaxed">
-                  {product.description} Nuestro proceso artesanal garantiza que cada gota 
-                  conserve todas sus propiedades organolépticas y nutricionales. 
-                  Ideal para ensaladas, marinados y para realzar el sabor de tus platos favoritos.
-                </p>
+                <div className="flex justify-between items-center mb-2">
+                  <span className="text-xs font-bold uppercase tracking-wider">
+                    Size: {selectedSize || "Select"}
+                  </span>
+                  <button className="text-xs text-gray-500 underline flex items-center gap-1">
+                    <Info className="w-3 h-3" /> Size Guide
+                  </button>
+                </div>
+                <div className="grid grid-cols-6 gap-2">
+                  {sizes.map((size) => (
+                    <button
+                      key={size}
+                      onClick={() => setSelectedSize(size)}
+                      className={`h-10 flex items-center justify-center text-xs font-medium border transition-all duration-200
+                        ${
+                          selectedSize === size
+                            ? "bg-black text-white border-black"
+                            : "bg-white text-gray-900 border-gray-200 hover:border-gray-900"
+                        }`}
+                    >
+                      {size}
+                    </button>
+                  ))}
+                </div>
               </div>
 
-              {/* Características */}
-              <div className="grid grid-cols-2 gap-4 py-4">
-                {[
-                  { icon: LeafyGreen, text: '100% Natural' },
-                  { icon: Zap, text: 'Extracción en frío' },
-                  { icon: Award, text: 'Premiado' },
-                  { icon: CalendarDays, text: 'Cosecha 2024' }
-                ].map((item, index) => (
-                  <div key={index} className="flex items-center space-x-2">
-                    {/* Renderizamos el componente del icono */}
-                    <item.icon className="w-5 h-5 text-amber-600" />
-                    <span className="text-gray-600">{item.text}</span>
+              {/* Botón Añadir al Carrito */}
+              <div className="space-y-3">
+                <button
+                  onClick={() => addToCart(product)}
+                  className="w-full bg-black text-white py-4 px-8 uppercase font-bold tracking-widest text-md hover:bg-gray-800 transition-all duration-300 flex items-center justify-center gap-2"
+                >
+                  <span>Add to Cart</span>
+                </button>
+
+                {/* Iconos de Pago (Simulados) */}
+                <div className="flex justify-center gap-2 opacity-60 grayscale">
+                  <div className="h-6 w-10 bg-gray-200 rounded flex items-center justify-center text-[10px] font-bold">
+                    VISA
                   </div>
-                ))}
-              </div>
-
-              {/* Selector de Cantidad y Añadir al Carrito */}
-              <div className="space-y-4">
-                <div className="flex items-center space-x-4">
-                  <span className="text-gray-700 font-semibold">Cantidad:</span>
-                  <div className="flex items-center space-x-2">
-                    <button
-                      onClick={() => setSelectedQuantity(Math.max(1, selectedQuantity - 1))}
-                      className="w-10 h-10 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-50 transition-colors"
-                    >
-                      -
-                    </button>
-                    <span className="w-12 text-center font-semibold">{selectedQuantity}</span>
-                    <button
-                      onClick={() => setSelectedQuantity(selectedQuantity + 1)}
-                      className="w-10 h-10 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-50 transition-colors"
-                    >
-                      +
-                    </button>
+                  <div className="h-6 w-10 bg-gray-200 rounded flex items-center justify-center text-[10px] font-bold">
+                    MC
+                  </div>
+                  <div className="h-6 w-10 bg-gray-200 rounded flex items-center justify-center text-[10px] font-bold">
+                    AMEX
+                  </div>
+                  <div className="h-6 w-10 bg-gray-200 rounded flex items-center justify-center text-[10px] font-bold">
+                    PAYPAL
+                  </div>
+                  <div className="h-6 w-10 bg-gray-200 rounded flex items-center justify-center text-[10px] font-bold">
+                    APPLE
                   </div>
                 </div>
+              </div>
 
-                <motion.button
-                  onClick={() => {
-                    for (let i = 0; i < selectedQuantity; i++) {
-                      addToCart(product);
-                    }
-                  }}
-                  className="w-full bg-amber-600 hover:bg-amber-700 text-white py-4 rounded-xl font-semibold flex items-center justify-center space-x-2 transition-colors duration-300"
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
+              {/* Indicadores de Stock y Envío */}
+              <div className="bg-gray-200 p-4 rounded text-center space-y-2">
+                <div className="flex items-center justify-center gap-2 text-xs font-bold text-gray-700">
+                  <span className="w-2 h-2 rounded-full bg-orange-400 animate-pulse"></span>
+                  LOW STOCK
+                </div>
+                <div className="flex items-center justify-center gap-2 text-xs text-gray-600">
+                  {/* AQUÍ ESTÁ EL CAMBIO */}
+                  <img
+                    src="https://flagcdn.com/es.svg"
+                    alt="Bandera de España"
+                    className="w-5 h-auto shadow-sm rounded-[1px]" // Ajusta w-4 o w-5 según prefieras el tamaño
+                  />
+                  <p>FREE SHIPPING IN SPAIN FOR ORDERS OVER €225</p>
+                </div>
+              </div>
+
+              {/* Acordeones de Información */}
+              <div className="border-t border-gray-200 pt-2 space-y-1">
+                <AccordionItem
+                  title="DETAILS"
+                  isOpen={openAccordion === "details"}
+                  onClick={() => toggleAccordion("details")}
                 >
-                  <ShoppingCart className="w-5 h-5" />
-                  <span>Añadir al Carrito - €{(product.price * selectedQuantity).toFixed(2)}</span>
-                </motion.button>
+                  <p>{product.description}</p>
+                  <ul className="list-disc pl-4 mt-2 space-y-1">
+                    <li>100% Organic Cotton</li>
+                    <li>Heavyweight fabric (300gsm)</li>
+                    <li>Boxy fit</li>
+                    <li>Made in Portugal</li>
+                  </ul>
+                </AccordionItem>
+
+                <AccordionItem
+                  title="FIT INFORMATION"
+                  isOpen={openAccordion === "fit"}
+                  onClick={() => toggleAccordion("fit")}
+                >
+                  <p>
+                    This item is designed for an oversized fit. We recommend
+                    taking your true size for the intended look, or sizing down
+                    for a more regular fit.
+                  </p>
+                </AccordionItem>
+
+                <AccordionItem
+                  title="SHIPPING"
+                  isOpen={openAccordion === "shipping"}
+                  onClick={() => toggleAccordion("shipping")}
+                >
+                  <p>
+                    Standard shipping takes 3-5 business days. Express shipping
+                    options available at checkout. Worldwide shipping available.
+                  </p>
+                </AccordionItem>
               </div>
 
-              {/* Garantías */}
-              <div className="grid grid-cols-3 gap-4 pt-6 border-t">
-                {[
-                  { icon: Truck, text: 'Envío en 24h' },
-                  { icon: Shield, text: 'Garantía calidad' },
-                  { icon: Star, text: 'Producto premium' }
-                ].map((item, index) => (
-                  <div key={index} className="text-center">
-                    <item.icon className="w-6 h-6 text-amber-600 mx-auto mb-2" />
-                    <span className="text-sm text-gray-600">{item.text}</span>
+              {/* Complete The Look Section */}
+              {completeTheLookProducts.length > 0 && (
+                <div className="pt-6">
+                  <h3 className="text-sm font-bold uppercase tracking-wide mb-4 text-center">
+                    Complete the Look
+                  </h3>
+                  <div className="space-y-4">
+                    {completeTheLookProducts.map((item) => (
+                      <div
+                        key={item.id}
+                        className="flex gap-4 border border-gray-100 p-3 rounded hover:border-gray-300 transition-colors"
+                      >
+                        <div
+                          className="w-16 h-20 bg-gray-100 bg-cover bg-center"
+                          style={{
+                            backgroundImage: `url(${
+                              item.images?.[0] || item.image
+                            })`,
+                          }}
+                        ></div>
+                        <div className="flex-1 flex flex-col justify-center">
+                          <h4 className="text-xs font-bold uppercase">
+                            {item.name}
+                          </h4>
+                          <p className="text-xs text-gray-500">
+                            {item.price.toFixed(2)}€
+                          </p>
+                        </div>
+                        <div className="flex items-center">
+                          <button
+                            onClick={() => toggleLookItem(item.id)}
+                            className={`w-6 h-6 border flex items-center justify-center transition-colors
+                              ${
+                                selectedLookItems.includes(item.id)
+                                  ? "bg-black border-black text-white"
+                                  : "bg-white border-gray-300"
+                              }
+                            `}
+                          >
+                            {selectedLookItems.includes(item.id) && (
+                              <Check className="w-4 h-4" />
+                            )}
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+
+                    {selectedLookItems.length > 0 && (
+                      <button className="w-full bg-white border border-black text-black py-3 text-xs font-bold uppercase hover:bg-black hover:text-white transition-all">
+                        Add Selected to Cart
+                      </button>
+                    )}
                   </div>
-                ))}
-              </div>
-            </motion.div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
-      </section>
-
-      {/* Productos Relacionados */}
-      <section className="py-16 bg-amber-50">
-        <div className="container mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 60 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-          >
-            <h2 className="text-3xl font-bold text-center text-gray-900 mb-12 font-serif">
-              Productos Relacionados
-            </h2>
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {relatedProducts.map((relatedProduct) => (
-                <Link
-                  onClick={() => window.scrollTo(0, 0)}
-                  key={relatedProduct.id}
-                  to={`/producto/${relatedProduct.id}`}
-                  className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 group"
-                >
-                  <div className="h-48 bg-cover bg-center group-hover:scale-105 transition-transform duration-500"
-                    style={{ backgroundImage: `url(${relatedProduct.image})` }}>
-                  </div>
-                  <div className="p-4">
-                    <h3 className="font-semibold text-gray-900 mb-2">{relatedProduct.name}</h3>
-                    <p className="text-amber-600 font-bold">€{relatedProduct.price}</p>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </motion.div>
-        </div>
-      </section>
+      </div>
     </div>
   );
 };

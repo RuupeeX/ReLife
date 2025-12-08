@@ -1,21 +1,52 @@
-// ShopDropdown.jsx
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown } from "lucide-react";
-import { Link } from "react-router-dom"; // Importar Link
+import { Link } from "react-router-dom";
 
 const ShopDropdown = ({ headerHeight }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleLinkClick = () => {
-    setIsOpen(false); // Cierra el dropdown al hacer clic en un enlace
+    setIsOpen(false);
     setTimeout(() => {
       window.scrollTo({ top: 0, behavior: "instant" });
     }, 100);
   };
 
-  const getCategoryPath = (category) => {
-    return `/shop?category=${category.toLowerCase().replace(/\s+/g, "")}`;
+  // Función UNIFICADA para generar rutas: Siempre usa 'category'
+  const getCategoryPath = (item) => {
+    return `/shop?category=${item.toLowerCase().replace(/\s+/g, "-")}`;
+  };
+
+  const subCategories = {
+    TOPS: [
+      "T-SHIRTS",
+      "HOODIES",
+      "TRACK JACKETS",
+      "JERSEYS",
+      "KNITWEAR",
+      "JACKETS",
+    ],
+    BOTTOMS: [
+      "DENIM PANTS",
+      "CARGO PANTS",
+      "JOGGERS",
+      "TRACK PANTS",
+      "JORTS",
+      "SHORTS",
+      "SWIMSHORTS",
+      "UNDERWEAR",
+    ],
+    FOOTWEAR: ["ARMBO LOWS", "VORTEX", "VENTURE", "VITORIA", "V-SLIDES"],
+    ACCESSORIES: [
+      "CAPS",
+      "BAGS",
+      "BEANIES",
+      "CARDHOLDER",
+      "BELTS",
+      "RINGS",
+      "RUGS",
+    ],
   };
 
   return (
@@ -37,10 +68,13 @@ const ShopDropdown = ({ headerHeight }) => {
       <AnimatePresence>
         {isOpen && (
           <>
-            {/* Overlay para cerrar al hacer clic fuera */}
+            {/* Overlay */}
             <div
               className="fixed left-0 right-0 z-40 bg-black/10"
-              style={{ top: `${headerHeight}px`, height: `calc(100vh - ${headerHeight}px)` }}
+              style={{
+                top: `${headerHeight}px`,
+                height: `calc(100vh - ${headerHeight}px)`,
+              }}
               onClick={() => setIsOpen(false)}
             />
 
@@ -53,14 +87,12 @@ const ShopDropdown = ({ headerHeight }) => {
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.3 }}
             >
-              {/* Contenido principal del Dropdown */}
               <div className="py-6">
                 <div className="container mx-auto pl-8 pr-0">
-                  {/* Contenedor principal */}
                   <div className="flex">
-                    {/* COLUMNA IZQUIERDA: CATEGORÍAS SIN BORDE DERECHO */}
+                    {/* COLUMNA IZQUIERDA: CATEGORÍAS */}
                     <div className="w-[58%] grid grid-cols-5 gap-6 pr-8">
-                      {/* Sub-sección SHOP ALL */}
+                      {/* SHOP ALL */}
                       <div>
                         <h3 className="font-bold text-sm text-gray-900 uppercase tracking-wide mb-4">
                           SHOP ALL
@@ -76,7 +108,7 @@ const ShopDropdown = ({ headerHeight }) => {
                           ].map((item, index) => (
                             <Link
                               key={index}
-                              to={getCategoryPath(item)} // Usa la función para generar la ruta
+                              to={getCategoryPath(item)}
                               className="text-xs text-gray-600 hover:text-blue-700 block py-1 transition-colors duration-200"
                               onClick={handleLinkClick}
                             >
@@ -86,88 +118,34 @@ const ShopDropdown = ({ headerHeight }) => {
                         </div>
                       </div>
 
-                      {/* Categorías principales */}
+                      {/* Categorías principales y subcategorías */}
                       {["TOPS", "BOTTOMS", "FOOTWEAR", "ACCESSORIES"].map(
-                        (category, index) => (
+                        (mainCategory, index) => (
                           <div key={index}>
-                            <h3 className="font-bold text-sm text-gray-900 uppercase tracking-wide mb-4">
-                              {category}
-                            </h3>
+                            {/* CATEGORÍA PRINCIPAL CLICABLE */}
+                            <Link
+                              to={getCategoryPath(mainCategory)}
+                              onClick={handleLinkClick}
+                              className="block"
+                            >
+                              <h3 className="font-bold text-sm text-gray-900 uppercase tracking-wide mb-4 hover:text-blue-700 transition-colors">
+                                {mainCategory}
+                              </h3>
+                            </Link>
+
                             <div className="space-y-1">
-                              {category === "TOPS" &&
-                                [
-                                  "T-SHIRTS",
-                                  "HOODIES",
-                                  "TRACK JACKETS",
-                                  "JERSEYS",
-                                  "KNITWEAR",
-                                  "JACKETS",
-                                ].map((item, i) => (
+                              {subCategories[mainCategory]?.map(
+                                (subCategory, i) => (
                                   <Link
                                     key={i}
-                                    to={getCategoryPath(item)} // Usa la función
+                                    to={getCategoryPath(subCategory)}
                                     className="text-xs text-gray-600 hover:text-blue-700 block py-1 transition-colors duration-200"
                                     onClick={handleLinkClick}
                                   >
-                                    {item}
+                                    {subCategory}
                                   </Link>
-                                ))}
-                              {category === "BOTTOMS" &&
-                                [
-                                  "DENIM PANTS",
-                                  "CARGO PANTS",
-                                  "JOGGERS",
-                                  "TRACK PANTS",
-                                  "JORTS",
-                                  "SHORTS",
-                                  "SWIMSHORTS",
-                                  "UNDERWEAR",
-                                ].map((item, i) => (
-                                  <Link
-                                    key={i}
-                                    to={getCategoryPath(item)} // Usa la función
-                                    className="text-xs text-gray-600 hover:text-blue-700 block py-1 transition-colors duration-200"
-                                    onClick={handleLinkClick}
-                                  >
-                                    {item}
-                                  </Link>
-                                ))}
-                              {category === "FOOTWEAR" &&
-                                [
-                                  "ARMBO LOWS",
-                                  "VORTEX",
-                                  "VENTURE",
-                                  "VITORIA",
-                                  "V-SLIDES",
-                                ].map((item, i) => (
-                                  <Link
-                                    key={i}
-                                    to={getCategoryPath(item)} // Usa la función
-                                    className="text-xs text-gray-600 hover:text-blue-700 block py-1 transition-colors duration-200"
-                                    onClick={handleLinkClick}
-                                  >
-                                    {item}
-                                  </Link>
-                                ))}
-                              {category === "ACCESSORIES" &&
-                                [
-                                  "CAPS",
-                                  "BAGS",
-                                  "BEANIES",
-                                  "CARDHOLDER",
-                                  "BELTS",
-                                  "RINGS",
-                                  "RUGS",
-                                ].map((item, i) => (
-                                  <Link
-                                    key={i}
-                                    to={getCategoryPath(item)} // Usa la función
-                                    className="text-xs text-gray-600 hover:text-blue-700 block py-1 transition-colors duration-200"
-                                    onClick={handleLinkClick}
-                                  >
-                                    {item}
-                                  </Link>
-                                ))}
+                                )
+                              )}
                             </div>
                           </div>
                         )
@@ -177,17 +155,12 @@ const ShopDropdown = ({ headerHeight }) => {
                     {/* COLUMNA DERECHA: IMAGEN */}
                     <div className="w-[42%]">
                       <div className="relative w-full h-full min-h-[610px] -my-6 ml-28">
-                        {/* Imagen de fondo */}
                         <img
                           src="/images/dropbanner.png"
                           alt="SOFTS COLLECTION"
                           className="w-full h-full object-cover"
                         />
-
-                        {/* Efecto sombra superior */}
                         <div className="absolute top-0 left-0 right-0 h-56 bg-gradient-to-b from-black/70 via-black/40 to-transparent pointer-events-none"></div>
-
-                        {/* Texto superpuesto */}
                         <div className="absolute inset-0 flex flex-col justify-start pt-10 px-8">
                           <div className="text-white text-center relative z-10">
                             <h4 className="font-bold text-3xl mb-4 text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
@@ -197,7 +170,7 @@ const ShopDropdown = ({ headerHeight }) => {
                               Discover our premium soft collection designed for
                               comfort.
                             </p>
-                            <Link // Usa Link también para el botón principal
+                            <Link
                               to={getCategoryPath("SOFTS COLLECTION")}
                               className="inline-block text-base font-semibold text-white hover:text-gray-100 border-b-2 border-white pb-1.5 px-8 transition-all duration-300 hover:scale-105 hover:border-gray-200 drop-shadow-[0_1px_2px_rgba(0,0,0,0.4)]"
                               onClick={handleLinkClick}
