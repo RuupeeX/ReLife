@@ -19,7 +19,7 @@ import { useCart } from "../context/CartContext";
 // Componente para los Acordeones (Details, Fit, Shipping)
 const AccordionItem = ({ title, children, isOpen, onClick }) => {
   return (
-    // CAMBIO: Añadido 'mb-2' para separación y mantenido el borde
+    
     <div className="border-b border-gray-200 mb-2 last:mb-0 last:border-b-0">
       <button
         className="w-full py-4 flex justify-between items-center text-left hover:bg-gray-50 transition-colors"
@@ -110,7 +110,6 @@ const ProductDetail = () => {
                 .map((img, index) => (
                   <div
                     key={index}
-                    // AQUÍ ESTÁ EL CAMBIO: Añadimos lógica condicional para el índice 2 (la tercera imagen)
                     className={`relative bg-gray-100 aspect-[3/4] overflow-hidden ${
                       index === 2 ? "md:col-span-2" : ""
                     }`}
@@ -125,9 +124,9 @@ const ProductDetail = () => {
             </div>
           </div>
 
-          {/* COLUMNA DERECHA: INFORMACIÓN Y COMPRA (Sticky) */}
+          {/* COLUMNA DERECHA: INFORMACIÓN Y COMPRA */}
           <div className="lg:w-[40%]">
-            <div className="sticky top-24 space-y-8">
+            <div className=" top-24 space-y-8">
               {/* Header del Producto */}
               <div className="space-y-2 text-center lg:text-left">
                 <h1 className="text-2xl lg:text-2xl font-bold text-gray-900 uppercase tracking-tight">
@@ -224,7 +223,7 @@ const ProductDetail = () => {
                   <img
                     src="https://flagcdn.com/es.svg"
                     alt="Bandera de España"
-                    className="w-5 h-auto shadow-sm rounded-[1px]" // Ajusta w-4 o w-5 según prefieras el tamaño
+                    className="w-5 h-auto shadow-sm rounded-[1px]" 
                   />
                   <p>FREE SHIPPING IN SPAIN FOR ORDERS OVER €225</p>
                 </div>

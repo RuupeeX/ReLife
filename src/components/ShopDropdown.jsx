@@ -28,7 +28,7 @@ const ShopDropdown = ({ headerHeight }) => {
       "JACKETS",
     ],
     BOTTOMS: [
-      "DENIM PANTS",
+      "DENIM-PANTS",
       "CARGO PANTS",
       "JOGGERS",
       "TRACK PANTS",

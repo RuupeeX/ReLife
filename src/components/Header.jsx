@@ -22,7 +22,6 @@ const Header = () => {
   const handleSearch = (e) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      // Redirigir a la página de productos con la búsqueda
       window.location.href = `/shop?search=${encodeURIComponent(searchQuery)}`;
     }
   };
@@ -33,6 +32,16 @@ const Header = () => {
     }
   };
 
+  // Textos para el banner en movimiento
+  const bannerText = [
+    "SHOP", 
+    "FLASH SALE", 
+    "BLACK WEEK", 
+    "MEMBERS CLUB", 
+    "FREE SHIPPING WORLDWIDE",
+    "NEW COLLECTION"
+  ];
+
   return (
     <>
       <motion.header
@@ -42,23 +51,35 @@ const Header = () => {
         animate={{ y: 0 }}
         transition={{ duration: 0.6 }}
       >
-        {/* Top Banner */}
-        <div className="bg-black text-white text-xs py-2 px-4 text-center">
-          <div className="container mx-auto flex justify-center items-center space-x-16">
-            <span className="font-medium">SHOP</span>
-            <span>FLASH SALE</span>
-            <span>BLACK WEEK</span>
-            <span>MEMBERS CLUB</span>
-          </div>
+        {/* --- NUEVO TOP BANNER CON MOVIMIENTO A LA DERECHA --- */}
+        <div className="bg-black text-white text-xs py-2 overflow-hidden relative whitespace-nowrap">
+          <motion.div
+            className="flex w-max"
+            animate={{ x: ["-50%", "0%"] }} 
+            transition={{
+              repeat: Infinity,
+              ease: "linear",
+              duration: 80, // Ajusta este número para cambiar la velocidad (mayor = más lento)
+            }}
+          >
+            {/* Repetimos el contenido 4 veces para asegurar el loop infinito sin cortes */}
+            {[...bannerText, ...bannerText, ...bannerText, ...bannerText].map((text, index) => (
+              <span key={index} className="mx-8 font-medium tracking-widest flex items-center">
+                {text}
+                <span className="w-1 h-1 bg-white rounded-full ml-14 opacity-50"></span>
+              </span>
+            ))}
+          </motion.div>
         </div>
+        {/* ---------------------------------------------------- */}
 
         {/* Main Header */}
-        <div className="container mx-auto py-2">
+        <div className="container mx-auto py-2 px-4">
           <div className="flex items-center justify-between">
             {/* Left side - Navigation */}
             <div className="flex-1 flex justify-start">
-              <nav className="flex items-center space-x-8 text-xs">
-                {/* Shop con dropdown - PASA la headerHeight */}
+              <nav className="flex items-center space-x-8 text-xs hidden md:flex">
+                {/* Shop con dropdown */}
                 <ShopDropdown headerHeight={headerHeight} />
 
                 {/* Otros enlaces */}
@@ -78,6 +99,10 @@ const Header = () => {
                   </motion.div>
                 ))}
               </nav>
+              {/* Mobile Menu Icon Placeholder (si lo necesitas) */}
+              <div className="md:hidden">
+                 {/* Aquí iría tu icono de menú hamburguesa si lo tienes */}
+              </div>
             </div>
 
             {/* Center - Logo */}
@@ -90,7 +115,7 @@ const Header = () => {
                   <img
                     src="/images/logoGrafiti1.png"
                     alt="Aureum Logo"
-                    className="h-16 w-auto"
+                    className="h-12 md:h-16 w-auto" // Ajustado ligeramente para móvil
                     onClick={() => {
                       setTimeout(() => {
                         window.scrollTo({ top: 0, behavior: "instant" });
@@ -103,9 +128,9 @@ const Header = () => {
 
             {/* Right side - Actions */}
             <div className="flex-1 flex justify-end">
-              <div className="flex items-center space-x-4">
-                {/* Currency/Country Selector */}
-                <div className="flex items-center space-x-2 text-xs">
+              <div className="flex items-center space-x-3 md:space-x-4">
+                {/* Currency/Country Selector (Hidden on mobile usually to save space, or kept small) */}
+                <div className="hidden md:flex items-center space-x-2 text-xs">
                   <span className="text-gray-700">EUR €</span>
                   <span className="text-gray-400">|</span>
                   <span className="text-gray-700">SPAIN</span>
@@ -176,7 +201,7 @@ const Header = () => {
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       onKeyPress={handleKeyPress}
-                      placeholder="Search products, categories, brands..."
+                      placeholder="Search products..."
                       className="w-full pl-12 pr-20 py-3 border border-gray-300 focus:ring-2 focus:ring-black focus:border-transparent transition-all"
                       autoFocus
                     />
@@ -192,14 +217,10 @@ const Header = () => {
                 {/* Sugerencias rápidas */}
                 <div className="mt-3 flex flex-wrap gap-2">
                   <span className="text-xs text-gray-500 mt-1">Quick search:</span>
-                  {["Hoodies", "Jeans", "T-Shirts", "Sneakers", "Jackets", "Accessories"].map((term) => (
+                  {["Hoodies", "Jeans", "T-Shirts", "Sneakers"].map((term) => (
                     <button
                       key={term}
-                      onClick={() => {
-                        setSearchQuery(term);
-                        // Opcional: buscar automáticamente
-                        // window.location.href = `/shop?search=${term}`;
-                      }}
+                      onClick={() => setSearchQuery(term)}
                       className="text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1 rounded-full transition-colors"
                     >
                       {term}
@@ -212,8 +233,8 @@ const Header = () => {
         )}
       </AnimatePresence>
 
-      {/* Espacio para cuando la barra de búsqueda está abierta */}
-      {showSearch && <div className="h-24"></div>}
+      {/* Ajuste de espaciado: Si el search está abierto, a veces necesitamos un overlay o spacer */}
+      {showSearch && <div className="hidden md:block h-screen fixed inset-0 z-30 bg-black/20" onClick={() => setShowSearch(false)} style={{marginTop: headerHeight}}></div>}
     </>
   );
 };

@@ -233,10 +233,10 @@ const MembersClub = () => {
             {membershipTiers.map((tier, index) => (
               <div
                 key={index}
-                className="border-2 border-gray-200 rounded-2xl p-6 hover:shadow-xl transition-shadow duration-300"
+                className="border-2 border-gray-200 p-6 hover:shadow-xl transition-shadow duration-300"
               >
                 <div
-                  className={`${tier.color} text-white py-3 px-6 rounded-full text-center mb-6`}
+                  className={`${tier.color} text-white py-3 px-6 text-center mb-6`}
                 >
                   <h3 className="text-xl font-bold">{tier.name}</h3>
                 </div>
@@ -259,7 +259,7 @@ const MembersClub = () => {
 
                 {index === 0 && (
                   <Link to="/register">
-                    <button className="w-full bg-black text-white py-3 rounded-lg font-bold hover:bg-gray-800 transition-colors">
+                    <button className="w-full bg-black text-white py-3  font-bold hover:bg-gray-800 transition-colors">
                       JOIN NOW
                     </button>
                   </Link>

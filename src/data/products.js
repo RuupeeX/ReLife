@@ -4,7 +4,7 @@ export const products = [
     id: 1,
     name: "Champion Ring T-Shirt - Black",
     description: "Camiseta básica de algodón orgánico con corte moderno y logo minimalista bordado en el pecho.",
-    price: 29.90,
+    price: 39.90,
     size: "M",
     color: "Black",
     stock: 45,
@@ -21,7 +21,7 @@ export const products = [
     id: 2,
     name: "Universal Crew T-Shirt - Blue",
     description: "Pantalones cargo con múltiples bolsillos funcionales, tejido resistente y cómodo.",
-    price: 89.90,
+    price: 39.90,
     size: "L",
     color: "Blue",
     stock: 28,
@@ -53,119 +53,119 @@ export const products = [
   },
   {
     id: 4,
-    name: "Premium Hoodie - Black",
+    name: "Pannels Hoodie - Grey",
     description: "Sudadera premium con capucha, bolsillo canguro y tejido French Terry de alta calidad.",
     price: 79.90,
     size: "L",
-    color: "Black",
+    color: "Gray",
     stock: 31,
     mainCategory: "TOPS",
     subCategory: "HOODIES",
-    collection: "SOFTS COLLECTION",
+    collection: "CLASSIC COLLECTION",
     images: [
-      "/images/hoodie-front.jpg",
-      "/images/hoodie-back.jpg",
-      "/images/hoodie-detail.jpg"
+      "/images/Pannels-hoodie.png",
+      "/images/Pannels-hoodie-front.png",
+      "/images/Pannels-hoodie-back.png"
     ]
   },
   {
     id: 5,
-    name: "Track Jacket Vintage - Red",
+    name: "Bands Hoodie - Garnet",
     description: "Chaqueta deportiva con rayas laterales, cierre de cremallera y tejido ligero.",
     price: 64.90,
     size: "M",
     color: "Red",
     stock: 26,
     mainCategory: "TOPS",
-    subCategory: "TRACK JACKETS",
+    subCategory: "HOODIES",
     collection: "NEW ARRIVALS",
     images: [
-      "/images/jacket-front.jpg",
-      "/images/jacket-back.jpg",
-      "/images/jacket-zipped.jpg"
+      "/images/bands-garnet-hoodie.png",
+      "/images/Bands-garnet-hoodie-front.png",
+      "/images/bands-garnet-hoodie-side.png"
     ]
   },
   {
     id: 6,
-    name: "Knit Sweater - Grey",
+    name: "Holo Jersey Zip - Red & White",
     description: "Jersey de punto con cuello redondo y tejido suave. Diseño versátil.",
     price: 69.90,
     size: "M",
     color: "Grey",
     stock: 27,
     mainCategory: "TOPS",
-    subCategory: "KNITWEAR",
+    subCategory: "JERSEYS",
     collection: "SOFTS COLLECTION",
     images: [
-      "/images/sweater-front.jpg",
+      "/images/Zip-holo-jersey-RedWhite.png",
       "/images/sweater-back.jpg",
       "/images/sweater-detail.jpg"
     ]
   },
   {
     id: 7,
-    name: "Denim Pants Slim Fit - Blue",
+    name: "Denim Holo Grafiti",
     description: "Jeans de corte slim fit con tiro medio, lavado vintage y detalles desgastados.",
-    price: 92.90,
+    price: 74.90,
     size: "34",
     color: "Blue",
-    stock: 33,
+    stock: 40,
     mainCategory: "BOTTOMS",
-    subCategory: "DENIM PANTS",
+    subCategory: "DENIM-PANTS",
     collection: "CLASSIC COLLECTION",
     images: [
-      "/images/denim-front.jpg",
+      "/images/Vaquero-grafiti-blue.png",
       "/images/denim-back.jpg",
       "/images/denim-detail.jpg"
     ]
   },
   {
     id: 8,
-    name: "Tech Joggers - Black",
+    name: "Denim Holo Grafiti Black",
     description: "Joggers técnicos con tejido stretch, ajuste perfecto y detalles reflectantes.",
     price: 74.90,
     size: "M",
     color: "Black",
     stock: 19,
     mainCategory: "BOTTOMS",
-    subCategory: "JOGGERS",
+    subCategory: "DENIM-PANTS",
     collection: "ACTIVEWEAR",
     images: [
-      "/images/joggers-front.jpg",
+      "/images/Vaquero-grafiti-black.png",
       "/images/joggers-side.jpg",
       "/images/joggers-detail.jpg"
     ]
   },
   {
     id: 9,
-    name: "Cargo Pants - Green",
+    name: "Bison Denim Holo",
     description: "Pantalones cargo con múltiples bolsillos funcionales y ajuste moderno.",
     price: 84.90,
     size: "L",
-    color: "Green",
+    color: "Blue",
     stock: 21,
     mainCategory: "BOTTOMS",
-    subCategory: "CARGO PANTS",
+    subCategory: "DENIM-PANTS",
     collection: "NEW ARRIVALS",
     images: [
-      "/images/cargo-front.jpg",
-      "/images/cargo-side.jpg",
-      "/images/cargo-detail.jpg"
+      "/images/Bison-denim-holo.png",
+      "/images/Bison-denim-holo-side.png",
+      "/images/Bison-denim-holo-front.png"
     ]
   },
   {
     id: 10,
-    name: "Vortex Running Shoes - Black",
+    name: "Glory Polo Holo",
     description: "Zapatillas de running con tecnología de amortiguación avanzada.",
-    price: 149.90,
+    price: 49.90,
     size: "43",
     color: "Black",
     stock: 15,
-    mainCategory: "FOOTWEAR",
-    subCategory: "VORTEX",
-    collection: "ACTIVEWEAR",
+    mainCategory: "TOPS",
+    subCategory: "T-SHIRTS",
+    collection: "CLASSIC COLLECTION",
     images: [
-      "/images/vortex-front.jpg",
+      "/images/Glory-Holo-polo.png",
       "/images/vortex-side.jpg",
       "/images/vortex-bottom.jpg"
     ]
@@ -206,102 +206,187 @@ export const products = [
   },
   {
     id: 13,
-    name: "Signature Cap - Black",
+    name: "Aligator Cap Holo",
     description: "Gorra ajustable con diseño urbano, logo bordado y tejido transpirable.",
     price: 34.90,
     size: "Único",
-    color: "Black",
+    color: "Green",
     stock: 67,
     mainCategory: "ACCESSORIES",
     subCategory: "CAPS",
     collection: "CLASSIC COLLECTION",
     images: [
-      "/images/cap-front.jpg",
+      "/images/Cap-holo-aligator.png",
       "/images/cap-side.jpg",
       "/images/cap-back.jpg"
     ]
   },
   {
     id: 14,
-    name: "Urban Backpack - Grey",
+    name: "Polar Cap Holo",
     description: "Mochila urbana con compartimentos organizados y material resistente al agua.",
-    price: 89.90,
+    price: 39.90,
     size: "30L",
-    color: "Grey",
+    color: "Blue",
     stock: 24,
     mainCategory: "ACCESSORIES",
-    subCategory: "BAGS",
+    subCategory: "CAPS",
     collection: "NEW ARRIVALS",
     images: [
-      "/images/backpack-front.jpg",
+      "/images/cap-holo-polar.png",
       "/images/backpack-open.jpg",
       "/images/backpack-side.jpg"
     ]
   },
   {
     id: 15,
-    name: "Signature Beanie - Black",
+    name: "Western Cap Holo",
     description: "Gorro de lana merino con dobladillo y logo bordado.",
-    price: 29.90,
+    price: 34.90,
     size: "Único",
     color: "Black",
     stock: 73,
     mainCategory: "ACCESSORIES",
-    subCategory: "BEANIES",
+    subCategory: "CAPS",
     collection: "SOFTS COLLECTION",
     images: [
-      "/images/beanie-front.jpg",
+      "/images/Western-holo-cap.png",
       "/images/beanie-side.jpg",
       "/images/beanie-detail.jpg"
     ]
   },
   {
     id: 16,
-    name: "Leather Cardholder - Brown",
+    name: "Offroad Racing Cap Holo",
     description: "Portatarjetas de cuero genuino con capacidad para 6 tarjetas.",
-    price: 49.90,
+    price: 34.90,
     size: "Pequeño",
     color: "Brown",
     stock: 42,
     mainCategory: "ACCESSORIES",
-    subCategory: "CARDHOLDER",
+    subCategory: "CAPS",
     collection: "CLASSIC COLLECTION",
     images: [
-      "/images/cardholder-front.jpg",
+      "/images/Offroad-racing-cap.png",
       "/images/cardholder-open.jpg",
       "/images/cardholder-back.jpg"
     ]
   },
   {
     id: 17,
-    name: "Track Pants - Blue",
-    description: "Pantalones de entrenamiento con rayas laterales y tejido técnico.",
-    price: 59.90,
-    size: "M",
-    color: "Blue",
-    stock: 32,
-    mainCategory: "BOTTOMS",
-    subCategory: "TRACK PANTS",
-    collection: "TRACKSUITS",
+    name: "Leather Cardholder - Brown",
+    description: "Portatarjetas de cuero genuino con capacidad para 6 tarjetas.",
+    price: 54.90,
+    size: "Pequeño",
+    color: "Brown",
+    stock: 42,
+    mainCategory: "ACCESSORIES",
+    subCategory: "BAGS",
+    collection: "CLASSIC COLLECTION",
     images: [
-      "/images/trackpants-front.jpg",
-      "/images/trackpants-side.jpg",
-      "/images/trackpants-detail.jpg"
+      "/images/Shoulder-bag-holo-BlackLeather.png",
+      "/images/cardholder-open.jpg",
+      "/images/cardholder-back.jpg"
     ]
   },
   {
     id: 18,
-    name: "Swim Shorts - Navy",
+    name: "Crew Studios Zip - Black",
     description: "Bañadores con secado rápido, bolsillo trasero con cierre.",
-    price: 54.90,
+    price: 34.90,
     size: "L",
-    color: "Navy",
+    color: "Black",
     stock: 36,
-    mainCategory: "BOTTOMS",
-    subCategory: "SWIMSHORTS",
+    mainCategory: "TOPS",
+    subCategory: "HOODIES",
+    collection: "CLASSIC COLLECTION",
+    images: [
+      "/images/Zip-Crew-Black.png",
+      "/images/swim-back.jpg",
+      "/images/swim-detail.jpg"
+    ]
+  },
+  {
+    id: 19,
+    name: "Crew Studios Zip - Grey",
+    description: "Bañadores con secado rápido, bolsillo trasero con cierre.",
+    price: 34.90,
+    size: "L",
+    color: "Grey",
+    stock: 36,
+    mainCategory: "TOPS",
+    subCategory: "HOODIES",
+    collection: "CLASSIC COLLECTION",
+    images: [
+      "/images/Zip-Crew-Grey.png",
+      "/images/swim-back.jpg",
+      "/images/swim-detail.jpg"
+    ]
+  },
+  {
+    id: 20,
+    name: "Crew Grafiti Zip - Green",
+    description: "Bañadores con secado rápido, bolsillo trasero con cierre.",
+    price: 34.90,
+    size: "L",
+    color: "Green",
+    stock: 36,
+    mainCategory: "TOPS",
+    subCategory: "HOODIES",
     collection: "NEW ARRIVALS",
     images: [
-      "/images/swim-front.jpg",
+      "/images/Zip-Crew-ForestGreen.png",
+      "/images/swim-back.jpg",
+      "/images/swim-detail.jpg"
+    ]
+  },
+  {
+    id: 21,
+    name: "Crew Grafiti Zip - Black",
+    description: "Bañadores con secado rápido, bolsillo trasero con cierre.",
+    price: 34.90,
+    size: "L",
+    color: "Black",
+    stock: 36,
+    mainCategory: "TOPS",
+    subCategory: "HOODIES",
+    collection: "CLASSIC COLLECTION",
+    images: [
+      "/images/Zip-grafiti-bluenavy.png",
+      "/images/swim-back.jpg",
+      "/images/swim-detail.jpg"
+    ]
+  },
+  {
+    id: 22,
+    name: "Crew Grafiti Zip - Black",
+    description: "Bañadores con secado rápido, bolsillo trasero con cierre.",
+    price: 34.90,
+    size: "L",
+    color: "Black",
+    stock: 36,
+    mainCategory: "TOPS",
+    subCategory: "HOODIES",
+    collection: "CLASSIC COLLECTION",
+    images: [
+      "/images/Zip-grafiti-black.png",
+      "/images/swim-back.jpg",
+      "/images/swim-detail.jpg"
+    ]
+  },
+  {
+    id: 23,
+    name: "Crew Studios Zip - Black",
+    description: "Bañadores con secado rápido, bolsillo trasero con cierre.",
+    price: 34.90,
+    size: "L",
+    color: "Black",
+    stock: 36,
+    mainCategory: "TOPS",
+    subCategory: "HOODIES",
+    collection: "CLASSIC COLLECTION",
+    images: [
+      "/images/Zip-grafiti-grey.png",
       "/images/swim-back.jpg",
       "/images/swim-detail.jpg"
     ]
