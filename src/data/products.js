@@ -149,8 +149,8 @@ export const products = [
     collection: "NEW ARRIVALS",
     images: [
       "/images/Bison-denim-holo.png",
-      "/images/Bison-denim-holo-side.png",
-      "/images/Bison-denim-holo-front.png"
+      "/images/Bison-denim-holo-front.png",
+      "/images/Bison-denim-holo-side.png"
     ]
   },
   {
@@ -389,6 +389,142 @@ export const products = [
       "/images/Zip-grafiti-grey.png",
       "/images/swim-back.jpg",
       "/images/swim-detail.jpg"
+    ]
+  },
+  {
+    id: 24,
+    name: "Jogger Grafiti - Black",
+    description: "Joggers técnicos con tejido stretch, ajuste perfecto y detalles reflectantes.",
+    price: 54.99,
+    size: "M",
+    color: "Black",
+    stock: 19,
+    mainCategory: "BOTTOMS",
+    subCategory: "JOGGERS",
+    collection: "ACTIVEWEAR",
+    images: [
+      "/images/jogger-grafiti-black.png",
+      "/images/joggers-side.jpg",
+      "/images/joggers-detail.jpg"
+    ]
+  },
+  {
+    id: 25,
+    name: "Jogger Grafiti - Blue",
+    description: "Joggers técnicos con tejido stretch, ajuste perfecto y detalles reflectantes.",
+    price: 54.99,
+    size: "M",
+    color: "Blue",
+    stock: 19,
+    mainCategory: "BOTTOMS",
+    subCategory: "JOGGERS",
+    collection: "ACTIVEWEAR",
+    images: [
+      "/images/jogger-grafiti-bluenavy.png",
+      "/images/joggers-side.jpg",
+      "/images/joggers-detail.jpg"
+    ]
+  },
+  {
+    id: 26,
+    name: "Jogger Grafiti - Grey",
+    description: "Joggers técnicos con tejido stretch, ajuste perfecto y detalles reflectantes.",
+    price: 54.99,
+    size: "M",
+    color: "Grey",
+    stock: 19,
+    mainCategory: "BOTTOMS",
+    subCategory: "JOGGERS",
+    collection: "ACTIVEWEAR",
+    images: [
+      "/images/jogger-grafiti-grey.png",
+      "/images/joggers-side.jpg",
+      "/images/joggers-detail.jpg"
+    ]
+  },
+  {
+    id: 27,
+    name: "Boxer Slim - White",
+    description: "Joggers técnicos con tejido stretch, ajuste perfecto y detalles reflectantes.",
+    price: 19.99,
+    size: "M",
+    color: "White",
+    stock: 19,
+    mainCategory: "BOTTOMS",
+    subCategory: "UNDERWEAR",
+    collection: "ACTIVEWEAR",
+    images: [
+      "/images/boxer-holo-white.png",
+      "/images/joggers-side.jpg",
+      "/images/joggers-detail.jpg"
+    ]
+  },
+  {
+    id: 28,
+    name: "HC Hoodie - Pink",
+    description: "Joggers técnicos con tejido stretch, ajuste perfecto y detalles reflectantes.",
+    price: 69.99,
+    size: "M",
+    color: "Pink",
+    stock: 19,
+    mainCategory: "TOPS",
+    subCategory: "HOODIES",
+    collection: "CLASSIC COLLECTION",
+    images: [
+      "/images/hc-hoodie-pink.png",
+      "/images/joggers-side.jpg",
+      "/images/joggers-detail.jpg"
+    ]
+  },
+  {
+    id: 29,
+    name: "HC Hoodie - Black",
+    description: "Joggers técnicos con tejido stretch, ajuste perfecto y detalles reflectantes.",
+    price: 69.99,
+    size: "M",
+    color: "Black",
+    stock: 19,
+    mainCategory: "TOPS",
+    subCategory: "HOODIES",
+    collection: "CLASSIC COLLECTION",
+    images: [
+      "/images/hc-hoodie-black.png",
+      "/images/joggers-side.jpg",
+      "/images/joggers-detail.jpg"
+    ]
+  },
+  {
+    id: 30,
+    name: "Bands Hoodie - Grey",
+    description: "Joggers técnicos con tejido stretch, ajuste perfecto y detalles reflectantes.",
+    price: 69.99,
+    size: "M",
+    color: "Grey",
+    stock: 19,
+    mainCategory: "TOPS",
+    subCategory: "HOODIES",
+    collection: "NEW ARRIVALS",
+    images: [
+      "/images/bands-grey-hoodie.png",
+      "/images/joggers-side.jpg",
+      "/images/joggers-detail.jpg"
+    ]
+  },
+  {
+    id: 31,
+    name: "Bands Hoodie - Blue",
+    description: "Joggers técnicos con tejido stretch, ajuste perfecto y detalles reflectantes.",
+    price: 69.99,
+    size: "M",
+    color: "Blue",
+    stock: 19,
+    mainCategory: "TOPS",
+    subCategory: "HOODIES",
+    collection: "NEW ARRIVALS",
+    images: [
+      "/images/bands-bluenavy-hoodie.png",
+      "/images/joggers-side.jpg",
+      "/images/joggers-detail.jpg"
     ]
   }
 ];

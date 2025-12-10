@@ -37,7 +37,12 @@ const ShopDropdown = ({ headerHeight }) => {
       "SWIMSHORTS",
       "UNDERWEAR",
     ],
-    FOOTWEAR: ["ARMBO LOWS", "VORTEX", "VENTURE", "VITORIA", "V-SLIDES"],
+    FOOTWEAR: [
+      "ARMBO LOWS", 
+      "VORTEX", 
+      "VENTURE", 
+      "VITORIA", 
+      "V-SLIDES"],
     ACCESSORIES: [
       "CAPS",
       "BAGS",

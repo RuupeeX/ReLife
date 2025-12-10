@@ -8,6 +8,13 @@ const useQuery = () => {
   return new URLSearchParams(useLocation().search);
 };
 
+const handleLinkClick = () => {
+    setIsOpen(false);
+    setTimeout(() => {
+      window.scrollTo({ top: 0, behavior: "instant" });
+    }, 100);
+  };
+
 // --- COMPONENTES DE DROPDOWN ---
 
 const FilterDropdown = ({ title, options, filterValue, setFilterValue }) => {
@@ -316,7 +323,8 @@ const Products = () => {
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-12 pb-12 px-4 mt-10"> 
             {filteredProducts.map((product) => (
               <div key={product.id} className="group relative">
-                <Link to={`/producto/${product.id}`}>
+                <Link to={`/producto/${product.id}`} onClick={handleLinkClick}>
+
                   <div className="relative aspect-square bg-gray-100 mb-2 overflow-hidden">
                     <img
                       src={modelView && product.images[1] ? product.images[1] : product.images[0]}
