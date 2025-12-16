@@ -49,19 +49,50 @@ const MembersClub = () => {
     },
   ];
 
+  // Colores específicos para el hover y el shadow de cada Tier
+  const tierColors = {
+    BRONZE: {
+      hoverBorder: "hover:border-[#cd7f32]",
+      hoverText: "group-hover:text-[#cd7f32]",
+      // Sombra color bronce
+      hoverShadow: "hover:shadow-[0_10px_30px_-10px_rgba(205,127,50,0.5)]", 
+    },
+    SILVER: {
+      hoverBorder: "hover:border-[#c0c0c0]",
+      hoverText: "group-hover:text-[#c0c0c0]",
+      // Sombra color plata
+      hoverShadow: "hover:shadow-[0_10px_30px_-10px_rgba(192,192,192,0.5)]",
+    },
+    GOLD: {
+      hoverBorder: "hover:border-[#ffd700]",
+      hoverText: "group-hover:text-[#ffd700]",
+      // Sombra color oro
+      hoverShadow: "hover:shadow-[0_10px_30px_-10px_rgba(255,215,0,0.5)]",
+    },
+    PLATINUM: {
+      hoverBorder: "hover:border-[#0ea5e9]",
+      hoverText: "group-hover:text-[#0ea5e9]",
+      // Sombra color platino (azul cielo)
+      hoverShadow: "hover:shadow-[0_10px_30px_-10px_rgba(14,165,233,0.5)]",
+    },
+  };
+
   const membershipTiers = [
     {
       name: "BRONZE",
+      image: "/images/Bronze3D.png",
       requiredPoints: "0–999",
       benefits: [
         "2 points per €1 spent",
         "Access to exclusive sales",
         "Free standard shipping",
       ],
-      color: "bg-amber-900",
+      // Asignamos el objeto de colores correspondiente
+      colors: tierColors.BRONZE,
     },
     {
       name: "SILVER",
+      image: "/images/Silver3D.png",
       requiredPoints: "1,000–2,999",
       benefits: [
         "3 points per €1 spent",
@@ -69,10 +100,11 @@ const MembersClub = () => {
         "Free express shipping",
         "Free returns",
       ],
-      color: "bg-gray-400",
+      colors: tierColors.SILVER,
     },
     {
       name: "GOLD",
+      image: "/images/Gold3D.png",
       requiredPoints: "3,000–4,999",
       benefits: [
         "4 points per €1 spent",
@@ -81,10 +113,11 @@ const MembersClub = () => {
         "Dedicated support",
         "Birthday gift",
       ],
-      color: "bg-yellow-500",
+      colors: tierColors.GOLD,
     },
     {
       name: "PLATINUM",
+      image: "/images/Platinum3D.png",
       requiredPoints: "5,000+",
       benefits: [
         "5 points per €1 spent",
@@ -94,41 +127,41 @@ const MembersClub = () => {
         "VIP events",
         "Exclusive discounts",
       ],
-      color: "bg-gray-800",
+      colors: tierColors.PLATINUM,
     },
   ];
 
   return (
-    <div className="pt-20">
+    <div className="pt-20 bg-white text-black font-sans">
+      
       {/* Hero Section */}
-      <section className="relative h-[90vh] flex items-center justify-center overflow-hidden bg-gradient-to-br from-gray-900 to-black">
+      <section className="relative h-[80vh] flex items-center justify-center overflow-hidden bg-black">
         <div
-          className="absolute inset-0 bg-cover bg-center"
+          className="absolute inset-0 bg-cover bg-center opacity-60"
           style={{
             backgroundImage: "url('/images/memberbanner.png')",
           }}
         ></div>
-        <div className="absolute inset-0 bg-black/40 z-0"></div>
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black opacity-80"></div>
 
-        <div className="text-center text-white z-10 px-6 max-w-6xl">
-          <h1 className="text-4xl md:text-9xl font-bold mb-4 font-serif tracking-wide">
-            MEMBERS CLUB
+        <div className="text-center text-white z-10 px-6 max-w-5xl relative">
+          <h1 className="text-5xl md:text-8xl font-black mb-6 tracking-tighter uppercase leading-none">
+            Members Club
           </h1>
-          <p className="text-xl md:text-2xl mb-1 max-w-3xl mx-auto">
-            JOIN HOLOCREW CLUB AND GET REWARDED WHILE YOU SHOP
+          <p className="text-lg md:text-xl font-medium tracking-widest mb-2 uppercase text-gray-300">
+            Join Holocrew Club & Get Rewarded
           </p>
-          <p className="text-xl md:text-2xl mb-8">
-            YOU'LL RECEIVE CREDITS FOR SIGNING UP
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="w-24 h-1 bg-white mx-auto my-8"></div>
+          
+          <div className="flex flex-col sm:flex-row gap-6 justify-center mt-10">
             <Link to="/register">
-              <button className="bg-white text-black hover:bg-black hover:text-white border border-white px-6 py-3 font-bold text-lg shadow-lg transition-all duration-300 w-full sm:w-auto">
-                JOIN NOW
+              <button className="bg-white text-black px-10 py-4 text-sm font-bold tracking-[0.2em] uppercase hover:bg-transparent hover:text-white border border-white transition-all duration-300 min-w-[200px]">
+                Join Now
               </button>
             </Link>
             <Link to="/login">
-              <button className="bg-white text-black hover:bg-black hover:text-white border border-white px-10 py-3 font-bold text-lg shadow-lg transition-all duration-300 w-full sm:w-auto">
-                LOGIN
+              <button className="bg-transparent text-white border border-white px-10 py-4 text-sm font-bold tracking-[0.2em] uppercase hover:bg-white hover:text-black transition-all duration-300 min-w-[200px]">
+                Login
               </button>
             </Link>
           </div>
@@ -136,32 +169,30 @@ const MembersClub = () => {
       </section>
 
       {/* Benefits Section */}
-      <section className="bg-white py-16">
+      <section className="py-24 border-b border-gray-100">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-              WHY JOIN THE CLUB?
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold uppercase tracking-tight mb-4">
+              Unlock Exclusive Perks
             </h2>
-            <p className="text-gray-600 text-lg max-w-2xl mx-auto">
-              Discover all the exclusive benefits you'll receive as a member
-            </p>
+            <div className="w-12 h-0.5 bg-black mx-auto"></div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px bg-gray-200 border border-gray-200">
             {benefits.map((benefit, index) => (
               <div
                 key={index}
-                className="bg-gray-100 p-8 hover:shadow-xl transition-shadow duration-300"
+                className="bg-white p-10 flex flex-col items-center text-center hover:bg-gray-50 transition-colors duration-300"
               >
-                <div className="flex flex-col items-center mb-6">
-                  <benefit.icon className={`w-12 h-12 mb-2 ${benefit.color}`} />
-                  <h3 className="text-xl font-bold text-gray-900 ml-4">
-                    {benefit.title}
-                  </h3>
-                  <p className="text-gray-600 text-center">
-                    {benefit.description}
-                  </p>
+                <div className="mb-4 p-4 rounded-none">
+                    <benefit.icon className="w-8 h-8 text-blue-700" />
                 </div>
+                <h3 className="text-m font-bold uppercase tracking-wider mb-2">
+                  {benefit.title}
+                </h3>
+                <p className="text-sm text-gray-500 leading-relaxed max-w-xs">
+                  {benefit.description}
+                </p>
               </div>
             ))}
           </div>
@@ -169,101 +200,94 @@ const MembersClub = () => {
       </section>
 
       {/* How It Works */}
-      <section className="bg-white py-16">
+      <section className="py-24 bg-gray-50">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-              HOW IT WORKS
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold uppercase tracking-tight mb-4">
+              How It Works
             </h2>
+            <p className="text-gray-500 text-sm uppercase tracking-widest">Simple steps to rewards</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="text-center">
-              <div className="bg-black text-white w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">
-                1
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">
-                JOIN FOR FREE
-              </h3>
-              <p className="text-gray-600">
-                Sign up for free and get your 200 welcome credits for free
-              </p>
-            </div>
-
-            <div className="text-center">
-              <div className="bg-black text-white w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">
-                2
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">
-                SHOP & EARN
-              </h3>
-              <p className="text-gray-600">
-                Earn points with every purchase and level up in the program
-              </p>
-            </div>
-
-            <div className="text-center">
-              <div className="bg-black text-white w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">
-                3
-              </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">
-                REDEEM REWARDS
-              </h3>
-              <p className="text-gray-600">
-                Redeem your points for discounts, exclusive products, and more
-              </p>
-            </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 max-w-6xl mx-auto">
+            {[
+                { title: "Join for Free", desc: "Sign up and get 200 welcome credits instantly.", step: "01" },
+                { title: "Shop & Earn", desc: "Earn points with every purchase to level up.", step: "02" },
+                { title: "Redeem Rewards", desc: "Use points for discounts and exclusive products.", step: "03" }
+            ].map((item, index) => (
+                <div key={index} className="relative p-8 border border-gray-200 bg-white text-center group hover:border-black transition-colors duration-300">
+                    <span className="absolute -top-5 left-1/2 -translate-x-1/2 bg-gray-50 px-4 text-4xl font-black text-gray-200 group-hover:text-black transition-colors duration-300">
+                        {item.step}
+                    </span>
+                    <h3 className="text-lg font-bold uppercase tracking-wider mt-6 mb-3">{item.title}</h3>
+                    <p className="text-sm text-gray-500">{item.desc}</p>
+                </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Membership Tiers */}
-      <section className="bg-white py-16">
+      {/* Membership Tiers (SECCIÓN REDISEÑADA CON HOVER POR COLOR + SHADOW) */}
+      <section className="py-24">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-              MEMBERSHIP TIERS
+          <div className="text-center mb-20">
+            <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tighter mb-6">
+              Membership Tiers
             </h2>
-            <p className="text-gray-600 text-lg max-w-2xl mx-auto">
-              The more you shop, the more rewards you unlock
+            <p className="text-gray-500 text-sm uppercase tracking-widest max-w-md mx-auto border-t border-black pt-6">
+              Escalate your status. Unlock superior rewards.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {membershipTiers.map((tier, index) => (
               <div
                 key={index}
-                className="border-2 border-gray-200 p-6 hover:shadow-xl transition-shadow duration-300"
+                // APLICAMOS LAS CLASES DE COLOR Y SHADOW AQUÍ
+                className={`flex flex-col border-2 border-gray-100 group transition-all duration-300 ${tier.colors.hoverBorder} ${tier.colors.hoverShadow}`} 
               >
-                <div
-                  className={`${tier.color} text-white py-3 px-6 text-center mb-6`}
-                >
-                  <h3 className="text-xl font-bold">{tier.name}</h3>
+                {/* 1. IMAGEN GRANDE Y LIMPIA */}
+                <div className="w-full h-72 p-8 bg-gray-50 flex items-center justify-center relative overflow-hidden">
+                  <div className="absolute inset-0 z-10"></div>
+                  <img
+                    src={tier.image}
+                    alt={`${tier.name} tier`}
+                    className="w-full h-full object-contain drop-shadow-2xl transform group-hover:scale-110 transition-transform duration-700 z-0"
+                    onError={(e) => {
+                      e.target.style.display = "none";
+                      e.target.parentElement.innerHTML = '<div class="text-gray-200 text-8xl font-black opacity-20">★</div>';
+                    }}
+                  />
                 </div>
 
-                <div className="text-center mb-6">
-                  <div className="text-3xl font-bold text-gray-900 mb-2">
-                    {tier.requiredPoints}
+                {/* 2. CONTENIDO */}
+                <div className="p-8 text-center flex-grow flex flex-col bg-white relative z-20">
+                  {/* Nombre del Tier */}
+                  {/* Usamos tier.colors.hoverText */}
+                  <h3 className={`text-2xl font-black tracking-[0.15em] uppercase text-black mb-1 transition-colors duration-300 ${tier.colors.hoverText}`}>
+                    {tier.name}
+                  </h3>
+                  
+                  {/* Puntos */}
+                  <div className="mb-8">
+                    <span className="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Required Points</span>
+                    {/* Usamos tier.colors.hoverBorder para el subrayado */}
+                    <span className={`text-lg font-medium text-black border-b-2 border-transparent transition-all duration-300 inline-block pb-0.5 ${tier.colors.hoverBorder.replace('hover:', 'group-hover:')}`}>
+                        {tier.requiredPoints}
+                    </span>
                   </div>
-                  <p className="text-gray-600">required points</p>
+
+                  {/* Lista de Beneficios */}
+                  <ul className="space-y-4 text-left mt-auto border-t border-gray-100 pt-6">
+                    {tier.benefits.map((benefit, benefitIndex) => (
+                      // Usamos tier.colors.hoverText para el punto
+                      <li key={benefitIndex} className={`flex items-start text-xs text-gray-600 transition-colors duration-300 ${tier.colors.hoverText}`}>
+                        <span className="mr-3 font-bold">•</span>
+                        <span className="uppercase tracking-wide leading-relaxed text-black">{benefit}</span>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
-
-                <ul className="space-y-3 mb-8">
-                  {tier.benefits.map((benefit, benefitIndex) => (
-                    <li key={benefitIndex} className="flex items-start">
-                      <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 mr-3 flex-shrink-0" />
-                      <span className="text-gray-700">{benefit}</span>
-                    </li>
-                  ))}
-                </ul>
-
-                {index === 0 && (
-                  <Link to="/register">
-                    <button className="w-full bg-black text-white py-3  font-bold hover:bg-gray-800 transition-colors">
-                      JOIN NOW
-                    </button>
-                  </Link>
-                )}
               </div>
             ))}
           </div>
@@ -271,36 +295,35 @@ const MembersClub = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="bg-gray-100 py-16">
+      <section className="bg-black text-white py-24">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-4xl md:text-5xl font-bold text-grey-900 mb-6">
-            READY TO JOIN?
+          <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter mb-8">
+            Ready to Join?
           </h2>
-          <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
-            Join now and start enjoying exclusive benefits from your very first
-            purchase
+          <p className="text-gray-400 text-sm uppercase tracking-widest mb-12 max-w-xl mx-auto">
+            Start your journey today. Sign up now and receive 200 complimentary credits.
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="flex flex-col sm:flex-row gap-6 justify-center mb-16">
             <Link to="/register">
-              <button className="bg-white text-black hover:bg-gray-100 border border-black px-12 py-4  font-bold text-lg shadow-lg transition-all duration-300 w-full sm:w-auto">
-                JOIN NOW – GET 200 CREDITS
+              <button className="bg-white text-black px-12 py-4 text-sm font-bold tracking-[0.2em] uppercase hover:bg-black hover:text-white border border-white transition-all duration-300 w-full sm:w-auto">
+                Join Now
               </button>
             </Link>
             <Link to="/faq">
-              <button className="bg-white text-black hover:bg-gray-100 border border-black px-12 py-4  font-bold text-lg shadow-lg transition-all duration-300 w-full sm:w-auto">
-                LEARN MORE
+              <button className="bg-transparent text-white border border-white px-12 py-4 text-sm font-bold tracking-[0.2em] uppercase hover:bg-white hover:text-black transition-all duration-300 w-full sm:w-auto">
+                Learn More
               </button>
             </Link>
           </div>
 
-          <div className="mt-12 text-gray-600">
+          <div className="text-gray-500 text-xs uppercase tracking-widest">
             <p className="mb-2">Already a member?</p>
             <Link
               to="/login"
-              className="text-grey-500 font-bold hover:text-gray-700"
+              className="text-white border-b border-white pb-0.5 hover:text-gray-300 hover:border-gray-300 transition-all"
             >
-              Log in here to view your points and rewards →
+              Log in to view rewards
             </Link>
           </div>
         </div>

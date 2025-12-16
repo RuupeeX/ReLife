@@ -7,7 +7,7 @@ export const products = [
     price: 39.90,
     size: "M",
     color: "Black",
-    stock: 45,
+    stock: 0,
     mainCategory: "TOPS",
     subCategory: "T-SHIRTS",
     collection: "CLASSIC COLLECTION",
@@ -524,6 +524,23 @@ export const products = [
     images: [
       "/images/bands-bluenavy-hoodie.png",
       "/images/joggers-side.jpg",
+      "/images/joggers-detail.jpg"
+    ]
+  },
+  {
+    id: 32,
+    name: "Basic Denim Jorts",
+    description: "Joggers técnicos con tejido stretch, ajuste perfecto y detalles reflectantes.",
+    price: 59.99,
+    size: "M",
+    color: "Blue",
+    stock: 19,
+    mainCategory: "BOTTOMS",
+    subCategory: "JORTS",
+    collection: "CLASSIC COLLECTION",
+    images: [
+      "/images/denim-jorts.png",
+      "/images/demin-jorts-front.png",
       "/images/joggers-detail.jpg"
     ]
   }

@@ -3,23 +3,22 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import {
   ArrowLeft,
-  ShoppingCart,
   Star,
-  ChevronDown,
   Plus,
   Minus,
   Check,
-  CreditCard,
-  Truck,
   Info,
+  Heart,
 } from "lucide-react";
 import { products } from "../data/products";
 import { useCart } from "../context/CartContext";
+import { useWishlist } from "../context/WishlistContext";
+// 1. IMPORTAR CONTEXTO MONEDA
+import { useCurrency } from "../context/CurrencyContext";
 
-// Componente para los Acordeones (Details, Fit, Shipping)
+// Componente para los Acordeones (Sin cambios)
 const AccordionItem = ({ title, children, isOpen, onClick }) => {
   return (
-    
     <div className="border-b border-gray-200 mb-2 last:mb-0 last:border-b-0">
       <button
         className="w-full py-4 flex justify-between items-center text-left hover:bg-gray-50 transition-colors"
@@ -52,28 +51,29 @@ const ProductDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { addToCart } = useCart();
+  const { isInWishlist, toggleWishlist } = useWishlist();
+  
+  // 2. USAR EL HOOK DE MONEDA
+  const { formatPrice } = useCurrency();
 
   // Estados
   const [selectedSize, setSelectedSize] = useState(null);
-  const [openAccordion, setOpenAccordion] = useState(null); // 'details', 'fit', 'shipping'
+  const [openAccordion, setOpenAccordion] = useState(null); 
   const [selectedLookItems, setSelectedLookItems] = useState([]);
 
   // Encontrar producto
   const product = products.find((p) => p.id === parseInt(id));
 
-  // Productos sugeridos para "Complete the Look" (Excluyendo el actual)
   const completeTheLookProducts = products
     .filter((p) => p.id !== product?.id)
     .slice(0, 2);
 
   if (!product) return <div>Cargando...</div>;
 
-  // Lógica del acordeón
   const toggleAccordion = (section) => {
     setOpenAccordion(openAccordion === section ? null : section);
   };
 
-  // Lógica "Complete the look"
   const toggleLookItem = (itemId) => {
     if (selectedLookItems.includes(itemId)) {
       setSelectedLookItems(selectedLookItems.filter((id) => id !== itemId));
@@ -82,7 +82,6 @@ const ProductDetail = () => {
     }
   };
 
-  // Tallas disponibles (Mock)
   const sizes = ["XS", "S", "M", "L", "XL", "XXL"];
 
   return (
@@ -100,8 +99,7 @@ const ProductDetail = () => {
         <div className="flex flex-col lg:flex-row gap-20">
           {/* COLUMNA IZQUIERDA: GALERÍA DE IMÁGENES */}
           <div className="lg:w-[60%]">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-              {/* Si hay múltiples imágenes, las mostramos. Si no, repetimos la principal */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-2 relative">
               {(product.images && product.images.length > 0
                 ? product.images
                 : [product.image, product.image, product.image, product.image]
@@ -119,6 +117,19 @@ const ProductDetail = () => {
                       alt={`${product.name} view ${index + 1}`}
                       className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
                     />
+                    
+                    {/* Botón Wishlist Flotante en la primera imagen */}
+                    {index === 0 && (
+                         <button 
+                            onClick={() => toggleWishlist(product)}
+                            className="absolute top-4 right-4 p-2 rounded-full bg-white/50 hover:bg-white transition-all z-20"
+                        >
+                            <Heart 
+                                className={`w-5 h-5 transition-colors ${isInWishlist(product.id) ? "fill-black text-black" : "text-gray-900"}`} 
+                            />
+                        </button>
+                    )}
+
                   </div>
                 ))}
             </div>
@@ -133,7 +144,8 @@ const ProductDetail = () => {
                   {product.name}
                 </h1>
                 <p className="text-xl font-medium text-gray-900">
-                  {product.price.toFixed(2)}€
+                  {/* 3. FORMAT PRICE - PRECIO PRINCIPAL */}
+                  {formatPrice(product.price)}
                 </p>
                 <p className="text-xs text-gray-500">
                   Tax included.{" "}
@@ -141,7 +153,6 @@ const ProductDetail = () => {
                   calculated at checkout.
                 </p>
 
-                {/* Estrellas */}
                 <div className="flex justify-center lg:justify-start items-center space-x-1 pt-2">
                   {[1, 2, 3, 4, 5].map((star) => (
                     <Star
@@ -192,23 +203,13 @@ const ProductDetail = () => {
                   <span>Add to Cart</span>
                 </button>
 
-                {/* Iconos de Pago (Simulados) */}
+                {/* Iconos de Pago */}
                 <div className="flex justify-center gap-2 opacity-60 grayscale">
-                  <div className="h-6 w-10 bg-gray-200 rounded flex items-center justify-center text-[10px] font-bold">
-                    VISA
-                  </div>
-                  <div className="h-6 w-10 bg-gray-200 rounded flex items-center justify-center text-[10px] font-bold">
-                    MC
-                  </div>
-                  <div className="h-6 w-10 bg-gray-200 rounded flex items-center justify-center text-[10px] font-bold">
-                    AMEX
-                  </div>
-                  <div className="h-6 w-10 bg-gray-200 rounded flex items-center justify-center text-[10px] font-bold">
-                    PAYPAL
-                  </div>
-                  <div className="h-6 w-10 bg-gray-200 rounded flex items-center justify-center text-[10px] font-bold">
-                    APPLE
-                  </div>
+                  <div className="h-6 w-10 bg-gray-200 rounded flex items-center justify-center text-[10px] font-bold">VISA</div>
+                  <div className="h-6 w-10 bg-gray-200 rounded flex items-center justify-center text-[10px] font-bold">MC</div>
+                  <div className="h-6 w-10 bg-gray-200 rounded flex items-center justify-center text-[10px] font-bold">AMEX</div>
+                  <div className="h-6 w-10 bg-gray-200 rounded flex items-center justify-center text-[10px] font-bold">PAYPAL</div>
+                  <div className="h-6 w-10 bg-gray-200 rounded flex items-center justify-center text-[10px] font-bold">APPLE</div>
                 </div>
               </div>
 
@@ -219,7 +220,6 @@ const ProductDetail = () => {
                   LOW STOCK
                 </div>
                 <div className="flex items-center justify-center gap-2 text-xs text-gray-600">
-                  {/* AQUÍ ESTÁ EL CAMBIO */}
                   <img
                     src="https://flagcdn.com/es.svg"
                     alt="Bandera de España"
@@ -229,7 +229,7 @@ const ProductDetail = () => {
                 </div>
               </div>
 
-              {/* Acordeones de Información */}
+              {/* Acordeones */}
               <div className="border-t border-gray-200 pt-2 space-y-1">
                 <AccordionItem
                   title="DETAILS"
@@ -269,7 +269,7 @@ const ProductDetail = () => {
                 </AccordionItem>
               </div>
 
-              {/* Complete The Look Section */}
+              {/* Complete The Look */}
               {completeTheLookProducts.length > 0 && (
                 <div className="pt-6">
                   <h3 className="text-sm font-bold uppercase tracking-wide mb-4 text-center">
@@ -283,18 +283,15 @@ const ProductDetail = () => {
                       >
                         <div
                           className="w-16 h-20 bg-gray-100 bg-cover bg-center"
-                          style={{
-                            backgroundImage: `url(${
-                              item.images?.[0] || item.image
-                            })`,
-                          }}
+                          style={{ backgroundImage: `url(${item.images?.[0] || item.image})`}}
                         ></div>
                         <div className="flex-1 flex flex-col justify-center">
                           <h4 className="text-xs font-bold uppercase">
                             {item.name}
                           </h4>
                           <p className="text-xs text-gray-500">
-                            {item.price.toFixed(2)}€
+                            {/* 3. FORMAT PRICE - PRECIOS SUGERIDOS */}
+                            {formatPrice(item.price)}
                           </p>
                         </div>
                         <div className="flex items-center">
@@ -315,7 +312,6 @@ const ProductDetail = () => {
                         </div>
                       </div>
                     ))}
-
                     {selectedLookItems.length > 0 && (
                       <button className="w-full bg-white border border-black text-black py-3 text-xs font-bold uppercase hover:bg-black hover:text-white transition-all">
                         Add Selected to Cart

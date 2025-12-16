@@ -8,52 +8,57 @@ import {
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
+// 1. IMPORTAR CONTEXTO MONEDA Y REVIEWS
+import { useCurrency } from "../context/CurrencyContext";
+import ReviewSection from "../components/ReviewSection";
 
 const Home = () => {
-  // Función auxiliar para hacer scroll al inicio al cambiar de página
+  const { formatPrice } = useCurrency();
+
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "instant" });
   };
 
+  // Convertimos precios a números para que funcione el conversor
   const products = [
     {
       name: "AKIP80 LORS V2 'BLACK PRANTOY'",
-      price: "190.00€",
+      price: 190.0,
       image: "/images/bands-bluenavy-hoodie.png",
     },
     {
       name: "VORTER 'GLOSSY BLACK'",
-      price: "170.00€",
+      price: 170.0,
       image: "/images/bands-bluenavy-hoodie.png",
     },
     {
       name: "VENTURE HI 'TEXTILE BLACK'",
-      price: "240.00€",
+      price: 240.0,
       image: "/images/bands-bluenavy-hoodie.png",
     },
     {
       name: "AKIP80 LORS 'BLACK CROCO'",
-      price: "100.00€",
+      price: 100.0,
       image: "/images/bands-bluenavy-hoodie.png",
     },
     {
       name: "RUNNER PRO 'BLACK EDITION'",
-      price: "220.00€",
+      price: 220.0,
       image: "/images/bands-bluenavy-hoodie.png",
     },
     {
       name: "URBAN JACKET 'MATTE BLACK'",
-      price: "180.00€",
+      price: 180.0,
       image: "/images/product2.png",
     },
     {
       name: "TECH HOODIE 'STEALTH'",
-      price: "150.00€",
+      price: 150.0,
       image: "/images/product3.png",
     },
     {
       name: "CARGOS 'BLACK CAMO'",
-      price: "130.00€",
+      price: 130.0,
       image: "/images/product4.png",
     },
   ];
@@ -73,33 +78,32 @@ const Home = () => {
   };
 
   return (
-    <div className="pt-20">
-      {/* Banner Hero */}
-      <section className="relative h-[90vh] flex items-center justify-center overflow-hidden">
+    <div className="pt-20 bg-white">
+      
+      {/* 1. BANNER HERO (Estructura original, estilo mejorado) */}
+      <section className="relative h-[90vh] flex items-center justify-center overflow-hidden bg-black">
         <div
-          className="absolute inset-0 bg-cover bg-center"
+          className="absolute inset-0 bg-cover bg-center opacity-80"
           style={{
-            backgroundImage: "url('/images/prueba.png')",
+            backgroundImage: "url('/images/bannerGoat.png')",
           }}
         ></div>
+        <div className="absolute inset-0 bg-black/20 z-0"></div>
 
-        <div className="absolute inset-0 bg-black/10 z-0"></div>
-
-        <div className="text-center text-white z-10 px-4 max-w-4xl">
-          <h1 className="text-5xl md:text-7xl font-bold mb-6 font-serif">
-            RISE WITH THE CREW
+        <div className="text-center text-white z-10 px-4 max-w-5xl">
+          <h1 className="text-5xl md:text-8xl font-black mb-8 uppercase tracking-tighter shadow-sm">
+            Rise With The Crew
           </h1>
-          {/* CORRECCIÓN: Apunta a /shop */}
           <Link to="/shop" onClick={scrollToTop}>
-            <button className="bg-white text-black hover:bg-black hover:text-white px-8 py-3 font-bold text-lg shadow-lg border border-white hover:border-white transition-all duration-300">
-              SHOP NOW
+            <button className="bg-white text-black hover:bg-black hover:text-white px-10 py-4 text-sm font-bold tracking-[0.2em] uppercase border border-white transition-all duration-300">
+              Shop Now
             </button>
           </Link>
         </div>
       </section>
 
-      {/* Información de Envío */}
-      <section className="bg-white py-8">
+      {/* 2. INFO ENVÍO (Estructura original, iconos más limpios) */}
+      <section className="bg-white py-12 border-b border-gray-100">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {[
@@ -107,66 +111,60 @@ const Home = () => {
                 icon: RefreshCw,
                 title: "14 DAYS RETURN POLICY",
                 description: "Devoluciones gratuitas durante 14 días",
-                color: "text-black",
               },
               {
                 icon: Truck,
                 title: "FREE SHIPPING OVER 50€",
                 description: "Envío gratuito en pedidos superiores a 50€",
-                color: "text-black",
               },
               {
                 icon: Globe,
                 title: "WORLDWIDE SHIPPING",
                 description: "Envíos a todo el mundo",
-                color: "text-black",
               },
             ].map((item, index) => (
-              <div key={index} className="text-center p-8">
+              <div key={index} className="text-center p-6">
                 <div className="flex items-center justify-center mx-auto mb-4">
-                  <item.icon className={`w-12 h-12 ${item.color}`} />
+                  <item.icon className="w-8 h-8 text-black" strokeWidth={1.5} />
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-2">
+                <h3 className="text-sm font-bold text-gray-900 mb-2 uppercase tracking-wide">
                   {item.title}
                 </h3>
-                <p className="text-gray-600">{item.description}</p>
+                <p className="text-xs text-gray-500">{item.description}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Categorías con Descuentos */}
-      <div className="bg-gray-100">
-        <div className="flex flex-col md:flex-row w-full">
+      {/* 3. CATEGORÍAS 3 COLUMNAS (TOPS, BOTTOMS, ACC) */}
+      <div className="bg-white">
+        <div className="flex flex-col md:flex-row w-full h-auto md:h-[85vh]">
           {/* Categoría 1 - TOPS */}
           <Link
-            to="/shop?category=tops" // CORRECCIÓN: /shop y ?category=tops
+            to="/shop?category=tops"
             onClick={scrollToTop}
-            className="relative overflow-hidden flex-1 h-[85vh] group md:mr-1"
+            className="relative overflow-hidden flex-1 h-[60vh] md:h-full group border-r border-white/10"
           >
             <div
-              className="absolute inset-0 bg-cover bg-center"
-              style={{
-                backgroundImage: "url('/images/tops1.png')",
-              }}
+              className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
+              style={{ backgroundImage: "url('/images/tops1.png')" }}
             ></div>
-            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent">
-              <div className="absolute bottom-5 left-8">
-                <h3 className="text-3xl md:text-4xl font-bold text-white mb-2">
-                  TOPS
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent">
+              <div className="absolute bottom-8 left-8">
+                <h3 className="text-4xl md:text-5xl font-black text-white mb-2 uppercase tracking-tighter">
+                  Tops
                 </h3>
-                <p className="text-4xl md:text-3xl font-bold text-white">
-                  UP TO 75% OFF
+                <p className="text-sm font-bold text-white uppercase tracking-widest opacity-90">
+                  Up to 75% Off
                 </p>
               </div>
-              <div className="absolute bottom-4 right-4">
-                <button className="bg-white text-black px-8 py-3 font-bold text-lg shadow-lg flex items-center space-x-2">
-                  <span>OFFERS</span>
+              <div className="absolute bottom-8 right-8">
+                <button className="bg-white text-black w-10 h-10 flex items-center justify-center hover:bg-black border border-white hover:text-white transition-colors duration-300">
                   <ArrowRight className="w-5 h-5" />
                 </button>
               </div>
-              <div className="absolute top-6 right-6 bg-red-600 text-white px-4 py-2 font-bold text-xl">
+              <div className="absolute top-6 right-6 bg-white text-black px-3 py-1 text-xs font-bold uppercase tracking-wider">
                 -75%
               </div>
             </div>
@@ -174,32 +172,29 @@ const Home = () => {
 
           {/* Categoría 2 - BOTTOMS */}
           <Link
-            to="/shop?category=bottoms" // CORRECCIÓN: /shop y ?category=bottoms
+            to="/shop?category=bottoms"
             onClick={scrollToTop}
-            className="relative overflow-hidden flex-1 h-[85vh] group mx-1"
+            className="relative overflow-hidden flex-1 h-[60vh] md:h-full group border-r border-white/10"
           >
             <div
-              className="absolute inset-0 bg-cover bg-center"
-              style={{
-                backgroundImage: "url('/images/bottons.png')",
-              }}
+              className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
+              style={{ backgroundImage: "url('/images/bottons.png')" }}
             ></div>
-            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent">
-              <div className="absolute bottom-5 left-8">
-                <h3 className="text-3xl md:text-4xl font-bold text-white mb-2">
-                  BOTTOMS
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent">
+              <div className="absolute bottom-8 left-8">
+                <h3 className="text-4xl md:text-5xl font-black text-white mb-2 uppercase tracking-tighter">
+                  Bottoms
                 </h3>
-                <p className="text-4xl md:text-3xl font-bold text-white">
-                  UP TO 70% OFF
+                <p className="text-sm font-bold text-white uppercase tracking-widest opacity-90">
+                  Up to 70% Off
                 </p>
               </div>
-              <div className="absolute bottom-4 right-4">
-                <button className="bg-white text-black px-8 py-3 font-bold text-lg shadow-lg flex items-center space-x-2">
-                  <span>OFFERS</span>
+              <div className="absolute bottom-8 right-8">
+                <button className="bg-white text-black w-10 h-10 flex items-center justify-center hover:bg-black border border-white hover:text-white transition-colors duration-300">
                   <ArrowRight className="w-5 h-5" />
                 </button>
               </div>
-              <div className="absolute top-6 right-6 bg-red-600 text-white px-4 py-2 font-bold text-xl">
+              <div className="absolute top-6 right-6 bg-white text-black px-3 py-1 text-xs font-bold uppercase tracking-wider">
                 -70%
               </div>
             </div>
@@ -207,32 +202,29 @@ const Home = () => {
 
           {/* Categoría 3 - ACCESSORIES */}
           <Link
-            to="/shop?category=accessories" // CORRECCIÓN: /shop y ?category=accessories
+            to="/shop?category=accessories"
             onClick={scrollToTop}
-            className="relative overflow-hidden flex-1 h-[85vh] group md:ml-1"
+            className="relative overflow-hidden flex-1 h-[60vh] md:h-full group"
           >
             <div
-              className="absolute inset-0 bg-cover bg-center"
-              style={{
-                backgroundImage: "url('/images/accessories.png')",
-              }}
+              className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
+              style={{ backgroundImage: "url('/images/accessories.png')" }}
             ></div>
-            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent">
-              <div className="absolute bottom-5 left-8">
-                <h3 className="text-3xl md:text-4xl font-bold text-white mb-2">
-                  ACCESSORIES
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent">
+              <div className="absolute bottom-8 left-8">
+                <h3 className="text-4xl md:text-5xl font-black text-white mb-2 uppercase tracking-tighter">
+                  Accessories
                 </h3>
-                <p className="text-4xl md:text-3xl font-bold text-white">
-                  UP TO 50% OFF
+                <p className="text-sm font-bold text-white uppercase tracking-widest opacity-90">
+                  Up to 50% Off
                 </p>
               </div>
-              <div className="absolute bottom-4 right-4">
-                <button className="bg-white text-black px-8 py-3 font-bold text-lg shadow-lg flex items-center space-x-2">
-                  <span>OFFERS</span>
+              <div className="absolute bottom-8 right-8">
+                <button className="bg-white text-black w-10 h-10 flex items-center justify-center hover:bg-black hover:text-white border border-white transition-colors duration-300">
                   <ArrowRight className="w-5 h-5" />
                 </button>
               </div>
-              <div className="absolute top-6 right-6 bg-red-600 text-white px-4 py-2 font-bold text-xl">
+              <div className="absolute top-6 right-6 bg-white text-black px-3 py-1 text-xs font-bold uppercase tracking-wider">
                 -50%
               </div>
             </div>
@@ -240,312 +232,316 @@ const Home = () => {
         </div>
       </div>
 
-      {/* Sección DISCOVER BY CATEGORY */}
-      <section className="bg-white py-16">
-        <div className="relative">
-          <div className="container mx-auto px-4 mb-12">
-            <div className="text-center">
-              <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-8">
-                DISCOVER BY CATEGORY
-              </h2>
-              <div className="flex justify-center">
-                <div className="flex flex-wrap justify-center gap-8">
-                  {[
-                    "NEW ARRIVALS",
-                    "FOOTWEAR",
-                    "DENIM PANTS", // Ajustado para coincidir con tu Dropdown
-                    "JERSEYS",
-                    "KNITWEAR",
-                    "TRACK JACKETS", // Ajustado
-                    "HOODIES",
-                    "T-SHIRTS",
-                  ].map((category, index) => (
-                    <Link
-                      key={index}
-                      // CORRECCIÓN: Generación de URL consistente con Products.js
-                      to={`/shop?category=${category
-                        .toLowerCase()
-                        .replace(/\s+/g, "-")}`}
-                      onClick={scrollToTop}
-                      className="group"
-                    >
-                      <div className="text-center">
-                        <div className="text-lg md:text-lg font-bold text-gray-800 group-hover:text-blue-700 transition-colors whitespace-nowrap uppercase">
-                          {category}
-                        </div>
-                        <div className="mt-2 h-1 w-full bg-transparent group-hover:bg-blue-700 transition-colors"></div>
-                      </div>
-                    </Link>
-                  ))}
-                </div>
+      {/* 4. DISCOVER BY CATEGORY */}
+      <section className="bg-white py-20 border-b border-gray-100">
+        <div className="container mx-auto px-4 mb-12">
+          <div className="text-center">
+            <h2 className="text-3xl md:text-5xl font-black text-gray-900 mb-10 uppercase tracking-tighter">
+              Discover by Category
+            </h2>
+            <div className="flex justify-center">
+              <div className="flex flex-wrap justify-center gap-x-8 gap-y-4">
+                {[
+                  "NEW ARRIVALS", "FOOTWEAR", "DENIM PANTS", "JERSEYS",
+                  "KNITWEAR", "TRACK JACKETS", "HOODIES", "T-SHIRTS",
+                ].map((category, index) => (
+                  <Link
+                    key={index}
+                    to={`/shop?category=${category.toLowerCase().replace(/\s+/g, "-")}`}
+                    onClick={scrollToTop}
+                    className="group relative"
+                  >
+                    <span className="text-sm font-bold text-gray-500 group-hover:text-black transition-colors uppercase tracking-widest">
+                        {category}
+                    </span>
+                    <span className="absolute -bottom-1 left-0 w-0 h-px bg-black transition-all duration-300 group-hover:w-full"></span>
+                  </Link>
+                ))}
               </div>
             </div>
           </div>
+        </div>
 
-          {/* Carrusel de Productos */}
-          <div className="relative">
-            <div
-              id="products-carousel"
-              className="flex overflow-x-auto scrollbar-hide space-x-6 pb-8 pl-4"
-              style={{
-                scrollbarWidth: "none",
-                msOverflowStyle: "none",
-                scrollPaddingLeft: "0",
-                scrollPaddingRight: "0",
-              }}
-            >
-              {products.map((product, index) => (
-                <Link
-                  key={index}
-                  // Nota: Aquí mantengo el link por nombre, pero idealmente debería ser por ID si tienes acceso a él
-                  to={`/producto/${product.name
-                    .toLowerCase()
-                    .replace(/\s+/g, "-")}`}
-                  onClick={scrollToTop}
-                  className="group flex-shrink-0 w-64 first:ml-0 last:mr-0"
-                >
-                  <div className="relative aspect-square bg-gray-100 mb-4 overflow-hidden rounded-lg">
-                    <div
-                      className="w-full h-full bg-cover bg-center group-hover:scale-105 transition-transform duration-500"
-                      style={{
-                        backgroundImage: `url('${product.image}')`,
-                      }}
-                    ></div>
-                  </div>
-                  <h4 className="text-sm font-bold text-gray-900 mb-2 line-clamp-2">
-                    {product.name}
-                  </h4>
-                  <div className="flex justify-between items-center">
-                    <span className="text-xl font-bold text-gray-900">
-                      {product.price}
-                    </span>
-                  </div>
-                  <button className="mt-4 w-full bg-black text-white py-2 font-semibold hover:bg-gray-800 transition-colors opacity-0 group-hover:opacity-100 transition-opacity">
-                    AÑADIR AL CARRITO
-                  </button>
-                </Link>
-              ))}
-            </div>
-
-            <button
-              onClick={() => scrollLeft("products-carousel")}
-              className="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 bg-white/80 hover:bg-white border border-gray-300 rounded-full w-10 h-10 flex items-center justify-center shadow-lg ml-2"
-            >
-              <ChevronLeft className="w-6 h-6 text-gray-800" />
-            </button>
-
-            <button
-              onClick={() => scrollRight("products-carousel")}
-              className="absolute right-0 top-1/2 transform -translate-y-1/2 z-10 bg-white/80 hover:bg-white border border-gray-300 rounded-full w-10 h-10 flex items-center justify-center shadow-lg mr-2"
-            >
-              <ChevronRight className="w-6 h-6 text-gray-800" />
-            </button>
-          </div>
-
-          <div className="container mx-auto px-4">
-            <div className="text-center mt-12">
-              <Link to="/shop" onClick={scrollToTop}>
-                <button className="bg-black text-white px-10 py-3 font-bold text-lg shadow-lg hover:bg-gray-800 transition-colors flex items-center space-x-2 mx-auto">
-                  <span>VER TODOS LOS PRODUCTOS</span>
-                  <ArrowRight className="w-5 h-5" />
+        {/* 5. CARRUSEL DE PRODUCTOS 1 */}
+        <div className="relative group/carousel">
+          <div
+            id="products-carousel"
+            className="flex overflow-x-auto scrollbar-hide space-x-px pb-8 border-t border-b border-gray-100 "
+            style={{ scrollbarWidth: "none" }}
+          >
+            {products.map((product, index) => (
+              <Link
+                key={index}
+                to={`/producto/${product.name.toLowerCase().replace(/\s+/g, "-")}`}
+                onClick={scrollToTop}
+                className="group flex-shrink-0 w-72 bg-white p-4 hover:shadow-lg transition-all duration-300"
+              >
+                <div className="relative aspect-square bg-gray-50 mb-4 overflow-hidden">
+                  <div
+                    className="w-full h-full bg-cover bg-center mix-blend-multiply transition-transform duration-700 group-hover:scale-105"
+                    style={{ backgroundImage: `url('${product.image}')` }}
+                  ></div>
+                </div>
+                <h4 className="text-xs font-bold text-gray-900 mb-1 line-clamp-1 uppercase tracking-wide">
+                  {product.name}
+                </h4>
+                <div className="flex justify-between items-center">
+                  <span className="text-sm font-medium text-gray-600">
+                    {formatPrice(product.price)}
+                  </span>
+                </div>
+                <button className="mt-4 w-full bg-black text-white py-2 text-xs font-bold uppercase tracking-widest hover:bg-gray-800 transition-all opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0">
+                  Add to Cart
                 </button>
               </Link>
-            </div>
+            ))}
           </div>
+
+          {/* Flechas Carrusel */}
+          <button
+            onClick={() => scrollLeft("products-carousel")}
+            className="hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white border-r border-gray-200 w-12 h-16 items-center justify-center hover:bg-gray-50"
+          >
+            <ChevronLeft className="w-6 h-6 text-black" />
+          </button>
+          <button
+            onClick={() => scrollRight("products-carousel")}
+            className="hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white border-l border-gray-200 w-12 h-16 items-center justify-center hover:bg-gray-50"
+          >
+            <ChevronRight className="w-6 h-6 text-black" />
+          </button>
+        </div>
+
+        <div className="text-center mt-12">
+            <Link to="/shop" onClick={scrollToTop}>
+              <button className="bg-white text-black border border-black px-12 py-3 text-xs font-bold uppercase tracking-[0.15em] hover:bg-black hover:text-white transition-all duration-300">
+                View All Products
+              </button>
+            </Link>
         </div>
       </section>
 
-      {/* Nueva sección de 2 columnas - NEW ARRIVALS y NEW DENIMS */}
-      <div className="bg-gray-100">
-        <div className="flex flex-col md:flex-row w-full">
-          {/* Columna 1 - NEW ARRIVALS */}
+      {/* 6. NEW ARRIVALS & DENIMS (2 Columnas) */}
+      <div className="bg-white">
+        <div className="flex flex-col md:flex-row w-full h-[95vh]">
+          {/* New Arrivals */}
           <Link
-            to="/shop?category=new-arrivals" // CORRECCIÓN
+            to="/shop?category=new-arrivals"
             onClick={scrollToTop}
-            className="relative overflow-hidden flex-1 h-[95vh] group md:mr-1"
+            className="relative overflow-hidden flex-1 h-full group border-r border-white"
           >
             <div
-              className="absolute inset-0 bg-cover bg-center"
-              style={{
-                backgroundImage: "url('/images/newarrivals.png')",
-              }}
+              className="absolute inset-0 bg-cover bg-center transition-transform duration-1000 group-hover:scale-105"
+              style={{ backgroundImage: "url('/images/newarrivals.png')" }}
             ></div>
-            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent flex items-center justify-center">
+            <div className="absolute inset-0 bg-black/10 group-hover:bg-black/30 transition-colors duration-500 flex items-center justify-center">
               <div className="text-center">
-                <h3 className="text-4xl md:text-5xl font-bold text-white mb-1">
-                  NEW ARRIVALS
+                <h3 className="text-5xl md:text-7xl font-black text-white mb-2 uppercase tracking-tighter">
+                  New <br/> Arrivals
                 </h3>
-                <p className="text-4xl md:text-3xl font-bold text-white">
-                  SHOP NOW
-                </p>
+                <span className="inline-block border-b-2 border-white text-white font-bold uppercase tracking-widest text-sm pb-1">Shop Collection</span>
               </div>
             </div>
           </Link>
 
-          {/* Columna 2 - NEW DENIMS */}
+          {/* New Denims */}
           <Link
-            to="/shop?category=denim-pants" // CORRECCIÓN: Apuntando a la categoría correcta del dropdown
+            to="/shop?category=denim-pants"
             onClick={scrollToTop}
-            className="relative overflow-hidden flex-1 h-[95vh] group md:ml-1"
+            className="relative overflow-hidden flex-1 h-full group"
           >
             <div
-              className="absolute inset-0 bg-cover bg-center"
-              style={{
-                backgroundImage: "url('/images/newdenims.png')",
-              }}
+              className="absolute inset-0 bg-cover bg-center transition-transform duration-1000 group-hover:scale-105"
+              style={{ backgroundImage: "url('/images/newdenims.png')" }}
             ></div>
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent flex items-center justify-center">
+            <div className="absolute inset-0 bg-black/10 group-hover:bg-black/30 transition-colors duration-500 flex items-center justify-center">
               <div className="text-center">
-                <h3 className="text-4xl md:text-5xl font-bold text-white mb-1">
-                  NEW DENIMS
+                <h3 className="text-5xl md:text-7xl font-black text-white mb-2 uppercase tracking-tighter">
+                  Denim <br/> Series
                 </h3>
-                <p className="text-4xl md:text-3xl font-bold text-white">
-                  SHOP NOW
-                </p>
+                <span className="inline-block border-b-2 border-white text-white font-bold uppercase tracking-widest text-sm pb-1">Shop Denim</span>
               </div>
             </div>
           </Link>
         </div>
       </div>
 
-      {/* Sección BEST SELLERS */}
-      <section className="bg-white py-16">
+      {/* 7. BEST SELLERS SECTION */}
+      <section className="bg-white py-20">
         <div className="relative">
-          <div className="container mx-auto px-4 mb-8">
-            <div className="flex flex-col md:flex-row md:items-center justify-between">
-              <div className="mb-6 md:mb-0 md:w-1/3">
-                <h2 className="text-4xl md:text-4xl font-bold text-gray-900">
-                  BEST SELLERS
-                </h2>
-              </div>
-
-              <div className="md:w-1/3 flex justify-end">
-                {/* CORRECCIÓN: Podrías crear una categoría Best Sellers o simplemente llevar al shop */}
-                <Link to="/shop" onClick={scrollToTop}>
-                  <button className="text-black font-bold hover:text-gray-700 transition-colors flex items-center space-x-2">
-                    <span>VER TODOS LOS BEST SELLERS</span>
-                    <ArrowRight className="w-4 h-4" />
-                  </button>
-                </Link>
-              </div>
-            </div>
+          <div className="container mx-auto px-4 mb-10 flex flex-col md:flex-row items-center justify-between">
+             <h2 className="text-3xl md:text-5xl font-black text-gray-900 uppercase tracking-tighter">
+                Best Sellers
+             </h2>
+             <Link to="/shop" onClick={scrollToTop}>
+                <button className="text-sm font-bold uppercase tracking-widest border-b border-black pb-1 hover:text-gray-600 hover:border-gray-600 transition-all mt-4 md:mt-0">
+                    View All
+                </button>
+             </Link>
           </div>
 
-          <div className="relative">
+          {/* Carrusel 2 (Igual que el 1) */}
+          <div className="relative group/carousel">
             <div
               id="best-sellers-carousel"
-              className="flex overflow-x-auto scrollbar-hide space-x-6 pb-8 pl-4"
-              style={{
-                scrollbarWidth: "none",
-                msOverflowStyle: "none",
-                scrollPaddingLeft: "0",
-                scrollPaddingRight: "0",
-              }}
+              className="flex overflow-x-auto scrollbar-hide space-x-px pb-8 border-t border-b border-gray-100"
+              style={{ scrollbarWidth: "none" }}
             >
               {products.map((product, index) => (
                 <Link
                   key={index}
-                  to={`/producto/${product.name
-                    .toLowerCase()
-                    .replace(/\s+/g, "-")}`}
+                  to={`/producto/${product.name.toLowerCase().replace(/\s+/g, "-")}`}
                   onClick={scrollToTop}
-                  className="group flex-shrink-0 w-64 first:ml-0 last:mr-0"
+                  className="group flex-shrink-0 w-72 bg-white p-4 hover:shadow-lg transition-all duration-300"
                 >
-                  <div className="relative aspect-square bg-gray-100 mb-4 overflow-hidden rounded-lg">
+                  <div className="relative aspect-square bg-gray-50 mb-4 overflow-hidden">
                     <div
-                      className="w-full h-full bg-cover bg-center group-hover:scale-105 transition-transform duration-500"
-                      style={{
-                        backgroundImage: `url('${product.image}')`,
-                      }}
+                      className="w-full h-full bg-cover bg-center mix-blend-multiply transition-transform duration-700 group-hover:scale-105"
+                      style={{ backgroundImage: `url('${product.image}')` }}
                     ></div>
-                    <div className="absolute top-3 right-3 bg-black text-white px-2 py-1 rounded-full font-bold text-xs">
-                      TOP {index + 1}
+                    <div className="absolute top-0 left-0 bg-black text-white px-2 py-1 text-[10px] font-bold uppercase tracking-wider">
+                      Top {index + 1}
                     </div>
                   </div>
-                  <h4 className="text-sm font-bold text-gray-900 mb-2 line-clamp-2">
+                  <h4 className="text-xs font-bold text-gray-900 mb-1 line-clamp-1 uppercase tracking-wide">
                     {product.name}
                   </h4>
                   <div className="flex justify-between items-center">
-                    <span className="text-xl font-bold text-gray-900">
-                      {product.price}
+                    <span className="text-sm font-medium text-gray-600">
+                      {formatPrice(product.price)}
                     </span>
                   </div>
-                  <button className="mt-4 w-full bg-black text-white py-2 font-semibold hover:bg-gray-800 transition-colors opacity-0 group-hover:opacity-100 transition-opacity">
-                    AÑADIR AL CARRITO
+                  <button className="mt-4 w-full bg-black text-white py-2 text-xs font-bold uppercase tracking-widest hover:bg-gray-800 transition-all opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0">
+                    Add to Cart
                   </button>
                 </Link>
               ))}
             </div>
 
-            <button
-              onClick={() => scrollLeft("best-sellers-carousel")}
-              className="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 bg-white/80 hover:bg-white border border-gray-300 rounded-full w-10 h-10 flex items-center justify-center shadow-lg ml-2"
-            >
-              <ChevronLeft className="w-6 h-6 text-gray-800" />
+            <button onClick={() => scrollLeft("best-sellers-carousel")} className="hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white border-r border-gray-200 w-12 h-16 items-center justify-center hover:bg-gray-50">
+              <ChevronLeft className="w-6 h-6 text-black" />
             </button>
-
-            <button
-              onClick={() => scrollRight("best-sellers-carousel")}
-              className="absolute right-0 top-1/2 transform -translate-y-1/2 z-10 bg-white/80 hover:bg-white border border-gray-300 rounded-full w-10 h-10 flex items-center justify-center shadow-lg mr-2"
-            >
-              <ChevronRight className="w-6 h-6 text-gray-800" />
+            <button onClick={() => scrollRight("best-sellers-carousel")} className="hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white border-l border-gray-200 w-12 h-16 items-center justify-center hover:bg-gray-50">
+              <ChevronRight className="w-6 h-6 text-black" />
             </button>
           </div>
         </div>
       </section>
 
-      {/* Sección OUTERWEAR y FOOTWEAR */}
-      <div className="bg-gray-100">
-        <div className="flex flex-col md:flex-row w-full">
-          {/* Columna 1 - OUTERWEAR (Mapeado a Jackets para que funcione el filtro) */}
+      {/* 8. OUTERWEAR & FOOTWEAR (2 Columnas) */}
+      <div className="bg-white">
+        <div className="flex flex-col md:flex-row w-full h-[95vh]">
+          {/* Outerwear */}
           <Link
-            to="/shop?category=jackets" // CORRECCIÓN: "jackets" suele ser la categoría técnica para outerwear
+            to="/shop?category=jackets"
             onClick={scrollToTop}
-            className="relative overflow-hidden flex-1 h-[95vh] group md:mr-1"
+            className="relative overflow-hidden flex-1 h-full group border-r border-white"
           >
             <div
-              className="absolute inset-0 bg-cover bg-center"
-              style={{
-                backgroundImage: "url('/images/outerwear.png')",
-              }}
+              className="absolute inset-0 bg-cover bg-center transition-transform duration-1000 group-hover:scale-105"
+              style={{ backgroundImage: "url('/images/outerwear.png')" }}
             ></div>
-            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent flex items-center justify-center">
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent flex items-center justify-center">
               <div className="text-center">
-                <h3 className="text-4xl md:text-5xl font-bold text-white mb-1">
-                  OUTERWEAR
+                <h3 className="text-4xl md:text-6xl font-black text-white mb-2 uppercase tracking-tighter">
+                  Outerwear
                 </h3>
-                <p className="text-4xl md:text-3xl font-bold text-white">
-                  SHOP NOW
+                <p className="text-sm font-bold text-white uppercase tracking-widest border-b border-white inline-block pb-1">
+                  Shop Now
                 </p>
               </div>
             </div>
           </Link>
 
-          {/* Columna 2 - FOOTWEAR */}
+          {/* Footwear */}
           <Link
-            to="/shop?category=footwear" // CORRECCIÓN
+            to="/shop?category=footwear"
             onClick={scrollToTop}
-            className="relative overflow-hidden flex-1 h-[95vh] group md:ml-1"
+            className="relative overflow-hidden flex-1 h-full group"
           >
             <div
-              className="absolute inset-0 bg-cover bg-center"
-              style={{
-                backgroundImage: "url('/images/footwear.png')",
-              }}
+              className="absolute inset-0 bg-cover bg-center transition-transform duration-1000 group-hover:scale-105"
+              style={{ backgroundImage: "url('/images/footwear.png')" }}
             ></div>
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent flex items-center justify-center">
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent flex items-center justify-center">
               <div className="text-center">
-                <h3 className="text-4xl md:text-5xl font-bold text-white mb-1">
-                  FOOTWEAR
+                <h3 className="text-4xl md:text-6xl font-black text-white mb-2 uppercase tracking-tighter">
+                  Footwear
                 </h3>
-                <p className="text-4xl md:text-3xl font-bold text-white">
-                  SHOP NOW
+                <p className="text-sm font-bold text-white uppercase tracking-widest border-b border-white inline-block pb-1">
+                  Shop Now
                 </p>
               </div>
             </div>
           </Link>
         </div>
       </div>
+      
+      {/* 7. WINTER ESSENTIALS SECTION */}
+      <section className="bg-white py-20">
+        <div className="relative">
+          <div className="container mx-auto px-4 mb-10 flex flex-col md:flex-row items-center justify-between">
+             <h2 className="text-3xl md:text-5xl font-black text-gray-900 uppercase tracking-tighter">
+                Winter Essentials
+             </h2>
+             <Link to="/shop" onClick={scrollToTop}>
+                <button className="text-sm font-bold uppercase tracking-widest border-b border-black pb-1 hover:text-gray-600 hover:border-gray-600 transition-all mt-4 md:mt-0">
+                    View All
+                </button>
+             </Link>
+          </div>
+
+          {/* Carrusel 2 (Igual que el 1) */}
+          <div className="relative group/carousel">
+            <div
+              id="best-sellers-carousel"
+              className="flex overflow-x-auto scrollbar-hide space-x-px pb-8 border-t border-b border-gray-100"
+              style={{ scrollbarWidth: "none" }}
+            >
+              {products.map((product, index) => (
+                <Link
+                  key={index}
+                  to={`/producto/${product.name.toLowerCase().replace(/\s+/g, "-")}`}
+                  onClick={scrollToTop}
+                  className="group flex-shrink-0 w-72 bg-white p-4 hover:shadow-lg transition-all duration-300"
+                >
+                  <div className="relative aspect-square bg-gray-50 mb-4 overflow-hidden">
+                    <div
+                      className="w-full h-full bg-cover bg-center mix-blend-multiply transition-transform duration-700 group-hover:scale-105"
+                      style={{ backgroundImage: `url('${product.image}')` }}
+                    ></div>
+                    <div className="absolute top-0 left-0 bg-black text-white px-2 py-1 text-[10px] font-bold uppercase tracking-wider">
+                      Top {index + 1}
+                    </div>
+                  </div>
+                  <h4 className="text-xs font-bold text-gray-900 mb-1 line-clamp-1 uppercase tracking-wide">
+                    {product.name}
+                  </h4>
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm font-medium text-gray-600">
+                      {formatPrice(product.price)}
+                    </span>
+                  </div>
+                  <button className="mt-4 w-full bg-black text-white py-2 text-xs font-bold uppercase tracking-widest hover:bg-gray-800 transition-all opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0">
+                    Add to Cart
+                  </button>
+                </Link>
+              ))}
+            </div>
+
+            <button onClick={() => scrollLeft("best-sellers-carousel")} className="hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white border-r border-gray-200 w-12 h-16 items-center justify-center hover:bg-gray-50">
+              <ChevronLeft className="w-6 h-6 text-black" />
+            </button>
+            <button onClick={() => scrollRight("best-sellers-carousel")} className="hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white border-l border-gray-200 w-12 h-16 items-center justify-center hover:bg-gray-50">
+              <ChevronRight className="w-6 h-6 text-black" />
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* 9. SECCIÓN DE RESEÑAS */}
+      <ReviewSection />
+      
     </div>
   );
 };

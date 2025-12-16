@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useCart } from "../context/CartContext";
+import { useCurrency } from "../context/CurrencyContext";
 import {
   X,
   Plus,
@@ -27,6 +28,9 @@ const CartPanel = () => {
     clearCart,
   } = useCart();
 
+  // 2. USAR EL HOOK PARA FORMATEAR PRECIOS
+  const { formatPrice } = useCurrency();
+
   const [showCheckout, setShowCheckout] = useState(false);
 
   const slideIn = {
@@ -41,9 +45,10 @@ const CartPanel = () => {
     toggleCart();
   };
 
-  // Calcular si el envío es gratis
+  // Calcular si el envío es gratis (base 50 EUR)
   const isFreeShipping = getCartTotal() >= 50;
   const shippingNeeded = Math.max(0, 50 - getCartTotal());
+  const shippingCost = 5.99;
 
   return (
     <>
@@ -68,21 +73,21 @@ const CartPanel = () => {
               exit="exit"
             >
               {/* Header del carrito */}
-              <div className="flex items-center justify-between p-6 border-b border-black bg-white">
+              <div className="flex items-center justify-between p-3 border-b border-black bg-white">
                 <div className="flex items-center space-x-3">
                   <div className="relative">
-                    <ShoppingBag className="w-6 h-6 text-black" />
+                    <ShoppingBag className="w-5 h-5 text-black" />
                     {getCartItemsCount() > 0 && (
-                      <span className="absolute -top-2 -right-2 bg-black text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
+                      <span className="absolute -top-2 -right-2 bg-black text-white text-xs rounded-full w-4 h-4 flex items-center justify-center font-bold">
                         {getCartItemsCount()}
                       </span>
                     )}
                   </div>
-                  <h2 className="text-xl font-bold text-gray-900">YOUR CART</h2>
+                  <h2 className="text-[14px] font-bold text-gray-900">YOUR CART</h2>
                 </div>
                 <button
                   onClick={toggleCart}
-                  className="p-2 hover:bg-gray-100 rounded-full transition-colors duration-200"
+                  className="p-2 hover:bg-gray-100 transition-colors duration-200"
                 >
                   <X className="w-5 h-5 text-gray-700" />
                 </button>
@@ -113,15 +118,14 @@ const CartPanel = () => {
                     {items.map((item) => (
                       <motion.div
                         key={item.id}
-                        className="flex items-start space-x-4 bg-white border border-black rounded-xl p-4 hover:shadow-md transition-shadow duration-200"
+                        className="flex items-start space-x-4 bg-white border border-black p-4 hover:shadow-md transition-shadow duration-200"
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, x: -20 }}
                       >
                         {/* Imagen del producto */}
                         <div
-                          className="w-20 h-20 bg-gray-100 bg-cover bg-center rounded-lg flex-shrink-0"
-                          // CORRECCIÓN AQUÍ: Usar item.images[0] porque tus productos tienen un array de imágenes
+                          className="w-20 h-20 bg-gray-100 bg-cover bg-center  flex-shrink-0"
                           style={{
                             backgroundImage: `url(${
                               item.images && item.images.length > 0
@@ -142,13 +146,10 @@ const CartPanel = () => {
                                 Size: {item.size || "M"} | Color:{" "}
                                 {item.color || "Black"}
                               </p>
-                              <p className="text-black font-bold text-lg">
-                                €{item.price}
-                              </p>
                             </div>
                             <button
                               onClick={() => removeFromCart(item.id)}
-                              className="p-1 hover:bg-gray-100 text-gray-500 hover:text-red-600 rounded transition-colors duration-200"
+                              className="p-1 hover:bg-gray-100 text-gray-500 hover:text-red-600 transition-colors duration-200"
                             >
                               <Trash2 className="w-4 h-4" />
                             </button>
@@ -161,10 +162,10 @@ const CartPanel = () => {
                                 onClick={() =>
                                   updateQuantity(item.id, item.quantity - 1)
                                 }
-                                className="w-7 h-7 flex items-center justify-center border border-black rounded hover:bg-gray-100 transition-colors duration-200"
+                                className="w-6 h-6 flex items-center justify-center border border-black hover:bg-gray-100 transition-colors duration-200"
                                 disabled={item.quantity <= 1}
                               >
-                                <Minus className="w-3 h-3" />
+                                <Minus className="w-2 h-2" />
                               </button>
 
                               <span className="w-8 text-center font-semibold text-gray-900">
@@ -175,16 +176,16 @@ const CartPanel = () => {
                                 onClick={() =>
                                   updateQuantity(item.id, item.quantity + 1)
                                 }
-                                className="w-7 h-7 flex items-center justify-center border border-black rounded hover:bg-gray-100 transition-colors duration-200"
+                                className="w-6 h-6 flex items-center justify-center border border-black hover:bg-gray-100 transition-colors duration-200"
                               >
-                                <Plus className="w-3 h-3" />
+                                <Plus className="w-2 h-2" />
                               </button>
                             </div>
 
                             <div className="text-right">
-                              <p className="text-xs text-gray-500">Subtotal</p>
                               <p className="font-bold text-gray-900">
-                                €{(item.price * item.quantity).toFixed(2)}
+                                {/* CAMBIO: Subtotal del item formateado */}
+                                {formatPrice(item.price * item.quantity)}
                               </p>
                             </div>
                           </div>
@@ -203,24 +204,25 @@ const CartPanel = () => {
                     <div className="flex justify-between items-center text-sm">
                       <span className="text-gray-600">Subtotal</span>
                       <span className="font-semibold text-gray-900">
-                        €{getCartTotal().toFixed(2)}
+                        {/* CAMBIO: Subtotal general formateado */}
+                        {formatPrice(getCartTotal())}
                       </span>
                     </div>
                     <div className="flex justify-between items-center text-sm">
                       <span className="text-gray-600">Shipping</span>
                       <span className="font-semibold text-blue-700">
-                        {isFreeShipping ? "FREE" : `€5.99`}
+                        {/* CAMBIO: Envío formateado */}
+                        {isFreeShipping ? "FREE" : formatPrice(shippingCost)}
                       </span>
                     </div>
                     <div className="border-t border-gray-200 pt-3">
                       <div className="flex justify-between items-center text-lg font-bold">
                         <span className="text-gray-900">Total</span>
                         <span className="text-black">
-                          €
-                          {(
-                            getCartTotal() +
-                            (isFreeShipping ? 0 : 5.99)
-                          ).toFixed(2)}
+                          {/* CAMBIO: Total final formateado */}
+                          {formatPrice(
+                            getCartTotal() + (isFreeShipping ? 0 : shippingCost)
+                          )}
                         </span>
                       </div>
                     </div>
@@ -228,11 +230,12 @@ const CartPanel = () => {
 
                   {/* Barra de progreso de envío gratis */}
                   {!isFreeShipping && (
-                    <div className="bg-gray-200 rounded-lg p-4">
+                    <div className="bg-gray-200 p-4">
                       <div className="flex items-center space-x-2 mb-2">
                         <Truck className="w-4 h-4 text-blue-600" />
                         <span className="text-sm font-medium text-blue-800">
-                          Add €{shippingNeeded.toFixed(2)} more for FREE
+                          {/* CAMBIO: Mensaje de "te faltan X" formateado */}
+                          Add {formatPrice(shippingNeeded)} more for FREE
                           SHIPPING
                         </span>
                       </div>
@@ -254,21 +257,19 @@ const CartPanel = () => {
                   <div className="space-y-3">
                     <motion.button
                       onClick={handleCheckout}
-                      className="w-full bg-black text-white py-3 font-md text-lg border border-black shadow-lg hover:bg-white hover:text-black transition-colors duration-200 flex items-center justify-center space-x-2"
+                      className="w-full bg-black text-white py-3 font-md text-[14px] border border-black shadow-lg hover:bg-white hover:text-black transition-colors duration-200 flex items-center justify-center space-x-2"
                     >
                       <Shield className="w-4 h-4" />
                       <span>CHECKOUT SECURELY</span>
                     </motion.button>
 
-                    <div
-                      className="w-full text-gray-600 hover:text-gray-800 py-1 transition-colors duration-200 flex items-center justify-center space-x-2 text-sm"
-                    >
+                    <div className="w-full text-gray-600 hover:text-gray-800 transition-colors duration-200 flex items-center justify-center space-x-2 text-sm">
                       <span>or</span>
                     </div>
 
                     <button
                       onClick={toggleCart}
-                      className="w-full border border-black text-black hover:bg-black hover:text-white py-3 font-medium transition-colors duration-200"
+                      className="w-full border border-black text-black text-[14px] hover:bg-black hover:text-white py-3 font-medium transition-colors duration-200"
                     >
                       CONTINUE SHOPPING
                     </button>
@@ -286,7 +287,8 @@ const CartPanel = () => {
           <CheckoutForm
             onClose={() => setShowCheckout(false)}
             cartItems={items}
-            total={getCartTotal() * 1.21 + (isFreeShipping ? 0 : 5.99)}
+            // Mantenemos el cálculo numérico para la lógica interna del checkout
+            total={getCartTotal() * 1.21 + (isFreeShipping ? 0 : shippingCost)}
           />
         )}
       </AnimatePresence>
