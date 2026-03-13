@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { cn } from "../lib/utils";
+import LogoImg from "../assets/ReLife_icon3.png";
 import {
   Grid,
   Compass,
@@ -9,7 +10,6 @@ import {
   Settings,
   LogOut,
   PlusCircle,
-  Recycle,
   Menu,
   X,
   User,
@@ -18,9 +18,6 @@ import {
   Leaf,
 } from "lucide-react";
 
-// ═══════════════════════════════════════════
-// ANIMATED NAV ITEM
-// ═══════════════════════════════════════════
 const NavItem = ({ item, isActive, onClick }) => {
   const Icon = item.icon;
   const [ripple, setRipple] = useState(false);
@@ -43,7 +40,6 @@ const NavItem = ({ item, isActive, onClick }) => {
       aria-label={item.label}
       aria-current={isActive ? "page" : undefined}
     >
-      {/* Active background — glass morphism pill */}
       {isActive && (
         <div
           className="absolute inset-0 rounded-2xl"
@@ -54,8 +50,6 @@ const NavItem = ({ item, isActive, onClick }) => {
           }}
         />
       )}
-
-      {/* Active indicator bar */}
       {isActive && (
         <div
           className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-5 rounded-r-full"
@@ -65,8 +59,6 @@ const NavItem = ({ item, isActive, onClick }) => {
           }}
         />
       )}
-
-      {/* Ripple effect */}
       {ripple && (
         <div
           className="absolute inset-0 rounded-2xl pointer-events-none"
@@ -76,12 +68,12 @@ const NavItem = ({ item, isActive, onClick }) => {
           }}
         />
       )}
-
-      {/* Icon */}
-      <div className={cn(
-        "relative z-10 flex items-center justify-center transition-all duration-300",
-        isActive ? "text-emerald-400" : "text-white/40 group-hover:text-white/70"
-      )}>
+      <div
+        className={cn(
+          "relative z-10 flex items-center justify-center transition-all duration-300",
+          isActive ? "text-emerald-400" : "text-white/40 group-hover:text-white/70"
+        )}
+      >
         <Icon className="w-[18px] h-[18px]" strokeWidth={isActive ? 2.5 : 2} />
         {isActive && (
           <div
@@ -90,89 +82,103 @@ const NavItem = ({ item, isActive, onClick }) => {
           />
         )}
       </div>
-
-      {/* Label */}
       <span className="relative z-10 flex-1 text-left truncate">{item.label}</span>
-
-      {/* Badge */}
       {item.badge > 0 && (
         <span
           className={cn(
             "relative z-10 text-[10px] font-extrabold rounded-full transition-all px-[7px] py-[2px]",
-            isActive
-              ? "bg-emerald-400 text-stone-900"
-              : "bg-rose-500 text-white"
+            isActive ? "bg-emerald-400 text-stone-900" : "bg-rose-500 text-white"
           )}
           style={!isActive ? { boxShadow: "0 0 8px rgba(244,63,94,0.4)" } : {}}
         >
           {item.badge > 99 ? "99+" : item.badge}
         </span>
       )}
-
-      {/* Active arrow */}
-      {isActive && (
-        <ChevronRight
-          className="relative z-10 w-3.5 h-3.5 text-emerald-400/60"
-        />
-      )}
+      {isActive && <ChevronRight className="relative z-10 w-3.5 h-3.5 text-emerald-400/60" />}
     </button>
   );
 };
 
-// ═══════════════════════════════════════════
-// SIDEBAR COMPONENT
-// ═══════════════════════════════════════════
-const AppSidebar = ({
-  activeTab,
-  setActiveTab,
-  user,
-  logout,
-  notifications = [],
-  onCreatePost,
-}) => {
+const LogoIcon = ({ size = "desktop" }) => {
+  const [imgError, setImgError] = useState(false);
+  const isDesktop = size === "desktop";
+
+  // Fallback si la imagen no carga
+  if (imgError) {
+    return (
+      <div className="flex items-center gap-3">
+        <div
+          className={cn(
+            "flex items-center justify-center flex-shrink-0 overflow-hidden",
+            isDesktop ? "w-10 h-10 rounded-[13px]" : "w-9 h-9 rounded-[11px]"
+          )}
+          style={{
+            background: "linear-gradient(145deg, #10b981, #0d9488)",
+            boxShadow: isDesktop
+              ? "0 4px 20px rgba(16,185,129,0.3)"
+              : "0 3px 12px rgba(16,185,129,0.25)",
+          }}
+        >
+          <Leaf className={cn("text-white", isDesktop ? "w-5 h-5" : "w-4 h-4")} />
+        </div>
+        <div className="flex items-baseline gap-1.5">
+          {isDesktop ? (
+            <>
+              <span className="text-[22px] font-black text-white tracking-tight">Re</span>
+              <span className="text-[22px] font-black tracking-tight" style={{ color: "#34d399" }}>Life</span>
+            </>
+          ) : (
+            <>
+              <span className="text-lg font-black text-stone-800">Re</span>
+              <span className="text-lg font-black text-emerald-600">Life</span>
+            </>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  // Solo la imagen — ocupa bien el espacio
+  return (
+    <img
+      src={LogoImg}
+      alt="ReLife"
+      className={cn("object-contain flex-shrink-0", isDesktop && "ml-8 mb-3")}
+      style={{
+        height: isDesktop ? 65 : 60,
+        width: "auto",
+        maxWidth: isDesktop ? 200 : 150,
+      }}
+      onError={() => setImgError(true)}
+    />
+  );
+};
+
+const AppSidebar = ({ activeTab, setActiveTab, user, logout, notifications = [], onCreatePost }) => {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
-  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const [createHovered, setCreateHovered] = useState(false);
   const unreadCount = notifications.filter((n) => !n.read).length;
   const drawerRef = useRef(null);
 
-  // Lock body scroll on mobile drawer open
   useEffect(() => {
-    if (isMobileOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
+    if (isMobileOpen) document.body.style.overflow = "hidden";
+    else document.body.style.overflow = "";
+    return () => {
       document.body.style.overflow = "";
-    }
-    return () => { document.body.style.overflow = ""; };
+    };
   }, [isMobileOpen]);
 
-  // Inject animations
   useEffect(() => {
     const id = "sidebar-anims";
     if (document.getElementById(id)) return;
     const style = document.createElement("style");
     style.id = id;
     style.textContent = `
-      @keyframes navRipple {
-        0% { opacity: 1; transform: scale(0.8); }
-        100% { opacity: 0; transform: scale(1.2); }
-      }
-      @keyframes slideInDrawer {
-        from { transform: translateX(100%); }
-        to { transform: translateX(0); }
-      }
-      @keyframes fadeInOverlay {
-        from { opacity: 0; }
-        to { opacity: 1; }
-      }
-      @keyframes pulseGlow {
-        0%, 100% { box-shadow: 0 0 20px rgba(16,185,129,0.15); }
-        50% { box-shadow: 0 0 30px rgba(16,185,129,0.3); }
-      }
-      @keyframes floatLeaf {
-        0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0.04; }
-        50% { transform: translateY(-8px) rotate(10deg); opacity: 0.08; }
-      }
+      @keyframes navRipple { 0% { opacity: 1; transform: scale(0.8); } 100% { opacity: 0; transform: scale(1.2); } }
+      @keyframes slideInDrawer { from { transform: translateX(100%); } to { transform: translateX(0); } }
+      @keyframes fadeInOverlay { from { opacity: 0; } to { opacity: 1; } }
+      @keyframes pulseGlow { 0%, 100% { box-shadow: 0 0 20px rgba(16,185,129,0.15); } 50% { box-shadow: 0 0 30px rgba(16,185,129,0.3); } }
+      @keyframes floatLeaf { 0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0.04; } 50% { transform: translateY(-8px) rotate(10deg); opacity: 0.08; } }
     `;
     document.head.appendChild(style);
     return () => document.getElementById(id)?.remove();
@@ -197,79 +203,40 @@ const AppSidebar = ({
     setIsMobileOpen(false);
   };
 
-  const handleLogout = () => {
-    if (showLogoutConfirm) {
-      logout();
-      setIsMobileOpen(false);
-      setShowLogoutConfirm(false);
-    } else {
-      setShowLogoutConfirm(true);
-      setTimeout(() => setShowLogoutConfirm(false), 3000);
-    }
-  };
-
-  // ────── Desktop Sidebar ──────
   const SidebarContent = ({ isMobile = false }) => (
     <div className={cn("flex flex-col h-full relative", isMobile && "pb-20")}>
-      {/* Background decoration */}
+      {/* Fondo decorativo */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        {/* Top glow */}
         <div
           className="absolute -top-20 -right-20 w-[220px] h-[220px] rounded-full"
           style={{ background: "radial-gradient(circle, rgba(16,185,129,0.07) 0%, transparent 70%)" }}
         />
-        {/* Bottom glow */}
-        <div
-          className="absolute -bottom-10 -left-10 w-[160px] h-[160px] rounded-full"
-          style={{ background: "radial-gradient(circle, rgba(20,184,166,0.05) 0%, transparent 70%)" }}
-        />
-        {/* Floating decorative leaves */}
         <Leaf
           className="absolute top-[30%] right-4 w-6 h-6"
           style={{ color: "rgba(255,255,255,0.03)", animation: "floatLeaf 6s ease-in-out infinite" }}
         />
-        <Leaf
-          className="absolute bottom-[25%] left-3 w-4 h-4"
-          style={{ color: "rgba(255,255,255,0.03)", animation: "floatLeaf 8s ease-in-out infinite 2s", transform: "rotate(45deg)" }}
-        />
       </div>
 
-      {/* Logo */}
-      <div
-        className="flex items-center relative z-10 flex-shrink-0 h-[72px] pl-5 gap-3"
-        style={{ borderBottom: "1px solid rgba(255,255,255,0.04)" }}
-      >
-        <div
-          className="w-10 h-10 rounded-[13px] flex items-center justify-center flex-shrink-0"
-          style={{
-            background: "linear-gradient(145deg, #10b981, #0d9488)",
-            boxShadow: "0 4px 20px rgba(16,185,129,0.3)",
-            animation: "pulseGlow 4s ease-in-out infinite",
-          }}
-        >
-          <Recycle className="w-5 h-5 text-white" />
-        </div>
-        <div className="flex items-baseline gap-1.5">
-          <span className="text-[22px] font-black text-white tracking-tight">Re</span>
-          <span
-            className="text-[22px] font-black tracking-tight"
-            style={{ color: "#34d399" }}
+      {/* Logo + Subtítulo — solo en desktop, en mobile lo muestra el drawer header */}
+      {!isMobile && (
+        <div className="relative z-10 flex-shrink-0 pt-5 pb-2 px-5" style={{ borderBottom: "1px solid rgba(255,255,255,0.04)" }}>
+          <LogoIcon size="desktop" />
+          <p
+            className="text-[9px] font-semibold uppercase mt-1 ml-1 mb-1"
+            style={{ color: "rgba(255,255,255,0.12)", letterSpacing: "2px" }}
           >
-            Life
-          </span>
+            Reciclaje creativo
+          </p>
         </div>
-      </div>
-      <p
-        className="text-[9px] font-semibold uppercase px-5 -mt-2 mb-1"
-        style={{ color: "rgba(255,255,255,0.12)", letterSpacing: "2px" }}
-      >
-        Reciclaje creativo
-      </p>
+      )}
 
-      {/* Create button */}
+      {/* Botón Crear Post */}
       <div className="relative z-10 flex-shrink-0 p-3">
         <button
-          onClick={() => { onCreatePost(); setIsMobileOpen(false); }}
+          onClick={() => {
+            onCreatePost();
+            setIsMobileOpen(false);
+          }}
           onMouseEnter={() => setCreateHovered(true)}
           onMouseLeave={() => setCreateHovered(false)}
           className="w-full py-3.5 px-4 font-extrabold text-sm rounded-2xl border-none cursor-pointer flex items-center justify-center gap-2 transition-all duration-300 active:scale-[0.96]"
@@ -283,63 +250,44 @@ const AppSidebar = ({
               : "0 4px 20px rgba(16,185,129,0.25)",
             transform: createHovered ? "translateY(-1px)" : "none",
           }}
-          aria-label="Crear nuevo post"
         >
-          <PlusCircle className={cn("w-[18px] h-[18px] transition-transform duration-300", createHovered && "rotate-90")} />
+          <PlusCircle
+            className={cn("w-[18px] h-[18px] transition-transform duration-300", createHovered && "rotate-90")}
+          />
           Crear Post
         </button>
       </div>
 
-      {/* Navigation */}
-      <nav className="flex-1 overflow-y-auto relative z-10 scrollbar-hide" role="navigation" aria-label="Navegación principal">
+      {/* Navegación */}
+      <nav className="flex-1 overflow-y-auto relative z-10 scrollbar-hide">
         <div className="px-[10px] space-y-[2px]">
           {mainMenuItems.map((item) => (
-            <NavItem
-              key={item.id}
-              item={item}
-              isActive={activeTab === item.id}
-              onClick={() => handleTabChange(item.id)}
-            />
+            <NavItem key={item.id} item={item} isActive={activeTab === item.id} onClick={() => handleTabChange(item.id)} />
           ))}
-
           <div className="my-3" style={{ borderTop: "1px solid rgba(255,255,255,0.04)" }} />
-
           {utilMenuItems.map((item) => (
-            <NavItem
-              key={item.id}
-              item={item}
-              isActive={activeTab === item.id}
-              onClick={() => handleTabChange(item.id)}
-            />
+            <NavItem key={item.id} item={item} isActive={activeTab === item.id} onClick={() => handleTabChange(item.id)} />
           ))}
         </div>
       </nav>
 
-      {/* User footer */}
-      <div
-        className="relative z-10 flex-shrink-0 p-3"
-        style={{ borderTop: "1px solid rgba(255,255,255,0.04)" }}
-      >
+      {/* Perfil de Usuario */}
+      <div className="relative z-10 flex-shrink-0 p-3" style={{ borderTop: "1px solid rgba(255,255,255,0.04)" }}>
         <div className="flex items-center gap-3 p-2.5 rounded-2xl hover:bg-white/[0.04] transition-all duration-200">
-          {/* User info (clickable) */}
           <button
             onClick={() => handleTabChange("Profile")}
             className="flex items-center gap-3 flex-1 min-w-0 bg-transparent border-none cursor-pointer p-0 group"
-            aria-label={`Perfil de ${user?.name}`}
           >
             <div className="relative flex-shrink-0">
               <img
                 src={user?.avatar}
                 alt={user?.name}
                 className="w-10 h-10 rounded-full object-cover"
-                style={{
-                  border: "2px solid rgba(16,185,129,0.3)",
-                  boxShadow: "0 0 0 3px rgba(16,185,129,0.08)",
-                }}
+                style={{ border: "2px solid rgba(16,185,129,0.3)", boxShadow: "0 0 0 3px rgba(16,185,129,0.08)" }}
               />
               <div
                 className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 rounded-full"
-                style={{ border: "2.5px solid var(--bg-sidebar)", background: "#34d399" }}
+                style={{ border: "2.5px solid #0c1810", background: "#34d399" }}
               />
             </div>
             <div className="flex-1 min-w-0 text-left">
@@ -351,193 +299,52 @@ const AppSidebar = ({
               </p>
             </div>
           </button>
-
-          {/* Logout icon */}
           <button
-            onClick={handleLogout}
-            className={cn(
-              "w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 border-none cursor-pointer transition-all duration-200",
-              showLogoutConfirm
-                ? "bg-rose-500/20 text-rose-400"
-                : "bg-transparent text-white/20 hover:text-rose-400 hover:bg-white/[0.06]"
-            )}
-            aria-label={showLogoutConfirm ? "Confirmar cerrar sesión" : "Cerrar sesión"}
-            title={showLogoutConfirm ? "Pulsa de nuevo para confirmar" : "Cerrar sesión"}
+            onClick={() => logout()}
+            className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 border-none cursor-pointer transition-all duration-200 bg-transparent text-white/20 hover:text-rose-400 hover:bg-white/[0.06]"
           >
             <LogOut className="w-[16px] h-[16px]" />
           </button>
         </div>
       </div>
-
     </div>
   );
 
   return (
     <>
-      {/* ========== DESKTOP SIDEBAR ========== */}
+      {/* Desktop Sidebar */}
       <aside
         className="hidden md:flex flex-col h-full w-[260px] flex-shrink-0 z-20 relative overflow-hidden"
         style={{ background: "var(--bg-sidebar)" }}
-        role="complementary"
-        aria-label="Sidebar"
       >
         <SidebarContent />
       </aside>
 
-      {/* ========== MOBILE TOP BAR ========== */}
-      <div
-        className="md:hidden fixed top-0 left-0 right-0 h-[60px] flex items-center justify-between px-4 z-40"
+      {/* Mobile Menu Button — flotante, sin barra */}
+      <button
+        onClick={() => setIsMobileOpen(true)}
+        className="md:hidden fixed top-3 right-3 z-40 w-10 h-10 rounded-xl flex items-center justify-center border-none cursor-pointer transition-all duration-200"
         style={{
-          background: "rgba(255,255,255,0.92)",
-          backdropFilter: "blur(20px) saturate(180%)",
-          borderBottom: "1px solid rgba(0,0,0,0.06)",
+          background: "rgba(255,255,255,0.9)",
+          backdropFilter: "blur(12px)",
+          boxShadow: "0 2px 12px rgba(0,0,0,0.1)",
         }}
       >
-        <div className="flex items-center gap-2.5">
-          <div
-            className="w-9 h-9 rounded-[11px] flex items-center justify-center"
-            style={{
-              background: "linear-gradient(145deg, #10b981, #0d9488)",
-              boxShadow: "0 3px 12px rgba(16,185,129,0.25)",
-            }}
-          >
-            <Recycle className="w-[18px] h-[18px] text-white" />
-          </div>
-          <div className="flex items-baseline gap-1">
-            <span className="text-lg font-black text-stone-800">Re</span>
-            <span className="text-lg font-black text-emerald-600">Life</span>
-          </div>
-        </div>
+        <Menu className="w-5 h-5 text-stone-700" />
+      </button>
 
-        <div className="flex items-center gap-2">
-          {/* Notifications quick access */}
-          <button
-            onClick={() => { setActiveTab("Notifications"); }}
-            className="relative p-2 bg-transparent border-none cursor-pointer rounded-xl hover:bg-stone-100 transition-colors"
-            aria-label={`Notificaciones${unreadCount > 0 ? `, ${unreadCount} sin leer` : ""}`}
-          >
-            <Bell className="w-5 h-5 text-stone-600" />
-            {unreadCount > 0 && (
-              <span
-                className="absolute top-1 right-1 min-w-[16px] h-[16px] flex items-center justify-center text-[9px] font-extrabold text-white rounded-full px-1"
-                style={{ background: "#ef4444", boxShadow: "0 0 6px rgba(239,68,68,0.4)" }}
-              >
-                {unreadCount > 99 ? "99+" : unreadCount}
-              </span>
-            )}
-          </button>
-
-          {/* Menu toggle */}
-          <button
-            onClick={() => setIsMobileOpen(true)}
-            className="p-2 rounded-xl border-none cursor-pointer transition-colors hover:bg-stone-100"
-            style={{ background: "transparent" }}
-            aria-label="Abrir menú"
-          >
-            <Menu className="w-[22px] h-[22px] text-stone-700" />
-          </button>
-        </div>
-      </div>
-      <div className="md:hidden h-[60px]" />
-
-      {/* ========== MOBILE BOTTOM BAR (Quick Nav) ========== */}
-      <div
-        className="md:hidden fixed bottom-0 left-0 right-0 z-40 flex items-center justify-around py-2 px-1"
-        style={{
-          background: "rgba(255,255,255,0.92)",
-          backdropFilter: "blur(20px) saturate(180%)",
-          borderTop: "1px solid rgba(0,0,0,0.06)",
-          paddingBottom: "max(8px, env(safe-area-inset-bottom))",
-        }}
-        role="navigation"
-        aria-label="Navegación rápida"
-      >
-        {[
-          { id: "Feed", icon: Grid, label: "Inicio" },
-          { id: "Explore", icon: Compass, label: "Explorar" },
-          { id: "create", icon: PlusCircle, label: "Crear", isCreate: true },
-          { id: "Messages", icon: Mail, label: "Mensajes", badge: 2 },
-          { id: "Profile", icon: User, label: "Perfil" },
-        ].map((item) => {
-          const Icon = item.icon;
-          const isActive = activeTab === item.id;
-
-          if (item.isCreate) {
-            return (
-              <button
-                key={item.id}
-                onClick={onCreatePost}
-                className="flex flex-col items-center gap-0.5 border-none cursor-pointer bg-transparent p-1 -mt-4"
-                aria-label="Crear post"
-              >
-                <div
-                  className="w-12 h-12 rounded-2xl flex items-center justify-center"
-                  style={{
-                    background: "linear-gradient(135deg, #10b981, #14b8a6)",
-                    boxShadow: "0 4px 16px rgba(16,185,129,0.35)",
-                  }}
-                >
-                  <PlusCircle className="w-6 h-6 text-white" />
-                </div>
-              </button>
-            );
-          }
-
-          return (
-            <button
-              key={item.id}
-              onClick={() => setActiveTab(item.id)}
-              className="relative flex flex-col items-center gap-0.5 border-none cursor-pointer bg-transparent p-1 min-w-[48px]"
-              aria-label={item.label}
-              aria-current={isActive ? "page" : undefined}
-            >
-              <div className="relative">
-                <Icon
-                  className={cn(
-                    "w-[22px] h-[22px] transition-all duration-200",
-                    isActive ? "text-emerald-600" : "text-stone-400"
-                  )}
-                  strokeWidth={isActive ? 2.5 : 2}
-                />
-                {item.badge > 0 && (
-                  <span
-                    className="absolute -top-1.5 -right-2 min-w-[14px] h-[14px] flex items-center justify-center text-[8px] font-extrabold text-white rounded-full px-0.5"
-                    style={{ background: "#ef4444" }}
-                  >
-                    {item.badge}
-                  </span>
-                )}
-              </div>
-              <span
-                className={cn(
-                  "text-[10px] font-semibold transition-colors",
-                  isActive ? "text-emerald-600" : "text-stone-400"
-                )}
-              >
-                {item.label}
-              </span>
-              {isActive && (
-                <div
-                  className="absolute -bottom-2 w-5 h-[3px] rounded-full"
-                  style={{ background: "linear-gradient(to right, #10b981, #14b8a6)" }}
-                />
-              )}
-            </button>
-          );
-        })}
-      </div>
-
-      {/* ========== MOBILE DRAWER (Full menu) ========== */}
+      {/* Mobile Drawer */}
       {isMobileOpen && (
         <div className="md:hidden fixed inset-0 z-50">
-          {/* Overlay */}
           <div
             className="absolute inset-0"
-            style={{ background: "rgba(0,0,0,0.6)", backdropFilter: "blur(4px)", animation: "fadeInOverlay 0.2s ease" }}
+            style={{
+              background: "rgba(0,0,0,0.6)",
+              backdropFilter: "blur(4px)",
+              animation: "fadeInOverlay 0.2s ease",
+            }}
             onClick={() => setIsMobileOpen(false)}
           />
-
-          {/* Drawer */}
           <div
             ref={drawerRef}
             className="absolute right-0 top-0 h-full w-[300px] overflow-y-auto"
@@ -546,58 +353,19 @@ const AppSidebar = ({
               animation: "slideInDrawer 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
               boxShadow: "-8px 0 40px rgba(0,0,0,0.3)",
             }}
-            role="dialog"
-            aria-label="Menú de navegación"
           >
-            {/* Drawer header */}
             <div
-              className="p-4 flex justify-between items-center"
+              className="px-4 py-3 flex justify-between items-center"
               style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}
             >
-              <div className="flex items-baseline gap-1.5">
-                <span className="text-lg font-black text-white">Re</span>
-                <span className="text-lg font-black" style={{ color: "#34d399" }}>Life</span>
-              </div>
+              <LogoIcon size="mobile" />
               <button
                 onClick={() => setIsMobileOpen(false)}
-                className="w-8 h-8 rounded-xl flex items-center justify-center bg-white/[0.06] border-none cursor-pointer hover:bg-white/10 transition-colors"
-                aria-label="Cerrar menú"
+                className="w-8 h-8 rounded-xl flex items-center justify-center bg-white/[0.06] border-none cursor-pointer"
               >
                 <X className="w-4 h-4 text-white/60" />
               </button>
             </div>
-
-            {/* User info */}
-            <div className="p-4" style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
-              <button
-                onClick={() => handleTabChange("Profile")}
-                className="w-full flex items-center gap-3 bg-transparent border-none cursor-pointer text-left p-0"
-              >
-                <div className="relative flex-shrink-0">
-                  <img
-                    src={user?.avatar}
-                    alt={user?.name}
-                    className="w-12 h-12 rounded-full object-cover"
-                    style={{
-                      border: "2px solid rgba(16,185,129,0.4)",
-                      boxShadow: "0 0 0 3px rgba(16,185,129,0.1)",
-                    }}
-                  />
-                  <div
-                    className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 rounded-full"
-                    style={{ border: "2.5px solid var(--bg-sidebar)", background: "#34d399" }}
-                  />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="font-bold text-white text-[15px] truncate">{user?.name}</p>
-                  <p className="text-sm truncate" style={{ color: "rgba(255,255,255,0.25)" }}>
-                    @{user?.username}
-                  </p>
-                </div>
-                <ChevronRight className="w-4 h-4 text-white/20 flex-shrink-0" />
-              </button>
-            </div>
-
             <SidebarContent isMobile />
           </div>
         </div>

@@ -181,7 +181,7 @@ const PostCard = React.memo(({ post, onLike, onSave, onClick, onReport, onAddToC
         }}
       />
 
-      {/* Gradient overlay — enhanced for text contrast */}
+      {/* Gradient overlay */}
       <div
         style={{
           position: "absolute",
@@ -614,9 +614,7 @@ const StoryViewerModal = ({ stories, initialIndex, onClose }) => {
         </div>
 
         {/* Story header */}
-        <div
-          className="absolute top-8 left-4 right-4 z-20 flex items-center justify-between"
-        >
+        <div className="absolute top-8 left-4 right-4 z-20 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <img
               src={currentStory.avatar}
@@ -696,7 +694,7 @@ const StoryViewerModal = ({ stories, initialIndex, onClose }) => {
 };
 
 // ═══════════════════════════════════════════
-// STORY BUBBLE — improved with keyboard nav
+// STORY BUBBLE
 // ═══════════════════════════════════════════
 const StoryBubble = ({ user, isCreate, onClick }) => {
   const [tapped, setTapped] = useState(false);
@@ -752,7 +750,6 @@ const StoryBubble = ({ user, isCreate, onClick }) => {
             />
           )}
         </div>
-        {/* New story dot */}
         {!isCreate && user?.hasNewStory && (
           <div
             className="absolute -bottom-0.5 right-0.5 w-4 h-4 rounded-full flex items-center justify-center"
@@ -793,7 +790,6 @@ const TrendingCard = React.memo(({ tag, posts: p, gradient }) => {
         boxShadow: hovered ? "0 16px 48px rgba(0,0,0,0.18)" : "0 4px 12px rgba(0,0,0,0.06)",
       }}
     >
-      {/* Background decoration */}
       <div
         className="absolute -top-6 -right-6 w-24 h-24 rounded-full"
         style={{
@@ -927,7 +923,7 @@ const ReportModal = ({ isOpen, onClose, postId }) => {
 };
 
 // ═══════════════════════════════════════════
-// COLLECTION MODAL (Save to collection)
+// COLLECTION MODAL
 // ═══════════════════════════════════════════
 const CollectionModal = ({ isOpen, onClose, postId }) => {
   const [collections, setCollections] = useState([
@@ -1043,7 +1039,7 @@ const CollectionModal = ({ isOpen, onClose, postId }) => {
 };
 
 // ═══════════════════════════════════════════
-// CREATE POST MODAL — improved with drag & drop, tags, preview
+// CREATE POST MODAL
 // ═══════════════════════════════════════════
 const CreatePostModal = ({ isOpen, onClose }) => {
   const { addPost } = useData();
@@ -1186,7 +1182,6 @@ const CreatePostModal = ({ isOpen, onClose }) => {
 
         <div className="p-6">
           {showPreview ? (
-            /* Preview mode */
             <div className="space-y-4">
               {effectiveImage && (
                 <div className="rounded-2xl overflow-hidden" style={{ aspectRatio: "16/10" }}>
@@ -1226,7 +1221,6 @@ const CreatePostModal = ({ isOpen, onClose }) => {
               </div>
             </div>
           ) : (
-            /* Edit mode */
             <>
               <div className="flex items-center gap-3 mb-5">
                 <img
@@ -1262,7 +1256,6 @@ const CreatePostModal = ({ isOpen, onClose }) => {
                   className={cn(formInputStyle, "resize-none")}
                 />
 
-                {/* Image upload area */}
                 {!effectiveImage ? (
                   <div
                     onDragOver={handleDragOver}
@@ -1311,7 +1304,6 @@ const CreatePostModal = ({ isOpen, onClose }) => {
                   </div>
                 )}
 
-                {/* URL fallback */}
                 {!imagePreview && (
                   <div className="flex gap-2">
                     <div className="flex-1 relative">
@@ -1327,7 +1319,6 @@ const CreatePostModal = ({ isOpen, onClose }) => {
                   </div>
                 )}
 
-                {/* Tags */}
                 <div>
                   <div className="flex gap-2 mb-2 flex-wrap">
                     {tags.map((tag) => (
@@ -1512,7 +1503,7 @@ const getBentoConfig = (index) => {
 };
 
 // ═══════════════════════════════════════════
-// FEED HEADER (extracted component)
+// FEED HEADER — FIX: pr-16 en mobile para no tapar con botón flotante
 // ═══════════════════════════════════════════
 const FeedHeader = React.memo(({ user, searchQuery, setSearchQuery, setActiveTab, notifications, onSearchOpen }) => {
   const hour = new Date().getHours();
@@ -1520,7 +1511,7 @@ const FeedHeader = React.memo(({ user, searchQuery, setSearchQuery, setActiveTab
 
   return (
     <header
-      className="px-4 md:px-8 py-5 flex items-center justify-between flex-shrink-0 sticky top-0 z-40"
+      className="px-4 pr-16 md:px-8 md:pr-8 py-5 flex items-center justify-between flex-shrink-0 sticky top-0 z-30"
       style={{
         background: "rgba(250,250,249,0.88)",
         backdropFilter: "blur(20px)",
@@ -1539,68 +1530,68 @@ const FeedHeader = React.memo(({ user, searchQuery, setSearchQuery, setActiveTab
           {greeting}, {user.name.split(" ")[0]}! Descubre proyectos increíbles
         </p>
       </div>
-    <div className="flex items-center gap-[10px]">
-      {/* Mobile search trigger */}
-      <button
-        onClick={onSearchOpen}
-        className="lg:hidden p-[10px] bg-white rounded-2xl cursor-pointer transition-all border-none"
-        style={{ border: "1px solid var(--border)", boxShadow: "var(--shadow-sm)" }}
-        aria-label="Buscar"
-      >
-        <Search className="w-[18px] h-[18px]" style={{ color: "var(--text-secondary)" }} />
-      </button>
+      <div className="flex items-center gap-[10px]">
+        {/* Mobile search trigger */}
+        <button
+          onClick={onSearchOpen}
+          className="lg:hidden p-[10px] bg-white rounded-2xl cursor-pointer transition-all border-none"
+          style={{ border: "1px solid var(--border)", boxShadow: "var(--shadow-sm)" }}
+          aria-label="Buscar"
+        >
+          <Search className="w-[18px] h-[18px]" style={{ color: "var(--text-secondary)" }} />
+        </button>
 
-      {/* Desktop search */}
-      <div
-        className="hidden lg:flex items-center bg-white px-5 py-[10px] rounded-2xl gap-[10px] w-72 focus-within:ring-2 focus-within:ring-emerald-500/20 transition-all"
-        style={{ border: "1px solid var(--border)", boxShadow: "var(--shadow-sm)" }}
-      >
-        <Search className="w-4 h-4" style={{ color: "var(--text-muted)" }} />
-        <input
-          type="text"
-          placeholder="Buscar inspiración..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="bg-transparent outline-none text-[13px] w-full font-medium border-none"
-          style={{ color: "var(--text-secondary)" }}
-        />
-        {searchQuery && (
-          <button
-            onClick={() => setSearchQuery("")}
-            className="bg-transparent border-none cursor-pointer p-0"
-            style={{ color: "var(--text-muted)" }}
-            aria-label="Limpiar búsqueda"
-          >
-            <X size={14} />
-          </button>
-        )}
+        {/* Desktop search */}
+        <div
+          className="hidden lg:flex items-center bg-white px-5 py-[10px] rounded-2xl gap-[10px] w-72 focus-within:ring-2 focus-within:ring-emerald-500/20 transition-all"
+          style={{ border: "1px solid var(--border)", boxShadow: "var(--shadow-sm)" }}
+        >
+          <Search className="w-4 h-4" style={{ color: "var(--text-muted)" }} />
+          <input
+            type="text"
+            placeholder="Buscar inspiración..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="bg-transparent outline-none text-[13px] w-full font-medium border-none"
+            style={{ color: "var(--text-secondary)" }}
+          />
+          {searchQuery && (
+            <button
+              onClick={() => setSearchQuery("")}
+              className="bg-transparent border-none cursor-pointer p-0"
+              style={{ color: "var(--text-muted)" }}
+              aria-label="Limpiar búsqueda"
+            >
+              <X size={14} />
+            </button>
+          )}
+        </div>
+
+        <button
+          onClick={() => setActiveTab("Notifications")}
+          className="relative p-[10px] bg-white rounded-2xl cursor-pointer transition-all border-none"
+          style={{ border: "1px solid var(--border)", boxShadow: "var(--shadow-sm)" }}
+          aria-label={`Notificaciones${notifications.some((n) => !n.read) ? " - tienes nuevas" : ""}`}
+        >
+          <Bell className="w-[18px] h-[18px]" style={{ color: "var(--text-secondary)" }} />
+          {notifications.some((n) => !n.read) && (
+            <span
+              className="absolute top-[6px] right-[6px] flex items-center justify-center min-w-[18px] h-[18px] text-[9px] font-black text-white rounded-full px-1"
+              style={{ background: "#ef4444", border: "2px solid white" }}
+            >
+              {notifications.filter((n) => !n.read).length}
+            </span>
+          )}
+        </button>
       </div>
-
-      <button
-        onClick={() => setActiveTab("Notifications")}
-        className="relative p-[10px] bg-white rounded-2xl cursor-pointer transition-all border-none"
-        style={{ border: "1px solid var(--border)", boxShadow: "var(--shadow-sm)" }}
-        aria-label={`Notificaciones${notifications.some((n) => !n.read) ? " - tienes nuevas" : ""}`}
-      >
-        <Bell className="w-[18px] h-[18px]" style={{ color: "var(--text-secondary)" }} />
-        {notifications.some((n) => !n.read) && (
-          <span
-            className="absolute top-[6px] right-[6px] flex items-center justify-center min-w-[18px] h-[18px] text-[9px] font-black text-white rounded-full px-1"
-            style={{ background: "#ef4444", border: "2px solid white" }}
-          >
-            {notifications.filter((n) => !n.read).length}
-          </span>
-        )}
-      </button>
-    </div>
-  </header>
+    </header>
   );
 });
 
 FeedHeader.displayName = "FeedHeader";
 
 // ═══════════════════════════════════════════
-// FEED CONTROLS (extracted component)
+// FEED CONTROLS
 // ═══════════════════════════════════════════
 const FeedControls = React.memo(({ categories, categoryFilter, setCategoryFilter, feedFilter, setFeedFilter, searchQuery, filteredCount }) => (
   <div className="flex items-center justify-between mb-5 flex-wrap gap-3">
@@ -1698,7 +1689,7 @@ const useInfiniteScroll = (items, pageSize = 12) => {
 };
 
 // ═══════════════════════════════════════════
-// FEED VIEW — improved
+// FEED VIEW
 // ═══════════════════════════════════════════
 const FeedView = ({ user, onCreatePost, setActiveTab, setSelectedPost }) => {
   const { posts, toggleLike, toggleSave, notifications } = useData();
@@ -1750,7 +1741,6 @@ const FeedView = ({ user, onCreatePost, setActiveTab, setSelectedPost }) => {
 
   return (
     <div className="flex-1 flex flex-col h-full overflow-hidden relative" style={{ background: "var(--bg-primary)" }}>
-      {/* Subtle bg glow */}
       <div
         className="absolute top-0 right-0 w-[500px] h-[500px] pointer-events-none"
         style={{
@@ -1854,7 +1844,6 @@ const FeedView = ({ user, onCreatePost, setActiveTab, setSelectedPost }) => {
                 })}
               </div>
 
-              {/* Infinite scroll sentinel */}
               {hasMore && (
                 <div ref={sentinelRef} className="flex justify-center py-8">
                   {loading && (
@@ -1877,7 +1866,6 @@ const FeedView = ({ user, onCreatePost, setActiveTab, setSelectedPost }) => {
 
       <ScrollToTopButton containerRef={mainRef} />
 
-      {/* Story Viewer */}
       {storyViewerOpen && (
         <StoryViewerModal
           stories={stories}
@@ -1886,14 +1874,12 @@ const FeedView = ({ user, onCreatePost, setActiveTab, setSelectedPost }) => {
         />
       )}
 
-      {/* Report Modal */}
       <ReportModal
         isOpen={reportPostId !== null}
         onClose={() => setReportPostId(null)}
         postId={reportPostId}
       />
 
-      {/* Collection Modal */}
       <CollectionModal
         isOpen={collectionPostId !== null}
         onClose={() => setCollectionPostId(null)}
@@ -1904,7 +1890,7 @@ const FeedView = ({ user, onCreatePost, setActiveTab, setSelectedPost }) => {
 };
 
 // ═══════════════════════════════════════════
-// GLOBAL ANIMATIONS (inject once)
+// GLOBAL ANIMATIONS
 // ═══════════════════════════════════════════
 const GlobalStyles = () => {
   useEffect(() => {

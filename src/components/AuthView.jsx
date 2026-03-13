@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useAuth } from "../context/AuthContext";
+import LogoImg from "../assets/ReLife_icon3.png";
 import {
   ArrowRight,
   Eye,
@@ -10,6 +11,50 @@ import {
   AlertCircle,
   Check,
 } from "lucide-react";
+
+// ═══════════════════════════════════════════
+// AUTH LOGO — solo imagen, fallback icono+texto
+// ═══════════════════════════════════════════
+const AuthLogo = ({ size = "desktop" }) => {
+  const [imgError, setImgError] = useState(false);
+  const isDesktop = size === "desktop";
+
+  if (imgError) {
+    return (
+      <div className="flex items-center gap-3">
+        <div
+          className="flex items-center justify-center flex-shrink-0"
+          style={{
+            width: isDesktop ? 44 : 36,
+            height: isDesktop ? 44 : 36,
+            borderRadius: isDesktop ? 14 : 10,
+            background: "linear-gradient(135deg, #10b981, #14b8a6)",
+          }}
+        >
+          <Recycle className="text-white" style={{ width: isDesktop ? 22 : 18, height: isDesktop ? 22 : 18 }} />
+        </div>
+        <div className="flex items-baseline gap-1">
+          <span className={`${isDesktop ? "text-2xl" : "text-xl"} font-black text-white tracking-tight`}>Re</span>
+          <span className={`${isDesktop ? "text-2xl" : "text-xl"} font-black tracking-tight`} style={{ color: "#6ee7b7" }}>Life</span>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <img
+      src={LogoImg}
+      alt="ReLife"
+      className="object-contain flex-shrink-0"
+      style={{
+        height: isDesktop ? 75 : 65,
+        width: "auto",
+        maxWidth: isDesktop ? 200 : 160,
+      }}
+      onError={() => setImgError(true)}
+    />
+  );
+};
 
 // ═══════════════════════════════════════════
 // PASSWORD STRENGTH INDICATOR
@@ -29,7 +74,6 @@ const PasswordStrength = ({ password }) => {
 
   return (
     <div className="mt-2 space-y-2">
-      {/* Bar */}
       <div className="flex gap-1.5">
         {[0, 1, 2].map((i) => (
           <div
@@ -41,7 +85,6 @@ const PasswordStrength = ({ password }) => {
           />
         ))}
       </div>
-      {/* Label + checks */}
       <div className="flex items-center justify-between">
         <span
           className="text-[11px] font-semibold transition-colors"
@@ -86,17 +129,14 @@ const AuthView = () => {
     password: "",
   });
 
-  // Reset form when toggling between login/register
   useEffect(() => {
     setFormData({ name: "", username: "", email: "", password: "" });
     setErrors({});
     setTouched({});
     setShowPassword(false);
-    // Focus email input after mode switch
     setTimeout(() => emailRef.current?.focus(), 100);
   }, [isLogin]);
 
-  // Inject animations
   useEffect(() => {
     const id = "auth-animations";
     if (document.getElementById(id)) return;
@@ -124,7 +164,6 @@ const AuthView = () => {
     return () => document.getElementById(id)?.remove();
   }, []);
 
-  // Validation
   const validate = (data = formData) => {
     const errs = {};
     if (!data.email.trim()) errs.email = "El email es obligatorio";
@@ -146,7 +185,6 @@ const AuthView = () => {
     e.preventDefault();
     const errs = validate();
     setErrors(errs);
-    // Mark all as touched
     setTouched({ name: true, username: true, email: true, password: true });
     if (Object.keys(errs).length > 0) return;
 
@@ -165,7 +203,6 @@ const AuthView = () => {
     const { name, value } = e.target;
     const updated = { ...formData, [name]: value };
     setFormData(updated);
-    // Clear error for this field on change if it was touched
     if (touched[name]) {
       const errs = validate(updated);
       setErrors((prev) => ({ ...prev, [name]: errs[name] || undefined }));
@@ -223,15 +260,12 @@ const AuthView = () => {
     >
       {/* ── LEFT: Branding ── */}
       <div className="hidden lg:flex relative overflow-hidden" style={{ width: "48%" }}>
-        {/* Ambient glow */}
         <div
           className="absolute inset-0"
           style={{
             background: "radial-gradient(ellipse at 30% 50%, rgba(16,185,129,0.12) 0%, transparent 70%)",
           }}
         />
-
-        {/* Decorative circles */}
         <div
           className="absolute"
           style={{
@@ -255,18 +289,9 @@ const AuthView = () => {
           }}
         />
 
-        {/* Content */}
         <div className="relative z-10 flex flex-col justify-between p-10 w-full">
-          {/* Logo */}
-          <div className="flex items-center gap-3">
-            <div className="w-11 h-11 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-[14px] flex items-center justify-center">
-              <Recycle className="w-[22px] h-[22px] text-white" />
-            </div>
-            <div className="flex items-baseline gap-1">
-              <span className="text-2xl font-black text-white tracking-tight">Re</span>
-              <span className="text-2xl font-black tracking-tight" style={{ color: "#6ee7b7" }}>Life</span>
-            </div>
-          </div>
+          {/* Logo Desktop */}
+          <AuthLogo size="desktop" />
 
           {/* Main headline */}
           <div className="max-w-[420px]">
@@ -300,7 +325,6 @@ const AuthView = () => {
               Comparte, inspira y transforma.
             </p>
 
-            {/* Features */}
             <div className="space-y-4">
               {features.map((feature, index) => (
                 <div
@@ -353,15 +377,9 @@ const AuthView = () => {
       {/* ── RIGHT: Form ── */}
       <div className="flex-1 flex items-center justify-center p-6">
         <div className="w-full max-w-[420px]">
-          {/* Mobile logo */}
-          <div className="flex items-center gap-[10px] mb-8 lg:hidden">
-            <div className="w-9 h-9 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-[10px] flex items-center justify-center">
-              <Recycle className="w-[18px] h-[18px] text-white" />
-            </div>
-            <div className="flex items-baseline gap-1">
-              <span className="text-xl font-black text-white">Re</span>
-              <span className="text-xl font-black" style={{ color: "#6ee7b7" }}>Life</span>
-            </div>
+          {/* Mobile logo — centrado */}
+          <div className="mb-8 lg:hidden flex justify-center">
+            <AuthLogo size="mobile" />
           </div>
 
           {/* Card */}
