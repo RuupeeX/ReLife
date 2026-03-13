@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { cn } from "../lib/utils";
-import LogoImg from "../assets/ReLife_icon3.png";
+import LogoImg from "../assets/ReLife_Icon3.png";
 import {
   Grid,
   Compass,

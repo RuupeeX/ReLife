@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useAuth } from "../context/AuthContext";
-import LogoImg from "../assets/ReLife_icon3.png";
+import LogoImg from "../assets/ReLife_Icon3.png";
 import {
   ArrowRight,
   Eye,
