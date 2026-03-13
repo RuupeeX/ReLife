@@ -1,0 +1,84 @@
+[
+  {
+    "id": 1,
+    "author": "EcoMaria",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=Maria",
+    "image": "https://images.unsplash.com/photo-1544816155-12df9643f363?q=80&w=800&auto=format&fit=crop",
+    "title": "Lámpara Botella",
+    "description": "Lámpara artesanal hecha con botellas de vidrio recicladas y guirnaldas LED. Cada pieza es única.",
+    "likes": 45,
+    "likedByUser": false,
+    "saved": false,
+    "category": "lighting",
+    "comments": [
+      { "id": 1, "user": "Juan", "text": "¡Wow, increíble!", "time": "Hace 2h", "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=Juan" }
+    ]
+  },
+  {
+    "id": 2,
+    "author": "CarpinteroZen",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=Felix",
+    "image": "https://images.unsplash.com/photo-1534349762913-96c225508bbf?q=80&w=800&auto=format&fit=crop",
+    "title": "Estantería Palet",
+    "description": "Estantería moderna de 3 niveles hecha con palets reciclados y acabado natural.",
+    "likes": 120,
+    "likedByUser": true,
+    "saved": true,
+    "category": "furniture",
+    "comments": []
+  },
+  {
+    "id": 3,
+    "author": "TelaVerde",
+    "avatar": "https://api.dicebear.com/9.x/adventurer/svg?seed=Oliver",
+    "image": "https://images.unsplash.com/photo-1552168324-d612d77725e3?q=80&w=800&auto=format&fit=crop",
+    "title": "Bolso Jeans",
+    "description": "Bolso resistente y con estilo hecho con tela vaquera reciclada. Cosido a mano.",
+    "likes": 85,
+    "likedByUser": false,
+    "saved": false,
+    "category": "fashion",
+    "comments": []
+  },
+  {
+    "id": 4,
+    "author": "JardinUrbano",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=Bob",
+    "image": "https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?q=80&w=800&auto=format&fit=crop",
+    "title": "Maceta Lata",
+    "description": "Macetas decorativas pintadas a mano hechas con latas de conserva recicladas.",
+    "likes": 210,
+    "likedByUser": true,
+    "saved": false,
+    "category": "garden",
+    "comments": []
+  },
+  {
+    "id": 5,
+    "author": "ReMueble",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=Zack",
+    "image": "https://images.unsplash.com/photo-1538688525198-9b88f6f53126?q=80&w=800&auto=format&fit=crop",
+    "title": "Silla Restaurada",
+    "description": "Silla vintage completamente restaurada con tapizado nuevo en tela orgánica.",
+    "likes": 55,
+    "likedByUser": false,
+    "saved": true,
+    "category": "furniture",
+    "comments": []
+  },
+  {
+    "id": 6,
+    "author": "VidrioArt",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=Sara",
+    "image": "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?q=80&w=800&auto=format&fit=crop",
+    "title": "Jarrón Azul",
+    "description": "Jarrón artístico soplado a mano con vidrio reciclado. Tono azul cobalto único.",
+    "likes": 300,
+    "likedByUser": true,
+    "saved": false,
+    "category": "decor",
+    "comments": [
+      { "id": 1, "user": "Ana", "text": "Precioso trabajo", "time": "Hace 1h", "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=Ana" }
+    ]
+  }
+]

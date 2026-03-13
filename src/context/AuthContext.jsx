@@ -1,82 +1,66 @@
-import React, { createContext, useState, useContext, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect } from "react";
 
 const AuthContext = createContext();
 
-export const useAuth = () => useContext(AuthContext);
+export const useAuth = () => {
+  return useContext(AuthContext);
+};
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const storedUser = localStorage.getItem('user');
+    const storedUser = localStorage.getItem("relife_user");
     if (storedUser) {
       setUser(JSON.parse(storedUser));
     }
     setLoading(false);
   }, []);
 
-  const register = (userData) => {
-    const newUser = { 
-      ...userData, 
-      id: Date.now(),
-      credits: 200, 
-      memberSince: new Date().toLocaleDateString()
+  const login = (email, password) => {
+    const mockUser = {
+      name: "Rupe",
+      username: "_ruupee_",
+      email: email,
+      avatar: "https://api.dicebear.com/9.x/notionists-neutral/svg?seed=Mason",
+      bio: "Creador de upcycling · Amante de dar nueva vida a los objetos ♻️",
+      site: "relife.app",
+      stats: { posts: 6, followers: 128, following: 89 },
+    };
+    setUser(mockUser);
+    localStorage.setItem("relife_user", JSON.stringify(mockUser));
+  };
+
+  const register = (data) => {
+    const newUser = {
+      name: data.name,
+      username: data.username,
+      email: data.email,
+      avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${data.username}`,
+      bio: "Amante del reciclaje creativo.",
+      site: "",
+      stats: { posts: 0, followers: 0, following: 0 },
     };
     setUser(newUser);
-    localStorage.setItem('user', JSON.stringify(newUser));
-    localStorage.setItem('registeredUser', JSON.stringify(newUser));
+    localStorage.setItem("relife_user", JSON.stringify(newUser));
   };
-
-  const login = (loginData) => {
-    const storedRegisteredUser = localStorage.getItem('registeredUser');
-    const registeredUser = storedRegisteredUser ? JSON.parse(storedRegisteredUser) : null;
-
-    if (registeredUser && registeredUser.correo === loginData.correo) {
-        setUser(registeredUser);
-        localStorage.setItem('user', JSON.stringify(registeredUser));
-    } else {
-        const demoUser = { 
-            nombre: "Usuario Demo",
-            apodo: "invitado",
-            correo: loginData.correo,
-            ciudad: "Madrid",
-            credits: 0,
-            memberSince: new Date().toLocaleDateString()
-        };
-        setUser(demoUser);
-        localStorage.setItem('user', JSON.stringify(demoUser));
-    }
-  };
-
-  // --- NUEVA FUNCIÓN: ACTUALIZAR USUARIO ---
-  const updateUser = (newData) => {
-    // Fusionamos los datos actuales con los nuevos (ej: { avatar: "..." })
-    const updatedUser = { ...user, ...newData };
-    setUser(updatedUser);
-    
-    // Guardamos en localStorage para que persista al recargar
-    localStorage.setItem('user', JSON.stringify(updatedUser));
-    
-    // Si es el usuario registrado, actualizamos también el backup
-    const storedRegisteredUser = localStorage.getItem('registeredUser');
-    if (storedRegisteredUser) {
-        const parsed = JSON.parse(storedRegisteredUser);
-        if (parsed.correo === user.correo) {
-            localStorage.setItem('registeredUser', JSON.stringify(updatedUser));
-        }
-    }
-  };
-  // ----------------------------------------
 
   const logout = () => {
     setUser(null);
-    localStorage.removeItem('user');
+    localStorage.removeItem("relife_user");
   };
 
+  const updateUserProfile = (updatedData) => {
+    const newUser = { ...user, ...updatedData };
+    setUser(newUser);
+    localStorage.setItem("relife_user", JSON.stringify(newUser));
+  };
+
+  const value = { user, login, register, logout, updateUserProfile };
+
   return (
-    // AÑADIMOS updateUser AL VALUE
-    <AuthContext.Provider value={{ user, login, logout, register, updateUser, loading }}>
+    <AuthContext.Provider value={value}>
       {!loading && children}
     </AuthContext.Provider>
   );

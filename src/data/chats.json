@@ -1,0 +1,29 @@
+[
+  {
+    "id": 1,
+    "user": "JuanRecicla",
+    "avatar": "https://api.dicebear.com/7.x/avataaars/svg?seed=Felix",
+    "lastMessage": "¡Hola! ¿Aún tienes la lámpara?",
+    "time": "10:30 AM",
+    "unread": 2,
+    "online": true
+  },
+  {
+    "id": 2,
+    "user": "AnaGreen",
+    "avatar": "https://api.dicebear.com/9.x/adventurer/svg?seed=Oliver",
+    "lastMessage": "Me encanta tu último proyecto 🌿",
+    "time": "Ayer",
+    "unread": 0,
+    "online": false
+  },
+  {
+    "id": 3,
+    "user": "ReMueble",
+    "avatar": "https://api.dicebear.com/9.x/croodles-neutral/svg?seed=Riley",
+    "lastMessage": "¿Podrías pasarme las medidas?",
+    "time": "Ayer",
+    "unread": 0,
+    "online": true
+  }
+]
