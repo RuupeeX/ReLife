@@ -325,12 +325,12 @@ const AppSidebar = ({ activeTab, setActiveTab, user, logout, notifications = [],
         onClick={() => setIsMobileOpen(true)}
         className="md:hidden fixed top-3 right-3 z-40 w-10 h-10 rounded-xl flex items-center justify-center border-none cursor-pointer transition-all duration-200"
         style={{
-          background: "rgba(255,255,255,0.9)",
+          background: "#10b981",
           backdropFilter: "blur(12px)",
           boxShadow: "0 2px 12px rgba(0,0,0,0.1)",
         }}
       >
-        <Menu className="w-5 h-5 text-stone-700" />
+        <Menu className="w-5 h-5 text-black" />
       </button>
 
       {/* Mobile Drawer */}

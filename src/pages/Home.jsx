@@ -17,6 +17,8 @@ import {
   X,
   Send,
   ImagePlus,
+
+  
   Trash2,
   Link,
   ChevronLeft,
@@ -30,6 +32,8 @@ import {
   Sun,
   Filter,
   ArrowUp,
+  Star,
+  Clock,
 } from "lucide-react";
 import { cn } from "../lib/utils";
 
@@ -181,7 +185,7 @@ const PostCard = React.memo(({ post, onLike, onSave, onClick, onReport, onAddToC
         }}
       />
 
-      {/* Gradient overlay */}
+      {/* Gradient overlay — enhanced for text contrast */}
       <div
         style={{
           position: "absolute",
@@ -614,7 +618,9 @@ const StoryViewerModal = ({ stories, initialIndex, onClose }) => {
         </div>
 
         {/* Story header */}
-        <div className="absolute top-8 left-4 right-4 z-20 flex items-center justify-between">
+        <div
+          className="absolute top-8 left-4 right-4 z-20 flex items-center justify-between"
+        >
           <div className="flex items-center gap-3">
             <img
               src={currentStory.avatar}
@@ -694,7 +700,7 @@ const StoryViewerModal = ({ stories, initialIndex, onClose }) => {
 };
 
 // ═══════════════════════════════════════════
-// STORY BUBBLE
+// STORY BUBBLE — improved with keyboard nav
 // ═══════════════════════════════════════════
 const StoryBubble = ({ user, isCreate, onClick }) => {
   const [tapped, setTapped] = useState(false);
@@ -750,6 +756,7 @@ const StoryBubble = ({ user, isCreate, onClick }) => {
             />
           )}
         </div>
+        {/* New story dot */}
         {!isCreate && user?.hasNewStory && (
           <div
             className="absolute -bottom-0.5 right-0.5 w-4 h-4 rounded-full flex items-center justify-center"
@@ -790,6 +797,7 @@ const TrendingCard = React.memo(({ tag, posts: p, gradient }) => {
         boxShadow: hovered ? "0 16px 48px rgba(0,0,0,0.18)" : "0 4px 12px rgba(0,0,0,0.06)",
       }}
     >
+      {/* Background decoration */}
       <div
         className="absolute -top-6 -right-6 w-24 h-24 rounded-full"
         style={{
@@ -823,6 +831,285 @@ const TrendingCard = React.memo(({ tag, posts: p, gradient }) => {
 });
 
 TrendingCard.displayName = "TrendingCard";
+
+// ═══════════════════════════════════════════
+// CHALLENGES DATA — 6 missions with Lucide icons
+// ═══════════════════════════════════════════
+const CHALLENGES = [
+  {
+    id: 1, title: "Recicla & Gana", description: "Publica 3 proyectos de upcycling esta semana",
+    reward: "−15% descuento", rewardPoints: 500, icon: Sparkles,
+    color: "#10b981", bgLight: "rgba(16,185,129,0.1)", gradient: "linear-gradient(135deg, #10b981, #14b8a6)",
+    progress: 0.66, totalSteps: 3, currentStep: 2, timeLeft: "2d", difficulty: "Fácil",
+  },
+  {
+    id: 2, title: "Streak Creativo", description: "Entra 7 días seguidos a la app",
+    reward: "Badge exclusivo", rewardPoints: 300, icon: TrendingUp,
+    color: "#f59e0b", bgLight: "rgba(245,158,11,0.1)", gradient: "linear-gradient(135deg, #f59e0b, #ea580c)",
+    progress: 0.43, totalSteps: 7, currentStep: 3, timeLeft: "4d", difficulty: "Media",
+  },
+  {
+    id: 3, title: "Maestro Mercado", description: "Vende tu primer producto en Marketplace",
+    reward: "Sin comisión 1 mes", rewardPoints: 800, icon: Heart,
+    color: "#8b5cf6", bgLight: "rgba(139,92,246,0.1)", gradient: "linear-gradient(135deg, #8b5cf6, #ec4899)",
+    progress: 0, totalSteps: 1, currentStep: 0, timeLeft: "∞", difficulty: "Reto",
+  },
+  {
+    id: 4, title: "Comentarista", description: "Deja 10 comentarios constructivos",
+    reward: "+200 XP", rewardPoints: 200, icon: MessageCircle,
+    color: "#3b82f6", bgLight: "rgba(59,130,246,0.1)", gradient: "linear-gradient(135deg, #3b82f6, #06b6d4)",
+    progress: 0.7, totalSteps: 10, currentStep: 7, timeLeft: "5d", difficulty: "Fácil",
+  },
+  {
+    id: 5, title: "Coleccionista", description: "Guarda 15 posts en tus colecciones",
+    reward: "Tema exclusivo", rewardPoints: 350, icon: Bookmark,
+    color: "#ec4899", bgLight: "rgba(236,72,153,0.1)", gradient: "linear-gradient(135deg, #ec4899, #f43f5e)",
+    progress: 1.0, totalSteps: 15, currentStep: 15, timeLeft: "—", difficulty: "Media",
+  },
+  {
+    id: 6, title: "Influencer Verde", description: "Consigue 50 seguidores en tu perfil",
+    reward: "Verificación", rewardPoints: 1000, icon: Users,
+    color: "#0d9488", bgLight: "rgba(13,148,136,0.1)", gradient: "linear-gradient(135deg, #0d9488, #06b6d4)",
+    progress: 0.28, totalSteps: 50, currentStep: 14, timeLeft: "30d", difficulty: "Reto",
+  },
+];
+
+// ═══════════════════════════════════════════
+// POINTS MINI CARD
+// ═══════════════════════════════════════════
+const PointsMiniCard = () => {
+  const [animated, setAnimated] = useState(false);
+  useEffect(() => { const t = setTimeout(() => setAnimated(true), 300); return () => clearTimeout(t); }, []);
+
+  const xp = 1250;
+  const maxXp = 2000;
+  const pct = (xp / maxXp) * 100;
+
+  const stats = [
+    { icon: Star, value: "1.250", label: "puntos", color: "#f59e0b" },
+    { icon: TrendingUp, value: "7", label: "días racha", color: "#ef4444" },
+    { icon: CheckCircle, value: "4/6", label: "retos", color: "#10b981" },
+  ];
+
+  return (
+    <div
+      className="flex items-center gap-3 p-4 rounded-2xl mb-4"
+      style={{ background: "var(--bg-card)", border: "1px solid var(--border)" }}
+    >
+      {/* Level + XP */}
+      <div className="flex items-center gap-3 flex-1 min-w-0">
+        <div
+          className="w-12 h-12 rounded-xl flex items-center justify-center text-[18px] font-black text-white flex-shrink-0"
+          style={{ background: "linear-gradient(135deg, #10b981, #14b8a6)", boxShadow: "0 4px 12px rgba(16,185,129,0.25)" }}
+        >
+          5
+        </div>
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2 mb-1.5">
+            <span className="text-[13px] font-black" style={{ color: "var(--text-primary)" }}>Nivel 5</span>
+            <span className="text-[8px] font-bold uppercase px-1.5 py-0.5 rounded" style={{ background: "rgba(16,185,129,0.1)", color: "#10b981" }}>
+              Creador
+            </span>
+          </div>
+          <div className="w-full h-[6px] rounded-full overflow-hidden" style={{ background: "var(--border)" }}>
+            <div
+              className="h-full rounded-full transition-all duration-1000 ease-out"
+              style={{ width: animated ? `${pct}%` : "0%", background: "linear-gradient(90deg, #10b981, #06b6d4)" }}
+            />
+          </div>
+          <p className="text-[9px] font-medium mt-1" style={{ color: "var(--text-muted)" }}>
+            {xp.toLocaleString()} / {maxXp.toLocaleString()} XP
+          </p>
+        </div>
+      </div>
+
+      {/* Stats */}
+      {stats.map((s, i) => (
+        <React.Fragment key={s.label}>
+          <div className="w-px h-10 flex-shrink-0" style={{ background: "var(--border)" }} />
+          <div className="text-center flex-shrink-0 min-w-[52px]">
+            <s.icon className="w-3.5 h-3.5 mx-auto mb-0.5" style={{ color: s.color }} />
+            <p className="text-[14px] font-black leading-tight" style={{ color: "var(--text-primary)" }}>{s.value}</p>
+            <p className="text-[8px] font-medium" style={{ color: "var(--text-muted)" }}>{s.label}</p>
+          </div>
+        </React.Fragment>
+      ))}
+    </div>
+  );
+};
+
+// ═══════════════════════════════════════════
+// CHALLENGE CARD — symmetric, Lucide icons
+// ═══════════════════════════════════════════
+const ChallengeCard = React.memo(({ challenge, claimed, onClaim }) => {
+  const [hovered, setHovered] = useState(false);
+  const [animProg, setAnimProg] = useState(0);
+  const isComplete = challenge.progress >= 1;
+  const Icon = challenge.icon;
+
+  useEffect(() => {
+    const t = setTimeout(() => setAnimProg(challenge.progress), 400);
+    return () => clearTimeout(t);
+  }, [challenge.progress]);
+
+  const difficultyColors = {
+    "Fácil": { bg: "rgba(16,185,129,0.1)", text: "#10b981" },
+    "Media": { bg: "rgba(245,158,11,0.1)", text: "#f59e0b" },
+    "Reto": { bg: "rgba(239,68,68,0.1)", text: "#ef4444" },
+  };
+  const dc = difficultyColors[challenge.difficulty] || difficultyColors["Fácil"];
+
+  return (
+    <div
+      className="rounded-2xl overflow-hidden transition-all duration-300 h-full flex flex-col"
+      style={{
+        background: "var(--bg-card)",
+        border: `1.5px ${claimed ? "dashed" : "solid"} ${claimed ? "var(--text-faint)" : "var(--border)"}`,
+        transform: hovered ? "translateY(-4px)" : "none",
+        boxShadow: hovered ? "0 16px 40px rgba(0,0,0,0.1)" : "var(--shadow-sm)",
+        opacity: claimed ? 0.55 : 1,
+      }}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
+      <div className="p-4 flex flex-col flex-1">
+        {/* Top row */}
+        <div className="flex items-center justify-between mb-4">
+          <span
+            className="text-[9px] font-bold uppercase px-2 py-1 rounded-md"
+            style={{ background: dc.bg, color: dc.text }}
+          >
+            {challenge.difficulty}
+          </span>
+          <span className="text-[9px] font-semibold flex items-center gap-1" style={{ color: "var(--text-muted)" }}>
+            <Clock className="w-2.5 h-2.5" /> {challenge.timeLeft}
+          </span>
+        </div>
+
+        {/* Icon */}
+        <div className="flex justify-center mb-3">
+          <div
+            className="w-14 h-14 rounded-2xl flex items-center justify-center transition-transform duration-300"
+            style={{
+              background: claimed ? "var(--bg-input)" : challenge.gradient,
+              boxShadow: claimed ? "none" : `0 8px 20px ${challenge.color}30`,
+              transform: hovered && !claimed ? "scale(1.1)" : "scale(1)",
+            }}
+          >
+            {claimed
+              ? <CheckCircle className="w-6 h-6" style={{ color: "var(--text-faint)" }} />
+              : <Icon className="w-6 h-6 text-white" />
+            }
+          </div>
+        </div>
+
+        {/* Title */}
+        <h4 className="text-[13px] font-black text-center mb-1" style={{ color: "var(--text-primary)" }}>
+          {challenge.title}
+        </h4>
+        <p className="text-[10px] text-center leading-relaxed line-clamp-2 mb-auto" style={{ color: "var(--text-muted)" }}>
+          {challenge.description}
+        </p>
+
+        {/* Ticket separator */}
+        <div className="flex items-center -mx-4 my-3">
+          <div className="w-3 h-3 rounded-full flex-shrink-0 -ml-[7px]" style={{ background: "var(--bg-primary)" }} />
+          <div className="flex-1 border-t border-dashed" style={{ borderColor: "var(--border)" }} />
+          <div className="w-3 h-3 rounded-full flex-shrink-0 -mr-[7px]" style={{ background: "var(--bg-primary)" }} />
+        </div>
+
+        {/* Progress */}
+        <div className="flex items-center justify-between mb-1.5">
+          <span className="text-[9px] font-semibold" style={{ color: "var(--text-muted)" }}>
+            {challenge.currentStep}/{challenge.totalSteps}
+          </span>
+          <span className="text-[9px] font-bold" style={{ color: challenge.color }}>
+            {Math.round(challenge.progress * 100)}%
+          </span>
+        </div>
+        <div className="h-[5px] rounded-full overflow-hidden mb-3" style={{ background: "var(--border)" }}>
+          <div
+            className="h-full rounded-full transition-all duration-1000 ease-out"
+            style={{ width: `${animProg * 100}%`, background: claimed ? "var(--text-faint)" : challenge.gradient }}
+          />
+        </div>
+
+        {/* Reward */}
+        <div
+          className="flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl mb-3"
+          style={{ background: challenge.bgLight }}
+        >
+          <Tag className="w-3 h-3" style={{ color: challenge.color }} />
+          <span className="text-[10px] font-bold" style={{ color: challenge.color }}>{challenge.reward}</span>
+          <span className="text-[9px] font-medium" style={{ color: "var(--text-muted)" }}>+{challenge.rewardPoints}</span>
+        </div>
+
+        {/* CTA */}
+        <button
+          onClick={() => !claimed && isComplete && onClaim(challenge.id)}
+          disabled={claimed || !isComplete}
+          className="w-full py-2.5 rounded-xl text-[11px] font-bold border-none transition-all flex items-center justify-center gap-1.5"
+          style={{
+            background: claimed ? "var(--bg-input)" : isComplete ? challenge.gradient : challenge.bgLight,
+            color: claimed ? "var(--text-faint)" : isComplete ? "white" : challenge.color,
+            cursor: claimed || !isComplete ? "default" : "pointer",
+            boxShadow: isComplete && !claimed ? `0 4px 12px ${challenge.color}25` : "none",
+          }}
+        >
+          {claimed
+            ? <><CheckCircle className="w-3 h-3" /> Canjeado</>
+            : isComplete
+              ? <><Sparkles className="w-3 h-3" /> ¡Canjear!</>
+              : "En progreso"
+          }
+        </button>
+      </div>
+    </div>
+  );
+});
+
+ChallengeCard.displayName = "ChallengeCard";
+
+// ═══════════════════════════════════════════
+// CHALLENGES SECTION — symmetric grid
+// ═══════════════════════════════════════════
+const ChallengesSection = () => {
+  const [claimed, setClaimed] = useState({});
+
+  return (
+    <div className="mb-6">
+      <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center gap-2">
+          <h3 className="text-[13px] font-bold" style={{ color: "var(--text-secondary)" }}>
+            Retos & Recompensas
+          </h3>
+          <span
+            className="text-[9px] font-bold uppercase px-2 py-0.5 rounded flex items-center gap-1"
+            style={{ background: "#10b981", color: "white" }}
+          >
+            <Sparkles className="w-2.5 h-2.5" /> NUEVO
+          </span>
+        </div>
+        <span className="text-[11px] font-medium cursor-pointer hover:text-emerald-600 transition-colors" style={{ color: "var(--text-muted)" }}>
+          Ver todos
+        </span>
+      </div>
+
+      <PointsMiniCard />
+
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+        {CHALLENGES.map((challenge) => (
+          <ChallengeCard
+            key={challenge.id}
+            challenge={challenge}
+            claimed={claimed[challenge.id]}
+            onClaim={(id) => setClaimed((prev) => ({ ...prev, [id]: true }))}
+          />
+        ))}
+      </div>
+    </div>
+  );
+};
 
 // ═══════════════════════════════════════════
 // REPORT MODAL
@@ -923,7 +1210,7 @@ const ReportModal = ({ isOpen, onClose, postId }) => {
 };
 
 // ═══════════════════════════════════════════
-// COLLECTION MODAL
+// COLLECTION MODAL (Save to collection)
 // ═══════════════════════════════════════════
 const CollectionModal = ({ isOpen, onClose, postId }) => {
   const [collections, setCollections] = useState([
@@ -1039,7 +1326,7 @@ const CollectionModal = ({ isOpen, onClose, postId }) => {
 };
 
 // ═══════════════════════════════════════════
-// CREATE POST MODAL
+// CREATE POST MODAL — improved with drag & drop, tags, preview
 // ═══════════════════════════════════════════
 const CreatePostModal = ({ isOpen, onClose }) => {
   const { addPost } = useData();
@@ -1182,6 +1469,7 @@ const CreatePostModal = ({ isOpen, onClose }) => {
 
         <div className="p-6">
           {showPreview ? (
+            /* Preview mode */
             <div className="space-y-4">
               {effectiveImage && (
                 <div className="rounded-2xl overflow-hidden" style={{ aspectRatio: "16/10" }}>
@@ -1221,6 +1509,7 @@ const CreatePostModal = ({ isOpen, onClose }) => {
               </div>
             </div>
           ) : (
+            /* Edit mode */
             <>
               <div className="flex items-center gap-3 mb-5">
                 <img
@@ -1256,6 +1545,7 @@ const CreatePostModal = ({ isOpen, onClose }) => {
                   className={cn(formInputStyle, "resize-none")}
                 />
 
+                {/* Image upload area */}
                 {!effectiveImage ? (
                   <div
                     onDragOver={handleDragOver}
@@ -1304,6 +1594,7 @@ const CreatePostModal = ({ isOpen, onClose }) => {
                   </div>
                 )}
 
+                {/* URL fallback */}
                 {!imagePreview && (
                   <div className="flex gap-2">
                     <div className="flex-1 relative">
@@ -1319,6 +1610,7 @@ const CreatePostModal = ({ isOpen, onClose }) => {
                   </div>
                 )}
 
+                {/* Tags */}
                 <div>
                   <div className="flex gap-2 mb-2 flex-wrap">
                     {tags.map((tag) => (
@@ -1503,7 +1795,7 @@ const getBentoConfig = (index) => {
 };
 
 // ═══════════════════════════════════════════
-// FEED HEADER — FIX: pr-16 en mobile para no tapar con botón flotante
+// FEED HEADER (extracted component)
 // ═══════════════════════════════════════════
 const FeedHeader = React.memo(({ user, searchQuery, setSearchQuery, setActiveTab, notifications, onSearchOpen }) => {
   const hour = new Date().getHours();
@@ -1511,7 +1803,7 @@ const FeedHeader = React.memo(({ user, searchQuery, setSearchQuery, setActiveTab
 
   return (
     <header
-      className="px-4 pr-16 md:px-8 md:pr-8 py-5 flex items-center justify-between flex-shrink-0 sticky top-0 z-30"
+      className="px-4 pr-16 md:px-8 md:pr-8 py-5 flex items-center justify-between flex-shrink-0 sticky top-0 z-40"
       style={{
         background: "rgba(250,250,249,0.88)",
         backdropFilter: "blur(20px)",
@@ -1530,68 +1822,68 @@ const FeedHeader = React.memo(({ user, searchQuery, setSearchQuery, setActiveTab
           {greeting}, {user.name.split(" ")[0]}! Descubre proyectos increíbles
         </p>
       </div>
-      <div className="flex items-center gap-[10px]">
-        {/* Mobile search trigger */}
-        <button
-          onClick={onSearchOpen}
-          className="lg:hidden p-[10px] bg-white rounded-2xl cursor-pointer transition-all border-none"
-          style={{ border: "1px solid var(--border)", boxShadow: "var(--shadow-sm)" }}
-          aria-label="Buscar"
-        >
-          <Search className="w-[18px] h-[18px]" style={{ color: "var(--text-secondary)" }} />
-        </button>
+    <div className="flex items-center gap-[10px]">
+      {/* Mobile search trigger */}
+      <button
+        onClick={onSearchOpen}
+        className="lg:hidden p-[10px] bg-white rounded-2xl cursor-pointer transition-all border-none"
+        style={{ border: "1px solid var(--border)", boxShadow: "var(--shadow-sm)" }}
+        aria-label="Buscar"
+      >
+        <Search className="w-[18px] h-[18px]" style={{ color: "var(--text-secondary)" }} />
+      </button>
 
-        {/* Desktop search */}
-        <div
-          className="hidden lg:flex items-center bg-white px-5 py-[10px] rounded-2xl gap-[10px] w-72 focus-within:ring-2 focus-within:ring-emerald-500/20 transition-all"
-          style={{ border: "1px solid var(--border)", boxShadow: "var(--shadow-sm)" }}
-        >
-          <Search className="w-4 h-4" style={{ color: "var(--text-muted)" }} />
-          <input
-            type="text"
-            placeholder="Buscar inspiración..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="bg-transparent outline-none text-[13px] w-full font-medium border-none"
-            style={{ color: "var(--text-secondary)" }}
-          />
-          {searchQuery && (
-            <button
-              onClick={() => setSearchQuery("")}
-              className="bg-transparent border-none cursor-pointer p-0"
-              style={{ color: "var(--text-muted)" }}
-              aria-label="Limpiar búsqueda"
-            >
-              <X size={14} />
-            </button>
-          )}
-        </div>
-
-        <button
-          onClick={() => setActiveTab("Notifications")}
-          className="relative p-[10px] bg-white rounded-2xl cursor-pointer transition-all border-none"
-          style={{ border: "1px solid var(--border)", boxShadow: "var(--shadow-sm)" }}
-          aria-label={`Notificaciones${notifications.some((n) => !n.read) ? " - tienes nuevas" : ""}`}
-        >
-          <Bell className="w-[18px] h-[18px]" style={{ color: "var(--text-secondary)" }} />
-          {notifications.some((n) => !n.read) && (
-            <span
-              className="absolute top-[6px] right-[6px] flex items-center justify-center min-w-[18px] h-[18px] text-[9px] font-black text-white rounded-full px-1"
-              style={{ background: "#ef4444", border: "2px solid white" }}
-            >
-              {notifications.filter((n) => !n.read).length}
-            </span>
-          )}
-        </button>
+      {/* Desktop search */}
+      <div
+        className="hidden lg:flex items-center bg-white px-5 py-[10px] rounded-2xl gap-[10px] w-72 focus-within:ring-2 focus-within:ring-emerald-500/20 transition-all"
+        style={{ border: "1px solid var(--border)", boxShadow: "var(--shadow-sm)" }}
+      >
+        <Search className="w-4 h-4" style={{ color: "var(--text-muted)" }} />
+        <input
+          type="text"
+          placeholder="Buscar inspiración..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="bg-transparent outline-none text-[13px] w-full font-medium border-none"
+          style={{ color: "var(--text-secondary)" }}
+        />
+        {searchQuery && (
+          <button
+            onClick={() => setSearchQuery("")}
+            className="bg-transparent border-none cursor-pointer p-0"
+            style={{ color: "var(--text-muted)" }}
+            aria-label="Limpiar búsqueda"
+          >
+            <X size={14} />
+          </button>
+        )}
       </div>
-    </header>
+
+      <button
+        onClick={() => setActiveTab("Notifications")}
+        className="relative p-[10px] bg-white rounded-2xl cursor-pointer transition-all border-none"
+        style={{ border: "1px solid var(--border)", boxShadow: "var(--shadow-sm)" }}
+        aria-label={`Notificaciones${notifications.some((n) => !n.read) ? " - tienes nuevas" : ""}`}
+      >
+        <Bell className="w-[18px] h-[18px]" style={{ color: "var(--text-secondary)" }} />
+        {notifications.some((n) => !n.read) && (
+          <span
+            className="absolute top-[6px] right-[6px] flex items-center justify-center min-w-[18px] h-[18px] text-[9px] font-black text-white rounded-full px-1"
+            style={{ background: "#ef4444", border: "2px solid white" }}
+          >
+            {notifications.filter((n) => !n.read).length}
+          </span>
+        )}
+      </button>
+    </div>
+  </header>
   );
 });
 
 FeedHeader.displayName = "FeedHeader";
 
 // ═══════════════════════════════════════════
-// FEED CONTROLS
+// FEED CONTROLS (extracted component)
 // ═══════════════════════════════════════════
 const FeedControls = React.memo(({ categories, categoryFilter, setCategoryFilter, feedFilter, setFeedFilter, searchQuery, filteredCount }) => (
   <div className="flex items-center justify-between mb-5 flex-wrap gap-3">
@@ -1689,7 +1981,7 @@ const useInfiniteScroll = (items, pageSize = 12) => {
 };
 
 // ═══════════════════════════════════════════
-// FEED VIEW
+// FEED VIEW — improved
 // ═══════════════════════════════════════════
 const FeedView = ({ user, onCreatePost, setActiveTab, setSelectedPost }) => {
   const { posts, toggleLike, toggleSave, notifications } = useData();
@@ -1741,6 +2033,7 @@ const FeedView = ({ user, onCreatePost, setActiveTab, setSelectedPost }) => {
 
   return (
     <div className="flex-1 flex flex-col h-full overflow-hidden relative" style={{ background: "var(--bg-primary)" }}>
+      {/* Subtle bg glow */}
       <div
         className="absolute top-0 right-0 w-[500px] h-[500px] pointer-events-none"
         style={{
@@ -1787,6 +2080,9 @@ const FeedView = ({ user, onCreatePost, setActiveTab, setSelectedPost }) => {
               ))}
             </div>
           </div>
+
+          {/* Retos & Recompensas */}
+          <ChallengesSection />
 
           {/* Trending Tags */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
@@ -1844,6 +2140,7 @@ const FeedView = ({ user, onCreatePost, setActiveTab, setSelectedPost }) => {
                 })}
               </div>
 
+              {/* Infinite scroll sentinel */}
               {hasMore && (
                 <div ref={sentinelRef} className="flex justify-center py-8">
                   {loading && (
@@ -1866,6 +2163,7 @@ const FeedView = ({ user, onCreatePost, setActiveTab, setSelectedPost }) => {
 
       <ScrollToTopButton containerRef={mainRef} />
 
+      {/* Story Viewer */}
       {storyViewerOpen && (
         <StoryViewerModal
           stories={stories}
@@ -1874,12 +2172,14 @@ const FeedView = ({ user, onCreatePost, setActiveTab, setSelectedPost }) => {
         />
       )}
 
+      {/* Report Modal */}
       <ReportModal
         isOpen={reportPostId !== null}
         onClose={() => setReportPostId(null)}
         postId={reportPostId}
       />
 
+      {/* Collection Modal */}
       <CollectionModal
         isOpen={collectionPostId !== null}
         onClose={() => setCollectionPostId(null)}
@@ -1890,7 +2190,7 @@ const FeedView = ({ user, onCreatePost, setActiveTab, setSelectedPost }) => {
 };
 
 // ═══════════════════════════════════════════
-// GLOBAL ANIMATIONS
+// GLOBAL ANIMATIONS (inject once)
 // ═══════════════════════════════════════════
 const GlobalStyles = () => {
   useEffect(() => {

@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
+import { useTheme } from "../context/ThemeContext";
 import {
   User,
   Bell,
@@ -16,6 +17,18 @@ import {
   Trash2,
   AlertTriangle,
   X,
+  Moon,
+  Sun,
+
+  Sparkles,
+  Zap,
+  Star,
+
+
+
+
+  ShoppingBag,
+  Award,
 } from "lucide-react";
 import { cn } from "../lib/utils";
 
@@ -113,10 +126,480 @@ const ConfirmModal = ({ isOpen, onClose, onConfirm, icon: Icon, iconBg, title, m
 };
 
 // ═══════════════════════════════════════════
+// PRO SUBSCRIPTION SECTION — full pricing page
+// ═══════════════════════════════════════════
+const PLANS = {
+  monthly: [
+    {
+      id: "basic",
+      name: "Básico",
+      price: 4.99,
+      description: "Para creadores que empiezan",
+      features: [
+        { text: "Sin anuncios", included: true },
+        { text: "50 publicaciones/mes", included: true },
+        { text: "Estadísticas básicas", included: true },
+        { text: "Badge verificado", included: true },
+        { text: "Publicaciones ilimitadas", included: false },
+        { text: "Estadísticas avanzadas", included: false },
+        { text: "Soporte prioritario", included: false },
+        { text: "Marketplace sin comisión", included: false },
+      ],
+    },
+    {
+      id: "pro",
+      name: "Pro",
+      price: 9.99,
+      popular: true,
+      description: "Para creadores serios",
+      features: [
+        { text: "Sin anuncios", included: true },
+        { text: "Publicaciones ilimitadas", included: true },
+        { text: "Estadísticas avanzadas", included: true },
+        { text: "Badge verificado", included: true },
+        { text: "Soporte prioritario 24/7", included: true },
+        { text: "Marketplace sin comisión", included: true },
+        { text: "Acceso beta a funciones", included: false },
+        { text: "Insignia de fundador", included: false },
+      ],
+    },
+    {
+      id: "team",
+      name: "Equipo",
+      price: 24.99,
+      description: "Para colectivos y talleres",
+      features: [
+        { text: "Todo lo de Pro", included: true },
+        { text: "Hasta 5 miembros", included: true },
+        { text: "Página de equipo", included: true },
+        { text: "Analíticas de equipo", included: true },
+        { text: "Soporte prioritario 24/7", included: true },
+        { text: "Marketplace sin comisión", included: true },
+        { text: "Acceso beta a funciones", included: true },
+        { text: "Insignia de fundador", included: true },
+      ],
+    },
+  ],
+  yearly: [
+    { id: "basic", name: "Básico", price: 3.99, originalPrice: 4.99, description: "Para creadores que empiezan" },
+    { id: "pro", name: "Pro", price: 7.99, originalPrice: 9.99, popular: true, description: "Para creadores serios" },
+    { id: "team", name: "Equipo", price: 19.99, originalPrice: 24.99, description: "Para colectivos y talleres" },
+  ],
+};
+
+const ProSubscriptionSection = () => {
+  const [billing, setBilling] = useState("monthly"); // "monthly" | "yearly"
+  const [activePlan, setActivePlan] = useState(null); // null = free
+  const [confirmPlan, setConfirmPlan] = useState(null); // plan to confirm
+  const [successPlan, setSuccessPlan] = useState(null); // just subscribed
+
+  const plans = billing === "yearly"
+    ? PLANS.yearly.map((yp) => ({
+        ...PLANS.monthly.find((mp) => mp.id === yp.id),
+        ...yp,
+      }))
+    : PLANS.monthly;
+
+  const handleSubscribe = (plan) => {
+    if (activePlan === plan.id) return;
+    setConfirmPlan(plan);
+  };
+
+  const confirmSubscription = () => {
+    if (!confirmPlan) return;
+    setActivePlan(confirmPlan.id);
+    setSuccessPlan(confirmPlan.id);
+    setConfirmPlan(null);
+    setTimeout(() => setSuccessPlan(null), 3000);
+  };
+
+  const handleCancel = () => {
+    setActivePlan(null);
+  };
+
+  const savingPct = 20;
+
+  return (
+    <div className="space-y-6">
+      {/* ── Header banner ── */}
+      <div
+        className="relative rounded-[24px] overflow-hidden"
+        style={{ background: "linear-gradient(135deg, #0c1810, #0f2318, #0a1f14)" }}
+      >
+        {/* Decorative elements */}
+        <div className="absolute top-0 right-0 w-80 h-80" style={{ background: "radial-gradient(circle, rgba(16,185,129,0.15) 0%, transparent 70%)" }} />
+        <div className="absolute bottom-0 left-0 w-48 h-48" style={{ background: "radial-gradient(circle, rgba(6,182,212,0.1) 0%, transparent 70%)" }} />
+        <div className="absolute top-8 right-8 w-20 h-20 rounded-full" style={{ border: "1px solid rgba(255,255,255,0.04)" }} />
+        <div className="absolute bottom-4 right-24 w-12 h-12 rounded-full" style={{ border: "1px solid rgba(255,255,255,0.03)" }} />
+
+        <div className="relative z-10 p-8 md:p-10">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+            <div>
+              <div className="flex items-center gap-3 mb-4">
+                <div
+                  className="w-14 h-14 rounded-2xl flex items-center justify-center"
+                  style={{ background: "linear-gradient(135deg, #10b981, #06b6d4)", boxShadow: "0 8px 24px rgba(16,185,129,0.3)" }}
+                >
+                  <Award className="w-7 h-7 text-white" />
+                </div>
+                <div>
+                  <p className="text-white/40 text-[10px] font-bold uppercase tracking-[2px]">Plan actual</p>
+                  <p className="text-white text-2xl font-black">
+                    {activePlan ? plans.find((p) => p.id === activePlan)?.name || "Pro" : "Free"}
+                  </p>
+                </div>
+              </div>
+              <p className="text-white/50 text-[14px] leading-relaxed max-w-lg">
+                {activePlan
+                  ? "Estás disfrutando de todas las ventajas de tu plan. Puedes cambiar o cancelar en cualquier momento."
+                  : "Desbloquea todo el potencial de ReLife. Publicaciones ilimitadas, estadísticas avanzadas, soporte prioritario y mucho más."}
+              </p>
+            </div>
+
+            {activePlan && (
+              <button
+                onClick={handleCancel}
+                className="px-5 py-2.5 rounded-xl text-[13px] font-bold border-none cursor-pointer transition-all hover:bg-white/10 flex-shrink-0"
+                style={{ background: "rgba(255,255,255,0.06)", color: "rgba(255,255,255,0.5)", border: "1px solid rgba(255,255,255,0.08)" }}
+              >
+                Cancelar suscripción
+              </button>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* ── Billing toggle ── */}
+      <div className="flex justify-center">
+        <div
+          className="inline-flex items-center p-1 rounded-2xl"
+          style={{ background: "var(--bg-card)", border: "1px solid var(--border)" }}
+        >
+          <button
+            onClick={() => setBilling("monthly")}
+            className={cn(
+              "px-6 py-2.5 rounded-xl text-[13px] font-bold transition-all border-none cursor-pointer",
+              billing === "monthly"
+                ? "text-white shadow-lg"
+                : "text-stone-500 bg-transparent hover:text-stone-700"
+            )}
+            style={billing === "monthly" ? { background: "var(--text-primary)" } : {}}
+          >
+            Mensual
+          </button>
+          <button
+            onClick={() => setBilling("yearly")}
+            className={cn(
+              "px-6 py-2.5 rounded-xl text-[13px] font-bold transition-all border-none cursor-pointer flex items-center gap-2",
+              billing === "yearly"
+                ? "text-white shadow-lg"
+                : "text-stone-500 bg-transparent hover:text-stone-700"
+            )}
+            style={billing === "yearly" ? { background: "var(--text-primary)" } : {}}
+          >
+            Anual
+            <span
+              className="px-2 py-0.5 rounded-full text-[10px] font-bold"
+              style={{
+                background: billing === "yearly" ? "rgba(16,185,129,0.3)" : "rgba(16,185,129,0.1)",
+                color: billing === "yearly" ? "#6ee7b7" : "#10b981",
+              }}
+            >
+              -{savingPct}%
+            </span>
+          </button>
+        </div>
+      </div>
+
+      {/* ── Plan cards ── */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {plans.map((plan) => {
+          const isActive = activePlan === plan.id;
+          const isPro = plan.popular;
+
+          return (
+            <div
+              key={plan.id}
+              className={cn(
+                "relative rounded-[24px] overflow-hidden transition-all duration-500",
+                isPro ? "md:-mt-3 md:mb-[-12px]" : "",
+                isActive && "ring-2 ring-emerald-500 ring-offset-2"
+              )}
+              style={{
+                background: isPro
+                  ? "linear-gradient(160deg, #10b981, #0d9488, #06b6d4)"
+                  : "var(--bg-card)",
+                border: isPro ? "none" : "1px solid var(--border)",
+                boxShadow: isPro ? "0 20px 60px rgba(16,185,129,0.2)" : "var(--shadow-sm)",
+              }}
+            >
+              {/* Popular / Active badge */}
+              {(isPro || isActive) && (
+                <div className="absolute top-4 right-4 z-10">
+                  <span
+                    className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold"
+                    style={{
+                      background: isActive ? "#10b981" : "rgba(255,255,255,0.2)",
+                      color: "white",
+                      backdropFilter: "blur(8px)",
+                    }}
+                  >
+                    {isActive ? <><Check className="w-3 h-3" /> Activo</> : <><Star className="w-3 h-3" /> Popular</>}
+                  </span>
+                </div>
+              )}
+
+              <div className="p-6 md:p-7">
+                {/* Plan info */}
+                <p
+                  className="text-[12px] font-bold uppercase tracking-wider mb-1"
+                  style={{ color: isPro ? "rgba(255,255,255,0.5)" : "var(--text-muted)" }}
+                >
+                  {plan.description}
+                </p>
+                <h3
+                  className="text-[22px] font-black mb-4"
+                  style={{ color: isPro ? "white" : "var(--text-primary)", letterSpacing: "-0.02em" }}
+                >
+                  {plan.name}
+                </h3>
+
+                {/* Price */}
+                <div className="flex items-baseline gap-1.5 mb-1">
+                  <span
+                    className="text-[40px] font-black"
+                    style={{ color: isPro ? "white" : "#10b981", letterSpacing: "-0.04em", lineHeight: 1 }}
+                  >
+                    {plan.price}€
+                  </span>
+                  <span
+                    className="text-[13px] font-medium"
+                    style={{ color: isPro ? "rgba(255,255,255,0.5)" : "var(--text-muted)" }}
+                  >
+                    /{billing === "yearly" ? "mes" : "mes"}
+                  </span>
+                </div>
+                {billing === "yearly" && plan.originalPrice && (
+                  <p className="text-[12px] mb-4" style={{ color: isPro ? "rgba(255,255,255,0.4)" : "var(--text-faint)" }}>
+                    <span style={{ textDecoration: "line-through" }}>{plan.originalPrice}€</span> facturado anualmente
+                  </p>
+                )}
+                {billing !== "yearly" && <div className="mb-4" />}
+
+                {/* Divider */}
+                <div
+                  className="h-px mb-5"
+                  style={{ background: isPro ? "rgba(255,255,255,0.12)" : "var(--border)" }}
+                />
+
+                {/* Features */}
+                <div className="space-y-2.5 mb-6">
+                  {plan.features?.map((feat, i) => (
+                    <div key={i} className="flex items-center gap-2.5">
+                      {feat.included ? (
+                        <div
+                          className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0"
+                          style={{ background: isPro ? "rgba(255,255,255,0.2)" : "rgba(16,185,129,0.1)" }}
+                        >
+                          <Check className="w-3 h-3" style={{ color: isPro ? "white" : "#10b981" }} />
+                        </div>
+                      ) : (
+                        <div
+                          className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0"
+                          style={{ background: isPro ? "rgba(255,255,255,0.06)" : "var(--bg-input)" }}
+                        >
+                          <X className="w-2.5 h-2.5" style={{ color: isPro ? "rgba(255,255,255,0.2)" : "var(--text-faint)" }} />
+                        </div>
+                      )}
+                      <span
+                        className="text-[13px]"
+                        style={{
+                          color: feat.included
+                            ? (isPro ? "rgba(255,255,255,0.9)" : "var(--text-secondary)")
+                            : (isPro ? "rgba(255,255,255,0.25)" : "var(--text-faint)"),
+                          fontWeight: feat.included ? 500 : 400,
+                        }}
+                      >
+                        {feat.text}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+
+                {/* CTA */}
+                <button
+                  onClick={() => handleSubscribe(plan)}
+                  disabled={isActive}
+                  className={cn(
+                    "w-full py-3.5 rounded-xl font-bold text-[14px] border-none cursor-pointer transition-all",
+                    isActive
+                      ? "opacity-60 cursor-not-allowed"
+                      : "hover:scale-[1.02] active:scale-[0.98] hover:shadow-lg"
+                  )}
+                  style={{
+                    background: isActive
+                      ? (isPro ? "rgba(255,255,255,0.2)" : "var(--bg-input)")
+                      : isPro
+                        ? "white"
+                        : "linear-gradient(135deg, #10b981, #14b8a6)",
+                    color: isActive
+                      ? (isPro ? "rgba(255,255,255,0.6)" : "var(--text-muted)")
+                      : isPro ? "#059669" : "white",
+                    boxShadow: isActive ? "none" : isPro
+                      ? "0 4px 16px rgba(255,255,255,0.15)"
+                      : "0 4px 16px rgba(16,185,129,0.25)",
+                  }}
+                >
+                  {isActive ? "Plan actual" : `Elegir ${plan.name}`}
+                </button>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* ── FAQ / Trust ── */}
+      <div
+        className="rounded-[24px] p-6"
+        style={{ background: "var(--bg-card)", border: "1px solid var(--border)" }}
+      >
+        <h4 className="font-bold text-[15px] mb-4" style={{ color: "var(--text-primary)" }}>
+          Preguntas frecuentes
+        </h4>
+        <div className="space-y-3">
+          {[
+            { q: "¿Puedo cancelar en cualquier momento?", a: "Sí, sin permanencia. Tu plan se mantiene activo hasta el final del período facturado." },
+            { q: "¿Cómo funciona el período de prueba?", a: "Todos los planes incluyen 7 días de prueba gratuita. No se te cobrará durante ese tiempo." },
+            { q: "¿Puedo cambiar de plan después?", a: "Sí, puedes subir o bajar de plan cuando quieras. El cambio se aplica en el siguiente ciclo de facturación." },
+          ].map((item) => (
+            <details
+              key={item.q}
+              className="group rounded-xl overflow-hidden"
+              style={{ background: "var(--bg-input)" }}
+            >
+              <summary
+                className="flex items-center justify-between px-5 py-3.5 cursor-pointer list-none text-[13px] font-bold"
+                style={{ color: "var(--text-primary)" }}
+              >
+                {item.q}
+                <span
+                  className="text-[18px] transition-transform duration-200 group-open:rotate-45"
+                  style={{ color: "var(--text-muted)" }}
+                >
+                  +
+                </span>
+              </summary>
+              <div className="px-5 pb-4 text-[13px] leading-relaxed" style={{ color: "var(--text-muted)" }}>
+                {item.a}
+              </div>
+            </details>
+          ))}
+        </div>
+      </div>
+
+      {/* ── Trust badges ── */}
+      <div className="grid grid-cols-3 gap-3">
+        {[
+          { icon: Shield, label: "Pago seguro", sub: "SSL 256-bit" },
+          { icon: Zap, label: "Activa al instante", sub: "Sin esperas" },
+          { icon: X, label: "Sin permanencia", sub: "Cancela cuando quieras" },
+        ].map((badge) => (
+          <div
+            key={badge.label}
+            className="text-center p-4 rounded-xl"
+            style={{ background: "var(--bg-card)", border: "1px solid var(--border)" }}
+          >
+            <badge.icon className="w-5 h-5 mx-auto mb-2 text-emerald-500" />
+            <p className="text-[12px] font-bold" style={{ color: "var(--text-primary)" }}>{badge.label}</p>
+            <p className="text-[10px] mt-0.5" style={{ color: "var(--text-muted)" }}>{badge.sub}</p>
+          </div>
+        ))}
+      </div>
+
+      {/* ── Confirm modal ── */}
+      {confirmPlan && (
+        <div
+          className="fixed inset-0 z-[100] flex items-center justify-center p-4"
+          style={{ background: "rgba(0,0,0,0.6)", backdropFilter: "blur(8px)" }}
+          onClick={() => setConfirmPlan(null)}
+        >
+          <div
+            className="bg-white rounded-[28px] w-full max-w-sm overflow-hidden"
+            style={{ boxShadow: "0 40px 100px rgba(0,0,0,0.3)" }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div
+              className="p-8 text-center"
+              style={{ background: "linear-gradient(135deg, rgba(16,185,129,0.05), rgba(6,182,212,0.05))" }}
+            >
+              <div
+                className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4"
+                style={{ background: "linear-gradient(135deg, #10b981, #06b6d4)", boxShadow: "0 8px 24px rgba(16,185,129,0.3)" }}
+              >
+                <Award className="w-8 h-8 text-white" />
+              </div>
+              <h3 className="text-xl font-black mb-2" style={{ color: "var(--text-primary)" }}>
+                Confirmar suscripción
+              </h3>
+              <p className="text-sm mb-1" style={{ color: "var(--text-muted)" }}>
+                Te suscribirás al plan
+              </p>
+              <p className="text-2xl font-black mb-1" style={{ color: "#10b981" }}>
+                {confirmPlan.name}
+              </p>
+              <p className="text-[28px] font-black" style={{ color: "var(--text-primary)" }}>
+                {confirmPlan.price}€<span className="text-sm font-medium" style={{ color: "var(--text-muted)" }}>/{billing === "yearly" ? "mes" : "mes"}</span>
+              </p>
+              {billing === "yearly" && (
+                <p className="text-[12px] mt-1" style={{ color: "var(--text-muted)" }}>
+                  Facturado como {(confirmPlan.price * 12).toFixed(2)}€/año
+                </p>
+              )}
+            </div>
+            <div className="p-6 flex gap-3">
+              <button
+                onClick={() => setConfirmPlan(null)}
+                className="flex-1 py-3.5 rounded-xl font-bold text-sm border-none cursor-pointer transition-colors bg-stone-100 hover:bg-stone-200"
+                style={{ color: "var(--text-secondary)" }}
+              >
+                Cancelar
+              </button>
+              <button
+                onClick={confirmSubscription}
+                className="flex-[1.5] py-3.5 rounded-xl font-bold text-sm text-white border-none cursor-pointer transition-all hover:scale-[1.02] active:scale-[0.98]"
+                style={{ background: "linear-gradient(135deg, #10b981, #14b8a6)", boxShadow: "0 4px 16px rgba(16,185,129,0.3)" }}
+              >
+                Confirmar y pagar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── Success notification ── */}
+      {successPlan && (
+        <div
+          className="fixed bottom-6 right-6 z-50 flex items-center gap-3 px-6 py-4 rounded-2xl text-white font-medium"
+          style={{
+            background: "linear-gradient(135deg, #10b981, #14b8a6)",
+            boxShadow: "0 8px 32px rgba(16,185,129,0.4)",
+            animation: "slideUp 0.4s cubic-bezier(0.16,1,0.3,1)",
+          }}
+        >
+          <Check className="w-5 h-5" />
+          ¡Suscripción activada! Disfruta de {plans.find((p) => p.id === successPlan)?.name}
+        </div>
+      )}
+    </div>
+  );
+};
+
+// ═══════════════════════════════════════════
 // SETTINGS VIEW
 // ═══════════════════════════════════════════
 const SettingsView = () => {
   const { user, updateUserProfile, logout } = useAuth();
+  const { isDark, toggleTheme } = useTheme();
   const avatarInputRef = useRef(null);
 
   const [formData, setFormData] = useState({
@@ -262,6 +745,7 @@ const SettingsView = () => {
     { id: "notifications", label: "Notificaciones", icon: Bell },
     { id: "privacy", label: "Privacidad", icon: Lock },
     { id: "security", label: "Seguridad", icon: Shield },
+    { id: "pro", label: "Suscripción Pro", icon: Award },
   ];
 
   return (
@@ -590,6 +1074,40 @@ const SettingsView = () => {
                   checked={privacy.showActivity}
                   onChange={(v) => setPrivacy({ ...privacy, showActivity: v })}
                 />
+
+                {/* Theme toggle */}
+                <div
+                  className="flex items-center justify-between py-4"
+                  style={{ borderBottom: "1px solid #f5f5f4" }}
+                >
+                  <label htmlFor="theme-toggle" className="pr-4 cursor-pointer">
+                    <h4 className="text-sm font-bold flex items-center gap-2" style={{ color: "var(--text-secondary)" }}>
+                      {isDark ? <Moon className="w-4 h-4 text-violet-500" /> : <Sun className="w-4 h-4 text-amber-500" />}
+                      Modo oscuro
+                    </h4>
+                    <p className="text-[11px] mt-0.5" style={{ color: "var(--text-muted)" }}>
+                      {isDark ? "Tema oscuro activado. Pulsa para cambiar a claro." : "Tema claro activado. Pulsa para cambiar a oscuro."}
+                    </p>
+                  </label>
+                  <button
+                    id="theme-toggle"
+                    role="switch"
+                    aria-checked={isDark}
+                    aria-label="Modo oscuro"
+                    onClick={toggleTheme}
+                    className="relative w-11 h-6 rounded-full transition-all duration-300 flex-shrink-0 border-none cursor-pointer"
+                    style={{
+                      background: isDark ? "linear-gradient(135deg, #8b5cf6, #6366f1)" : "#d6d3d1",
+                    }}
+                  >
+                    <span
+                      className={cn(
+                        "absolute top-1/2 -translate-y-1/2 w-4 h-4 bg-white rounded-full shadow-md transition-all duration-300",
+                        isDark ? "left-6" : "left-1"
+                      )}
+                    />
+                  </button>
+                </div>
               </div>
             )}
 
@@ -715,6 +1233,11 @@ const SettingsView = () => {
                   </button>
                 </div>
               </>
+            )}
+
+            {/* ── PRO SUBSCRIPTION SECTION ── */}
+            {activeSection === "pro" && (
+              <ProSubscriptionSection />
             )}
           </div>
         </div>

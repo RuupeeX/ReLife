@@ -18,6 +18,22 @@ import {
   Camera,
   Copy,
   ExternalLink,
+  Award,
+  Lock,
+  Sparkles,
+  Users,
+  ShoppingBag,
+  Star,
+  Zap,
+  TrendingUp,
+  Shield,
+  Target,
+  Search,
+  Clock,
+  Eye,
+  Send,
+  Smartphone,
+  Download,
 } from "lucide-react";
 import { cn } from "../lib/utils";
 
@@ -247,6 +263,501 @@ const ProfilePostCard = React.memo(({ post, isOwn, onPostClick, onDelete }) => {
 ProfilePostCard.displayName = "ProfilePostCard";
 
 // ═══════════════════════════════════════════
+// ACHIEVEMENTS DATA — 15 logros con iconos Lucide
+// ═══════════════════════════════════════════
+const PROFILE_BADGES = [
+  // Publicaciones
+  { id: 1,  title: "Pionero",           desc: "Publica tu primer proyecto",              icon: Sparkles,       color: "#10b981", gradient: "linear-gradient(135deg, #10b981, #14b8a6)", progress: 1,  total: 1,   unlocked: true,  rarity: "Común",      xp: 50 },
+  { id: 2,  title: "Creador Activo",    desc: "Publica 10 proyectos",                   icon: Camera,         color: "#10b981", gradient: "linear-gradient(135deg, #10b981, #06b6d4)", progress: 7,  total: 10,  unlocked: false, rarity: "Raro",       xp: 200 },
+  { id: 3,  title: "Máquina de Ideas",  desc: "Alcanza 50 publicaciones",               icon: Zap,            color: "#059669", gradient: "linear-gradient(135deg, #059669, #10b981)", progress: 7,  total: 50,  unlocked: false, rarity: "Épico",      xp: 500 },
+  // Social
+  { id: 4,  title: "Primer Like",       desc: "Da like a una publicación",               icon: Heart,          color: "#ef4444", gradient: "linear-gradient(135deg, #ef4444, #f43f5e)", progress: 1,  total: 1,   unlocked: true,  rarity: "Común",      xp: 25 },
+  { id: 5,  title: "Comentarista",      desc: "Deja 25 comentarios",                     icon: MessageCircle,  color: "#3b82f6", gradient: "linear-gradient(135deg, #3b82f6, #06b6d4)", progress: 18, total: 25,  unlocked: false, rarity: "Raro",       xp: 150 },
+  { id: 6,  title: "Influencer Verde",  desc: "Consigue 100 seguidores",                 icon: Users,          color: "#8b5cf6", gradient: "linear-gradient(135deg, #8b5cf6, #a78bfa)", progress: 42, total: 100, unlocked: false, rarity: "Épico",      xp: 400 },
+  { id: 7,  title: "Embajador",         desc: "Comparte 20 posts fuera de la app",       icon: Share2,         color: "#0d9488", gradient: "linear-gradient(135deg, #0d9488, #06b6d4)", progress: 5,  total: 20,  unlocked: false, rarity: "Raro",       xp: 175 },
+  // Marketplace
+  { id: 8,  title: "Primera Venta",     desc: "Vende tu primer producto",                icon: ShoppingBag,    color: "#f59e0b", gradient: "linear-gradient(135deg, #f59e0b, #ea580c)", progress: 0,  total: 1,   unlocked: false, rarity: "Raro",       xp: 300 },
+  { id: 9,  title: "Vendedor Estrella", desc: "Realiza 10 ventas exitosas",              icon: Star,           color: "#f59e0b", gradient: "linear-gradient(135deg, #f59e0b, #fbbf24)", progress: 0,  total: 10,  unlocked: false, rarity: "Épico",      xp: 600 },
+  { id: 10, title: "Coleccionista",     desc: "Guarda 30 posts en colecciones",          icon: Bookmark,       color: "#ec4899", gradient: "linear-gradient(135deg, #ec4899, #f472b6)", progress: 22, total: 30,  unlocked: false, rarity: "Raro",       xp: 125 },
+  // Constancia
+  { id: 11, title: "Streak Semanal",    desc: "Entra 7 días seguidos",                   icon: TrendingUp,     color: "#ea580c", gradient: "linear-gradient(135deg, #ea580c, #f59e0b)", progress: 7,  total: 7,   unlocked: true,  rarity: "Común",      xp: 100 },
+  { id: 12, title: "Streak Mensual",    desc: "Racha de 30 días consecutivos",           icon: Target,         color: "#dc2626", gradient: "linear-gradient(135deg, #dc2626, #ea580c)", progress: 7,  total: 30,  unlocked: false, rarity: "Épico",      xp: 500 },
+  { id: 13, title: "Madrugador",        desc: "Publica antes de las 8:00 AM",            icon: Clock,          color: "#6366f1", gradient: "linear-gradient(135deg, #6366f1, #8b5cf6)", progress: 1,  total: 1,   unlocked: true,  rarity: "Raro",       xp: 75 },
+  // Especial
+  { id: 14, title: "Explorador",        desc: "Visita todas las secciones",              icon: Eye,            color: "#0891b2", gradient: "linear-gradient(135deg, #0891b2, #06b6d4)", progress: 6,  total: 8,   unlocked: false, rarity: "Común",      xp: 50 },
+  { id: 15, title: "Leyenda Eco",       desc: "Desbloquea todos los demás logros",       icon: Shield,         color: "#7c3aed", gradient: "linear-gradient(160deg, #7c3aed, #ec4899, #f59e0b)", progress: 4, total: 14, unlocked: false, rarity: "Legendario", xp: 1000 },
+];
+
+const RARITY_COLORS = {
+  "Común":      { color: "#78716c", bg: "rgba(120,113,108,0.08)" },
+  "Raro":       { color: "#3b82f6", bg: "rgba(59,130,246,0.08)" },
+  "Épico":      { color: "#8b5cf6", bg: "rgba(139,92,246,0.08)" },
+  "Legendario": { color: "#f59e0b", bg: "rgba(245,158,11,0.08)" },
+};
+
+// ═══════════════════════════════════════════
+// BADGE CARD
+// ═══════════════════════════════════════════
+const BadgeCard = ({ badge }) => {
+  const [hovered, setHovered] = useState(false);
+  const [animProg, setAnimProg] = useState(0);
+  const Icon = badge.icon;
+  const pct = (badge.progress / badge.total) * 100;
+  const rc = RARITY_COLORS[badge.rarity] || RARITY_COLORS["Común"];
+
+  useEffect(() => {
+    const t = setTimeout(() => setAnimProg(pct), 300);
+    return () => clearTimeout(t);
+  }, [pct]);
+
+  return (
+    <div
+      className="rounded-2xl overflow-hidden transition-all duration-300 h-full flex flex-col"
+      style={{
+        background: "var(--bg-card)",
+        border: `1px solid var(--border)`,
+        transform: hovered ? "translateY(-4px)" : "none",
+        boxShadow: hovered && badge.unlocked
+          ? `0 16px 40px ${badge.color}18`
+          : hovered ? "0 12px 32px rgba(0,0,0,0.06)" : "var(--shadow-sm)",
+        opacity: badge.unlocked ? 1 : 0.65,
+      }}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
+      <div className="p-4 flex flex-col flex-1">
+        {/* Rarity + XP */}
+        <div className="flex items-center justify-between mb-3">
+          <span className="text-[8px] font-bold uppercase px-1.5 py-0.5 rounded" style={{ background: rc.bg, color: rc.color }}>
+            {badge.rarity}
+          </span>
+          <span className="text-[9px] font-bold flex items-center gap-0.5" style={{ color: "var(--text-muted)" }}>
+            <Zap className="w-2.5 h-2.5 text-amber-500" /> {badge.xp}
+          </span>
+        </div>
+
+        {/* Icon */}
+        <div className="flex justify-center mb-3">
+          <div
+            className="w-14 h-14 rounded-2xl flex items-center justify-center transition-transform duration-300 relative"
+            style={{
+              background: badge.unlocked ? badge.gradient : "var(--bg-input)",
+              boxShadow: badge.unlocked ? `0 8px 20px ${badge.color}25` : "none",
+              transform: hovered ? "scale(1.1)" : "scale(1)",
+            }}
+          >
+            {badge.unlocked
+              ? <Icon className="w-6 h-6 text-white" />
+              : <Lock className="w-5 h-5" style={{ color: "var(--text-faint)" }} />
+            }
+            {badge.unlocked && (
+              <div
+                className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full flex items-center justify-center"
+                style={{ background: "#10b981", border: "2px solid var(--bg-card)" }}
+              >
+                <Check className="w-2.5 h-2.5 text-white" strokeWidth={3} />
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Title + desc */}
+        <h4
+          className="text-[12px] font-black text-center mb-0.5"
+          style={{ color: badge.unlocked ? "var(--text-primary)" : "var(--text-muted)" }}
+        >
+          {badge.title}
+        </h4>
+        <p className="text-[9px] text-center leading-relaxed mb-auto" style={{ color: "var(--text-muted)" }}>
+          {badge.desc}
+        </p>
+
+        {/* Progress */}
+        <div className="mt-3">
+          <div className="flex items-center justify-between mb-1">
+            <span className="text-[8px] font-semibold" style={{ color: "var(--text-muted)" }}>
+              {badge.progress}/{badge.total}
+            </span>
+            <span className="text-[8px] font-bold" style={{ color: badge.unlocked ? badge.color : "var(--text-muted)" }}>
+              {Math.round(pct)}%
+            </span>
+          </div>
+          <div className="h-[4px] rounded-full overflow-hidden" style={{ background: "var(--border)" }}>
+            <div
+              className="h-full rounded-full transition-all duration-1000 ease-out"
+              style={{ width: `${animProg}%`, background: badge.unlocked ? badge.gradient : "var(--text-faint)" }}
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// ═══════════════════════════════════════════
+// BADGES SECTION (inside Profile tab)
+// ═══════════════════════════════════════════
+const BadgesSection = () => {
+  const unlocked = PROFILE_BADGES.filter((b) => b.unlocked);
+  const locked = PROFILE_BADGES.filter((b) => !b.unlocked);
+  const totalXp = unlocked.reduce((s, b) => s + b.xp, 0);
+  const overallPct = Math.round((unlocked.length / PROFILE_BADGES.length) * 100);
+
+  return (
+    <div className="space-y-6">
+      {/* Summary card */}
+      <div
+        className="rounded-[24px] p-6 flex flex-col sm:flex-row items-center gap-6"
+        style={{ background: "var(--bg-card)", border: "1px solid var(--border)" }}
+      >
+        <div
+          className="w-16 h-16 rounded-2xl flex items-center justify-center flex-shrink-0"
+          style={{ background: "linear-gradient(135deg, #f59e0b, #ea580c)", boxShadow: "0 8px 24px rgba(245,158,11,0.25)" }}
+        >
+          <Award className="w-8 h-8 text-white" />
+        </div>
+        <div className="flex-1 text-center sm:text-left">
+          <h3 className="text-lg font-black" style={{ color: "var(--text-primary)" }}>
+            {unlocked.length} de {PROFILE_BADGES.length} logros
+          </h3>
+          <div className="h-2 rounded-full overflow-hidden mt-2 mb-1" style={{ background: "var(--border)" }}>
+            <div
+              className="h-full rounded-full"
+              style={{ width: `${overallPct}%`, background: "linear-gradient(90deg, #f59e0b, #10b981, #06b6d4)", transition: "width 1s ease-out" }}
+            />
+          </div>
+          <p className="text-[11px] font-medium" style={{ color: "var(--text-muted)" }}>
+            {overallPct}% completado · {totalXp.toLocaleString()} XP ganados
+          </p>
+        </div>
+        <div className="flex gap-5 flex-shrink-0">
+          {Object.entries(RARITY_COLORS).map(([name, cfg]) => (
+            <div key={name} className="text-center">
+              <p className="text-[14px] font-black" style={{ color: cfg.color }}>
+                {PROFILE_BADGES.filter((b) => b.rarity === name && b.unlocked).length}
+              </p>
+              <p className="text-[8px] font-bold uppercase" style={{ color: cfg.color }}>{name}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Unlocked */}
+      {unlocked.length > 0 && (
+        <div>
+          <h4 className="text-[13px] font-bold mb-3 flex items-center gap-2" style={{ color: "var(--text-primary)" }}>
+            <Check className="w-4 h-4 text-emerald-500" /> Desbloqueados
+            <span className="text-[11px] font-bold px-2 py-0.5 rounded-full" style={{ background: "rgba(16,185,129,0.1)", color: "#10b981" }}>
+              {unlocked.length}
+            </span>
+          </h4>
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+            {unlocked.map((b) => <BadgeCard key={b.id} badge={b} />)}
+          </div>
+        </div>
+      )}
+
+      {/* Locked */}
+      {locked.length > 0 && (
+        <div>
+          <h4 className="text-[13px] font-bold mb-3 flex items-center gap-2" style={{ color: "var(--text-muted)" }}>
+            <Lock className="w-4 h-4" /> Por desbloquear
+            <span className="text-[11px] font-bold px-2 py-0.5 rounded-full" style={{ background: "var(--bg-input)", color: "var(--text-muted)" }}>
+              {locked.length}
+            </span>
+          </h4>
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+            {locked.map((b) => <BadgeCard key={b.id} badge={b} />)}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+// ═══════════════════════════════════════════
+// DOWNLOAD APP MODAL — premium landing style
+// ═══════════════════════════════════════════
+const DownloadModal = ({ onClose }) => {
+  const [entering, setEntering] = useState(true);
+
+  useEffect(() => {
+    requestAnimationFrame(() => requestAnimationFrame(() => setEntering(false)));
+    document.body.style.overflow = "hidden";
+    const h = (e) => { if (e.key === "Escape") onClose(); };
+    document.addEventListener("keydown", h);
+    return () => { document.body.style.overflow = ""; document.removeEventListener("keydown", h); };
+  }, [onClose]);
+
+  // Inject glow animation
+  useEffect(() => {
+    const id = "download-modal-anims";
+    if (document.getElementById(id)) return;
+    const style = document.createElement("style");
+    style.id = id;
+    style.textContent = `
+      @keyframes dlFloat { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+      @keyframes dlPulse { 0%,100% { opacity: 0.4; } 50% { opacity: 0.8; } }
+      @keyframes dlSpin { to { transform: rotate(360deg); } }
+    `;
+    document.head.appendChild(style);
+    return () => document.getElementById(id)?.remove();
+  }, []);
+
+  const features = [
+    { icon: Heart, title: "Feed Social", desc: "Posts, stories y trending topics de reciclaje", color: "#ef4444" },
+    { icon: ShoppingBag, title: "Marketplace", desc: "Compra y vende creaciones recicladas", color: "#f59e0b" },
+    { icon: Award, title: "Gamificación", desc: "XP, logros, rachas y retos semanales", color: "#8b5cf6" },
+    { icon: MessageCircle, title: "Mensajería", desc: "Chat directo entre creadores", color: "#3b82f6" },
+    { icon: Eye, title: "Explorar", desc: "Descubre creadores y categorías", color: "#10b981" },
+    { icon: Shield, title: "Perfil Pro", desc: "Verificación, estadísticas y más", color: "#0d9488" },
+  ];
+
+  const stats = [
+    { value: "50k+", label: "Descargas" },
+    { value: "4.8", label: "Valoración" },
+    { value: "20k+", label: "Creadores" },
+  ];
+
+  return (
+    <div
+      className="fixed inset-0 z-[100] flex items-center justify-center p-3 md:p-6"
+      style={{
+        background: "rgba(0,0,0,0.8)",
+        backdropFilter: "blur(20px)",
+        opacity: entering ? 0 : 1,
+        transition: "opacity 0.3s ease",
+      }}
+      onClick={onClose}
+      role="dialog"
+      aria-modal="true"
+    >
+      <div
+        className="w-full max-w-[900px] max-h-[92vh] overflow-hidden rounded-[32px] flex flex-col md:flex-row"
+        style={{
+          boxShadow: "0 40px 120px rgba(0,0,0,0.5)",
+          transform: entering ? "translateY(30px) scale(0.96)" : "translateY(0) scale(1)",
+          transition: "transform 0.5s cubic-bezier(0.16,1,0.3,1)",
+        }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* ═══ LEFT PANEL — Dark hero ═══ */}
+        <div
+          className="relative w-full md:w-[45%] flex-shrink-0 overflow-hidden flex flex-col items-center justify-center p-8 md:p-10"
+          style={{ background: "linear-gradient(160deg, #0a0f0c, #0c1810, #091a12)", minHeight: 340 }}
+        >
+          {/* Animated background orbs */}
+          <div className="absolute top-[-40px] right-[-40px] w-48 h-48 rounded-full" style={{ background: "radial-gradient(circle, rgba(16,185,129,0.2) 0%, transparent 70%)", animation: "dlPulse 4s ease-in-out infinite" }} />
+          <div className="absolute bottom-[-30px] left-[-30px] w-36 h-36 rounded-full" style={{ background: "radial-gradient(circle, rgba(6,182,212,0.15) 0%, transparent 70%)", animation: "dlPulse 5s ease-in-out infinite 1s" }} />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-72 rounded-full" style={{ border: "1px solid rgba(255,255,255,0.03)" }} />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 rounded-full" style={{ border: "1px solid rgba(255,255,255,0.04)" }} />
+
+          {/* Close (mobile top) */}
+          <button
+            onClick={onClose}
+            className="absolute top-4 right-4 w-10 h-10 rounded-xl flex items-center justify-center border-none cursor-pointer transition-all hover:scale-110 z-20"
+            style={{ background: "rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.5)" }}
+            aria-label="Cerrar"
+          >
+            <X className="w-5 h-5" />
+          </button>
+
+          {/* Phone mockup */}
+          <div className="relative z-10 mb-6" style={{ animation: "dlFloat 6s ease-in-out infinite" }}>
+            <div
+              className="w-[140px] h-[240px] md:w-[160px] md:h-[280px] rounded-[28px] flex flex-col items-center justify-center relative overflow-hidden"
+              style={{
+                background: "linear-gradient(160deg, #1a1a1a, #111)",
+                border: "3px solid rgba(255,255,255,0.08)",
+                boxShadow: "0 20px 60px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05)",
+              }}
+            >
+              {/* Notch */}
+              <div
+                className="absolute top-0 left-1/2 -translate-x-1/2 w-16 h-5 rounded-b-xl"
+                style={{ background: "#0a0a0a", border: "1px solid rgba(255,255,255,0.05)", borderTop: "none" }}
+              />
+
+              {/* Screen content */}
+              <div className="absolute inset-[6px] rounded-[22px] overflow-hidden" style={{ background: "linear-gradient(160deg, #0f2318, #0c1810)" }}>
+                {/* Mini header */}
+                <div className="flex items-center gap-1.5 px-3 pt-7 pb-2">
+                  <div className="w-5 h-5 rounded-md flex items-center justify-center" style={{ background: "linear-gradient(135deg, #10b981, #14b8a6)" }}>
+                    <span className="text-[6px] font-black text-white">R</span>
+                  </div>
+                  <span className="text-[7px] font-black text-white">ReLife</span>
+                </div>
+                {/* Mini cards */}
+                <div className="px-2 space-y-1.5">
+                  <div className="h-12 rounded-lg" style={{ background: "linear-gradient(135deg, rgba(16,185,129,0.3), rgba(6,182,212,0.2))" }} />
+                  <div className="flex gap-1.5">
+                    <div className="h-10 flex-1 rounded-md" style={{ background: "rgba(255,255,255,0.06)" }} />
+                    <div className="h-10 flex-1 rounded-md" style={{ background: "rgba(255,255,255,0.04)" }} />
+                  </div>
+                  <div className="flex gap-1.5">
+                    <div className="h-8 flex-1 rounded-md" style={{ background: "rgba(255,255,255,0.03)" }} />
+                    <div className="h-8 flex-1 rounded-md" style={{ background: "rgba(255,255,255,0.05)" }} />
+                    <div className="h-8 flex-1 rounded-md" style={{ background: "rgba(255,255,255,0.03)" }} />
+                  </div>
+                </div>
+                {/* Mini bottom nav */}
+                <div className="absolute bottom-0 inset-x-0 flex justify-around px-3 py-2" style={{ background: "rgba(0,0,0,0.4)" }}>
+                  {[1,2,3,4,5].map((i) => (
+                    <div key={i} className="w-3 h-3 rounded" style={{ background: i === 1 ? "#10b981" : "rgba(255,255,255,0.1)" }} />
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Glow behind phone */}
+            <div
+              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-40 h-40 rounded-full -z-10"
+              style={{ background: "radial-gradient(circle, rgba(16,185,129,0.25) 0%, transparent 70%)", filter: "blur(30px)" }}
+            />
+          </div>
+
+          {/* Logo text */}
+          <div className="relative z-10 text-center">
+            <div className="flex items-baseline justify-center gap-1 mb-2">
+              <span className="text-3xl md:text-4xl font-black text-white tracking-tight">Re</span>
+              <span
+                className="text-3xl md:text-4xl font-black tracking-tight"
+                style={{ background: "linear-gradient(135deg, #6ee7b7, #14b8a6, #06b6d4)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}
+              >
+                Life
+              </span>
+            </div>
+            <p className="text-white/30 text-[12px] font-medium tracking-wide">
+              Reciclaje creativo en tu bolsillo
+            </p>
+          </div>
+
+          {/* Stats */}
+          <div className="relative z-10 flex gap-6 mt-6">
+            {stats.map((s, i) => (
+              <React.Fragment key={s.label}>
+                {i > 0 && <div className="w-px self-stretch" style={{ background: "rgba(255,255,255,0.06)" }} />}
+                <div className="text-center">
+                  <p className="text-white text-lg font-black">{s.value}</p>
+                  <p className="text-white/25 text-[9px] font-bold uppercase tracking-wider">{s.label}</p>
+                </div>
+              </React.Fragment>
+            ))}
+          </div>
+        </div>
+
+        {/* ═══ RIGHT PANEL — Content ═══ */}
+        <div
+          className="flex-1 overflow-y-auto"
+          style={{ background: "var(--bg-card)" }}
+        >
+          {/* QR section */}
+          <div className="p-6 md:p-8 text-center" style={{ borderBottom: "1px solid var(--border)" }}>
+            <div className="flex items-center justify-center gap-2 mb-4">
+              <Smartphone className="w-4 h-4 text-emerald-500" />
+              <p className="text-[11px] font-bold uppercase tracking-[2px]" style={{ color: "var(--text-muted)" }}>
+                Escanea el QR
+              </p>
+            </div>
+
+            {/* QR — src/assets/qr_relife.png */}
+            <div
+              className="w-44 h-44 mx-auto rounded-2xl overflow-hidden mb-4 flex items-center justify-center"
+              style={{ background: "white", boxShadow: "0 4px 20px rgba(0,0,0,0.06)", border: "1px solid var(--border)" }}
+            >
+              <img
+                src={new URL("../assets/qr_relife.png", import.meta.url).href}
+                alt="QR para descargar ReLife"
+                className="w-full h-full object-contain p-3"
+                onError={(e) => {
+                  e.target.style.display = "none";
+                  e.target.parentElement.innerHTML = `
+                    <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:8px;color:var(--text-faint)">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect width="5" height="5" x="3" y="3" rx="1"/><rect width="5" height="5" x="16" y="3" rx="1"/><rect width="5" height="5" x="3" y="16" rx="1"/><path d="M21 16h-3a2 2 0 0 0-2 2v3"/><path d="M21 21v.01"/><path d="M12 7v3a2 2 0 0 1-2 2H7"/><path d="M3 12h.01"/><path d="M12 3h.01"/><path d="M12 16v.01"/><path d="M16 12h1"/><path d="M21 12v.01"/><path d="M12 21v-1"/></svg>
+                      <span style="font-size:10px;font-weight:600">qr_relife.png</span>
+                    </div>
+                  `;
+                }}
+              />
+            </div>
+
+            <p className="text-[12px] font-medium" style={{ color: "var(--text-muted)" }}>
+              Apunta con la cámara de tu móvil
+            </p>
+          </div>
+
+          {/* Features grid */}
+          <div className="p-6 md:p-8">
+            <h3 className="text-[13px] font-black mb-4 flex items-center gap-2" style={{ color: "var(--text-primary)" }}>
+              <Sparkles className="w-4 h-4 text-emerald-500" />
+              Todo lo que incluye
+            </h3>
+            <div className="grid grid-cols-2 gap-2.5">
+              {features.map((f) => (
+                <div
+                  key={f.title}
+                  className="p-3 rounded-xl transition-all hover:scale-[1.02]"
+                  style={{ background: "var(--bg-input)", border: "1px solid var(--border)" }}
+                >
+                  <div
+                    className="w-8 h-8 rounded-lg flex items-center justify-center mb-2"
+                    style={{ background: `${f.color}12` }}
+                  >
+                    <f.icon className="w-4 h-4" style={{ color: f.color }} />
+                  </div>
+                  <p className="text-[11px] font-bold" style={{ color: "var(--text-primary)" }}>
+                    {f.title}
+                  </p>
+                  <p className="text-[9px] mt-0.5 leading-relaxed" style={{ color: "var(--text-muted)" }}>
+                    {f.desc}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Download bar */}
+          <div className="px-6 md:px-8 pb-6 md:pb-8">
+            <div
+              className="flex items-center gap-4 p-4 rounded-2xl"
+              style={{
+                background: "linear-gradient(135deg, rgba(16,185,129,0.08), rgba(6,182,212,0.05))",
+                border: "1px solid rgba(16,185,129,0.12)",
+              }}
+            >
+              <div
+                className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0"
+                style={{ background: "linear-gradient(135deg, #10b981, #14b8a6)" }}
+              >
+                <Download className="w-5 h-5 text-white" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-[13px] font-bold" style={{ color: "var(--text-primary)" }}>
+                  ReLife para Android
+                </p>
+                <p className="text-[10px]" style={{ color: "var(--text-muted)" }}>
+                  v1.0 · 24 MB · Android 8.0+
+                </p>
+              </div>
+              <span
+                className="text-[11px] font-bold uppercase px-3 py-1.5 rounded-xl flex-shrink-0"
+                style={{ background: "linear-gradient(135deg, #10b981, #14b8a6)", color: "white", boxShadow: "0 4px 12px rgba(16,185,129,0.25)" }}
+              >
+                Gratis
+              </span>
+            </div>
+
+            <p className="text-center text-[10px] mt-3 flex items-center justify-center gap-1.5" style={{ color: "var(--text-faint)" }}>
+              <Smartphone className="w-3 h-3" /> Android · iOS próximamente
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// ═══════════════════════════════════════════
 // PROFILE VIEW
 // ═══════════════════════════════════════════
 const ProfileView = ({ onPostClick, onNavigateToSettings }) => {
@@ -257,6 +768,7 @@ const ProfileView = ({ onPostClick, onNavigateToSettings }) => {
   const [editingBio, setEditingBio] = useState(false);
   const [bioText, setBioText] = useState(user?.bio || "");
   const [copied, setCopied] = useState(false);
+  const [showDownload, setShowDownload] = useState(false);
   const bioRef = useRef(null);
   const avatarInputRef = useRef(null);
 
@@ -286,6 +798,7 @@ const ProfileView = ({ onPostClick, onNavigateToSettings }) => {
     { id: "posts", label: "Publicaciones", icon: Grid, count: userPosts.length },
     { id: "saved", label: "Guardados", icon: Bookmark, count: savedPosts.length },
     { id: "liked", label: "Me gusta", icon: Heart, count: likedPosts.length },
+    { id: "achievements", label: "Logros", icon: Award, count: null },
   ];
 
   // Focus bio input when editing
@@ -504,17 +1017,14 @@ const ProfileView = ({ onPostClick, onNavigateToSettings }) => {
 
             {/* Meta */}
             <div className="flex items-center gap-4 text-sm flex-wrap justify-center" style={{ color: "var(--text-muted)" }}>
-              {user?.site && (
-                <a
-                  href={user.site.startsWith("http") ? user.site : `https://${user.site}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-1 hover:text-emerald-600 transition-colors"
-                >
-                  <ExternalLink className="w-3.5 h-3.5" />
-                  <span className="font-medium">{user.site}</span>
-                </a>
-              )}
+              <button
+                onClick={() => setShowDownload(true)}
+                className="flex items-center gap-1 hover:text-emerald-600 transition-colors bg-transparent border-none cursor-pointer p-0 text-sm font-medium"
+                style={{ color: "var(--text-muted)" }}
+              >
+                <Smartphone className="w-3.5 h-3.5" />
+                <span className="font-medium">relife.app</span>
+              </button>
               <div className="flex items-center gap-1">
                 <Calendar className="w-3.5 h-3.5" />
                 <span className="font-medium">Se unió en 2024</span>
@@ -578,6 +1088,7 @@ const ProfileView = ({ onPostClick, onNavigateToSettings }) => {
               >
                 <Icon className="w-4 h-4" />
                 {tab.label}
+                {tab.count !== null && (
                 <span
                   className={cn(
                     "text-[11px] px-2 py-0.5 rounded-full font-bold",
@@ -588,6 +1099,7 @@ const ProfileView = ({ onPostClick, onNavigateToSettings }) => {
                 >
                   {tab.count}
                 </span>
+                )}
               </button>
             );
           })}
@@ -596,7 +1108,9 @@ const ProfileView = ({ onPostClick, onNavigateToSettings }) => {
 
       {/* Content */}
       <div className="max-w-[900px] mx-auto px-4 md:px-8 py-6 pb-24">
-        {displayPosts.length === 0 ? (
+        {activeTab === "achievements" ? (
+          <BadgesSection />
+        ) : displayPosts.length === 0 ? (
           <div
             className="bg-white rounded-[24px] p-12 text-center"
             style={{ border: "1px solid var(--border)" }}
@@ -639,6 +1153,9 @@ const ProfileView = ({ onPostClick, onNavigateToSettings }) => {
           </div>
         )}
       </div>
+
+      {/* Download App Modal */}
+      {showDownload && <DownloadModal onClose={() => setShowDownload(false)} />}
     </div>
   );
 };

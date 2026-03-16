@@ -162,7 +162,7 @@ const PostDetailModal = ({ isOpen, onClose, post, currentUser, onLike }) => {
 
       {/* ═══ DESKTOP ═══ */}
       <div className="hidden md:flex h-full w-full relative z-10">
-        <button onClick={onClose} className="absolute top-5 right-5 z-50 w-11 h-11 rounded-2xl flex items-center justify-center border-none cursor-pointer transition-all hover:scale-110 hover:bg-white/20" style={{ background: "rgba(255,255,255,0.12)", backdropFilter: "blur(12px)", color: "white", border: "1px solid rgba(255,255,255,0.15)" }} aria-label="Cerrar">
+        <button onClick={onClose} className="absolute top-5 right-5 z-50 w-11 h-11 rounded-2xl flex items-center justify-center border-none cursor-pointer transition-all hover:scale-110 hover:bg-white/20" style={{ background: "#10b981", backdropFilter: "blur(12px)", color: "black", border: "1px solid rgba(255,255,255,0.15)" }} aria-label="Cerrar">
           <X className="w-5 h-5" />
         </button>
 
