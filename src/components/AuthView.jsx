@@ -113,7 +113,7 @@ const PasswordStrength = ({ password }) => {
 // AUTH VIEW
 // ═══════════════════════════════════════════
 const AuthView = () => {
-  const { login, register } = useAuth();
+  const { login, register, loginAsGuest } = useAuth();
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -598,6 +598,19 @@ const AuthView = () => {
               {isLogin ? "Crea una cuenta" : "Inicia sesión"}
             </button>
           </p>
+
+          {/* Guest mode */}
+          <button
+            onClick={loginAsGuest}
+            className="w-full mt-4 py-3 rounded-xl text-[13px] font-semibold border-none cursor-pointer transition-all hover:bg-white/[0.06]"
+            style={{
+              background: "transparent",
+              color: "rgba(255,255,255,0.3)",
+              border: "1px solid rgba(255,255,255,0.06)",
+            }}
+          >
+            Continuar como invitado
+          </button>
         </div>
       </div>
     </div>

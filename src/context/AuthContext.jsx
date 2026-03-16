@@ -57,7 +57,21 @@ export const AuthProvider = ({ children }) => {
     localStorage.setItem("relife_user", JSON.stringify(newUser));
   };
 
-  const value = { user, login, register, logout, updateUserProfile };
+  const loginAsGuest = () => {
+    const guestUser = {
+      name: "Invitado",
+      username: "invitado",
+      email: "",
+      avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Guest",
+      bio: "",
+      site: "",
+      isGuest: true,
+      stats: { posts: 0, followers: 0, following: 0 },
+    };
+    setUser(guestUser);
+  };
+
+  const value = { user, login, register, logout, loginAsGuest, updateUserProfile };
 
   return (
     <AuthContext.Provider value={value}>

@@ -17,8 +17,6 @@ import {
   X,
   Send,
   ImagePlus,
-
-  
   Trash2,
   Link,
   ChevronLeft,
@@ -34,6 +32,7 @@ import {
   ArrowUp,
   Star,
   Clock,
+  Lock,
 } from "lucide-react";
 import { cn } from "../lib/utils";
 
@@ -1803,7 +1802,7 @@ const FeedHeader = React.memo(({ user, searchQuery, setSearchQuery, setActiveTab
 
   return (
     <header
-      className="px-4 pr-16 md:px-8 md:pr-8 py-5 flex items-center justify-between flex-shrink-0 sticky top-0 z-40"
+      className="px-4 md:px-8 py-5 flex items-center justify-between flex-shrink-0 sticky top-0 z-30"
       style={{
         background: "rgba(250,250,249,0.88)",
         backdropFilter: "blur(20px)",
@@ -1823,10 +1822,10 @@ const FeedHeader = React.memo(({ user, searchQuery, setSearchQuery, setActiveTab
         </p>
       </div>
     <div className="flex items-center gap-[10px]">
-      {/* Mobile search trigger */}
+      {/* Mobile search trigger — hidden since AppSidebar has mobile top bar */}
       <button
         onClick={onSearchOpen}
-        className="lg:hidden p-[10px] bg-white rounded-2xl cursor-pointer transition-all border-none"
+        className="hidden md:hidden lg:hidden p-[10px] bg-white rounded-2xl cursor-pointer transition-all border-none"
         style={{ border: "1px solid var(--border)", boxShadow: "var(--shadow-sm)" }}
         aria-label="Buscar"
       >
@@ -1859,9 +1858,10 @@ const FeedHeader = React.memo(({ user, searchQuery, setSearchQuery, setActiveTab
         )}
       </div>
 
+      {/* Notifications — only visible on desktop, mobile has it in AppSidebar top bar */}
       <button
         onClick={() => setActiveTab("Notifications")}
-        className="relative p-[10px] bg-white rounded-2xl cursor-pointer transition-all border-none"
+        className="relative p-[10px] bg-white rounded-2xl cursor-pointer transition-all border-none hidden md:flex"
         style={{ border: "1px solid var(--border)", boxShadow: "var(--shadow-sm)" }}
         aria-label={`Notificaciones${notifications.some((n) => !n.read) ? " - tienes nuevas" : ""}`}
       >
@@ -2239,6 +2239,62 @@ const GlobalStyles = () => {
 };
 
 // ═══════════════════════════════════════════
+// GUEST ACTION MODAL — shown when guests try restricted actions
+// ═══════════════════════════════════════════
+const GuestActionModal = ({ isOpen, onClose, onLogin }) => {
+  if (!isOpen) return null;
+
+  return (
+    <div
+      className="fixed inset-0 z-[80] flex items-center justify-center p-4"
+      style={{ background: "rgba(0,0,0,0.6)", backdropFilter: "blur(8px)" }}
+      onClick={onClose}
+    >
+      <div
+        className="bg-white rounded-[28px] w-full max-w-sm overflow-hidden"
+        style={{ boxShadow: "0 30px 80px rgba(0,0,0,0.25)" }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div
+          className="p-8 text-center relative overflow-hidden"
+          style={{ background: "linear-gradient(135deg, rgba(16,185,129,0.04), rgba(6,182,212,0.03))" }}
+        >
+          <div className="absolute top-0 right-0 w-32 h-32" style={{ background: "radial-gradient(circle, rgba(16,185,129,0.08) 0%, transparent 70%)" }} />
+          <div
+            className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 relative z-10"
+            style={{ background: "linear-gradient(135deg, #10b981, #14b8a6)", boxShadow: "0 8px 24px rgba(16,185,129,0.3)" }}
+          >
+            <Lock className="w-7 h-7 text-white" />
+          </div>
+          <h3 className="text-xl font-black mb-2 relative z-10" style={{ color: "var(--text-primary)" }}>
+            Función exclusiva
+          </h3>
+          <p className="text-sm leading-relaxed relative z-10" style={{ color: "var(--text-muted)" }}>
+            Crea una cuenta gratuita para acceder a todas las funciones de ReLife.
+          </p>
+        </div>
+        <div className="p-6 flex flex-col gap-3">
+          <button
+            onClick={onLogin}
+            className="w-full py-3.5 rounded-xl font-bold text-white border-none cursor-pointer transition-all hover:scale-[1.02]"
+            style={{ background: "linear-gradient(135deg, #10b981, #14b8a6)", boxShadow: "0 4px 16px rgba(16,185,129,0.25)" }}
+          >
+            Crear cuenta gratis
+          </button>
+          <button
+            onClick={onClose}
+            className="w-full py-3 rounded-xl font-bold border-none cursor-pointer transition-colors bg-stone-100 hover:bg-stone-200"
+            style={{ color: "var(--text-secondary)" }}
+          >
+            Seguir como invitado
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// ═══════════════════════════════════════════
 // HOME (Router)
 // ═══════════════════════════════════════════
 const Home = () => {
@@ -2247,22 +2303,43 @@ const Home = () => {
   const [activeTab, setActiveTab] = useState("Feed");
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [selectedPost, setSelectedPost] = useState(null);
+  const [showGuestModal, setShowGuestModal] = useState(false);
 
   if (!user) return <AuthView />;
+
+  const isGuest = user?.isGuest === true;
+
+  // Intercept actions for guests
+  const guardAction = (action) => {
+    if (isGuest) {
+      setShowGuestModal(true);
+      return;
+    }
+    action();
+  };
+
+  const handleGuestLogin = () => {
+    setShowGuestModal(false);
+    logout(); // logs out guest, shows AuthView
+  };
 
   const renderContent = () => {
     switch (activeTab) {
       case "Messages":
+        if (isGuest) { setShowGuestModal(true); setActiveTab("Feed"); return null; }
         return <MessagesView />;
       case "Settings":
         return <SettingsView />;
       case "Explore":
         return <ExploreView />;
       case "Notifications":
+        if (isGuest) { setShowGuestModal(true); setActiveTab("Feed"); return null; }
         return <NotificationsView />;
       case "Stats":
+        if (isGuest) { setShowGuestModal(true); setActiveTab("Feed"); return null; }
         return <StatsView />;
       case "Profile":
+        if (isGuest) { setShowGuestModal(true); setActiveTab("Feed"); return null; }
         return (
           <ProfileView
             onPostClick={(post) => setSelectedPost(post)}
@@ -2276,7 +2353,7 @@ const Home = () => {
         return (
           <FeedView
             user={user}
-            onCreatePost={() => setIsCreateOpen(true)}
+            onCreatePost={() => guardAction(() => setIsCreateOpen(true))}
             setActiveTab={setActiveTab}
             setSelectedPost={setSelectedPost}
           />
@@ -2297,24 +2374,32 @@ const Home = () => {
         user={user}
         logout={logout}
         notifications={notifications}
-        onCreatePost={() => setIsCreateOpen(true)}
+        onCreatePost={() => guardAction(() => setIsCreateOpen(true))}
       />
 
       <ViewTransition viewKey={activeTab}>
         {renderContent()}
       </ViewTransition>
 
-      <CreatePostModal
-        isOpen={isCreateOpen}
-        onClose={() => setIsCreateOpen(false)}
-      />
+      {!isGuest && (
+        <CreatePostModal
+          isOpen={isCreateOpen}
+          onClose={() => setIsCreateOpen(false)}
+        />
+      )}
 
       <PostDetailModal
         isOpen={!!selectedPost}
         onClose={() => setSelectedPost(null)}
         post={selectedPost}
         currentUser={user}
-        onLike={toggleLike}
+        onLike={(id) => guardAction(() => toggleLike(id))}
+      />
+
+      <GuestActionModal
+        isOpen={showGuestModal}
+        onClose={() => setShowGuestModal(false)}
+        onLogin={handleGuestLogin}
       />
     </div>
   );

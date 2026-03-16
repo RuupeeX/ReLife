@@ -562,62 +562,8 @@ const DownloadModal = ({ onClose }) => {
             <X className="w-5 h-5" />
           </button>
 
-          {/* Phone mockup */}
-          <div className="relative z-10 mb-6" style={{ animation: "dlFloat 6s ease-in-out infinite" }}>
-            <div
-              className="w-[140px] h-[240px] md:w-[160px] md:h-[280px] rounded-[28px] flex flex-col items-center justify-center relative overflow-hidden"
-              style={{
-                background: "linear-gradient(160deg, #1a1a1a, #111)",
-                border: "3px solid rgba(255,255,255,0.08)",
-                boxShadow: "0 20px 60px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05)",
-              }}
-            >
-              {/* Notch */}
-              <div
-                className="absolute top-0 left-1/2 -translate-x-1/2 w-16 h-5 rounded-b-xl"
-                style={{ background: "#0a0a0a", border: "1px solid rgba(255,255,255,0.05)", borderTop: "none" }}
-              />
-
-              {/* Screen content */}
-              <div className="absolute inset-[6px] rounded-[22px] overflow-hidden" style={{ background: "linear-gradient(160deg, #0f2318, #0c1810)" }}>
-                {/* Mini header */}
-                <div className="flex items-center gap-1.5 px-3 pt-7 pb-2">
-                  <div className="w-5 h-5 rounded-md flex items-center justify-center" style={{ background: "linear-gradient(135deg, #10b981, #14b8a6)" }}>
-                    <span className="text-[6px] font-black text-white">R</span>
-                  </div>
-                  <span className="text-[7px] font-black text-white">ReLife</span>
-                </div>
-                {/* Mini cards */}
-                <div className="px-2 space-y-1.5">
-                  <div className="h-12 rounded-lg" style={{ background: "linear-gradient(135deg, rgba(16,185,129,0.3), rgba(6,182,212,0.2))" }} />
-                  <div className="flex gap-1.5">
-                    <div className="h-10 flex-1 rounded-md" style={{ background: "rgba(255,255,255,0.06)" }} />
-                    <div className="h-10 flex-1 rounded-md" style={{ background: "rgba(255,255,255,0.04)" }} />
-                  </div>
-                  <div className="flex gap-1.5">
-                    <div className="h-8 flex-1 rounded-md" style={{ background: "rgba(255,255,255,0.03)" }} />
-                    <div className="h-8 flex-1 rounded-md" style={{ background: "rgba(255,255,255,0.05)" }} />
-                    <div className="h-8 flex-1 rounded-md" style={{ background: "rgba(255,255,255,0.03)" }} />
-                  </div>
-                </div>
-                {/* Mini bottom nav */}
-                <div className="absolute bottom-0 inset-x-0 flex justify-around px-3 py-2" style={{ background: "rgba(0,0,0,0.4)" }}>
-                  {[1,2,3,4,5].map((i) => (
-                    <div key={i} className="w-3 h-3 rounded" style={{ background: i === 1 ? "#10b981" : "rgba(255,255,255,0.1)" }} />
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* Glow behind phone */}
-            <div
-              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-40 h-40 rounded-full -z-10"
-              style={{ background: "radial-gradient(circle, rgba(16,185,129,0.25) 0%, transparent 70%)", filter: "blur(30px)" }}
-            />
-          </div>
-
           {/* Logo text */}
-          <div className="relative z-10 text-center">
+          <div className="relative z-10 text-center mb-6">
             <div className="flex items-baseline justify-center gap-1 mb-2">
               <span className="text-3xl md:text-4xl font-black text-white tracking-tight">Re</span>
               <span
@@ -629,6 +575,40 @@ const DownloadModal = ({ onClose }) => {
             </div>
             <p className="text-white/30 text-[12px] font-medium tracking-wide">
               Reciclaje creativo en tu bolsillo
+            </p>
+          </div>
+
+          {/* QR — big, centered */}
+          <div className="relative z-10 flex flex-col items-center">
+            <p className="text-[9px] font-bold uppercase tracking-[2px] mb-4" style={{ color: "rgba(255,255,255,0.3)" }}>
+              Escanea para descargar
+            </p>
+            <div
+              className="w-48 h-48 md:w-56 md:h-56 rounded-3xl overflow-hidden flex items-center justify-center"
+              style={{ background: "white", boxShadow: "0 16px 48px rgba(0,0,0,0.4), 0 0 80px rgba(16,185,129,0.15)" }}
+            >
+              <img
+                src={new URL("../assets/qr_relife.png", import.meta.url).href}
+                alt="QR para descargar ReLife"
+                className="w-full h-full object-contain p-3"
+                onError={(e) => {
+                  e.target.style.display = "none";
+                  e.target.parentElement.innerHTML = `
+                    <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:8px;color:#999">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect width="5" height="5" x="3" y="3" rx="1"/><rect width="5" height="5" x="16" y="3" rx="1"/><rect width="5" height="5" x="3" y="16" rx="1"/><path d="M21 16h-3a2 2 0 0 0-2 2v3"/><path d="M21 21v.01"/><path d="M12 7v3a2 2 0 0 1-2 2H7"/><path d="M3 12h.01"/><path d="M12 3h.01"/><path d="M12 16v.01"/><path d="M16 12h1"/><path d="M21 12v.01"/><path d="M12 21v-1"/></svg>
+                      <span style="font-size:10px;font-weight:600">qr_relife.png</span>
+                    </div>
+                  `;
+                }}
+              />
+            </div>
+            {/* Glow behind QR */}
+            <div
+              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-56 h-56 rounded-full -z-10"
+              style={{ background: "radial-gradient(circle, rgba(16,185,129,0.2) 0%, transparent 70%)", filter: "blur(40px)" }}
+            />
+            <p className="text-[10px] mt-3 font-medium" style={{ color: "rgba(255,255,255,0.2)" }}>
+              Apunta con la cámara de tu móvil
             </p>
           </div>
 
@@ -651,41 +631,6 @@ const DownloadModal = ({ onClose }) => {
           className="flex-1 overflow-y-auto"
           style={{ background: "var(--bg-card)" }}
         >
-          {/* QR section */}
-          <div className="p-6 md:p-8 text-center" style={{ borderBottom: "1px solid var(--border)" }}>
-            <div className="flex items-center justify-center gap-2 mb-4">
-              <Smartphone className="w-4 h-4 text-emerald-500" />
-              <p className="text-[11px] font-bold uppercase tracking-[2px]" style={{ color: "var(--text-muted)" }}>
-                Escanea el QR
-              </p>
-            </div>
-
-            {/* QR — src/assets/qr_relife.png */}
-            <div
-              className="w-44 h-44 mx-auto rounded-2xl overflow-hidden mb-4 flex items-center justify-center"
-              style={{ background: "white", boxShadow: "0 4px 20px rgba(0,0,0,0.06)", border: "1px solid var(--border)" }}
-            >
-              <img
-                src={new URL("../assets/qr_relife.png", import.meta.url).href}
-                alt="QR para descargar ReLife"
-                className="w-full h-full object-contain p-3"
-                onError={(e) => {
-                  e.target.style.display = "none";
-                  e.target.parentElement.innerHTML = `
-                    <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:8px;color:var(--text-faint)">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect width="5" height="5" x="3" y="3" rx="1"/><rect width="5" height="5" x="16" y="3" rx="1"/><rect width="5" height="5" x="3" y="16" rx="1"/><path d="M21 16h-3a2 2 0 0 0-2 2v3"/><path d="M21 21v.01"/><path d="M12 7v3a2 2 0 0 1-2 2H7"/><path d="M3 12h.01"/><path d="M12 3h.01"/><path d="M12 16v.01"/><path d="M16 12h1"/><path d="M21 12v.01"/><path d="M12 21v-1"/></svg>
-                      <span style="font-size:10px;font-weight:600">qr_relife.png</span>
-                    </div>
-                  `;
-                }}
-              />
-            </div>
-
-            <p className="text-[12px] font-medium" style={{ color: "var(--text-muted)" }}>
-              Apunta con la cámara de tu móvil
-            </p>
-          </div>
-
           {/* Features grid */}
           <div className="p-6 md:p-8">
             <h3 className="text-[13px] font-black mb-4 flex items-center gap-2" style={{ color: "var(--text-primary)" }}>
